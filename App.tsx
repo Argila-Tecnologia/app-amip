@@ -1,20 +1,54 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { StatusBar } from 'react-native';
+
+import {
+  RobotoSlab_400Regular,
+  RobotoSlab_500Medium,
+  useFonts,
+} from '@expo-google-fonts/roboto-slab';
+
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+
+import { QueryClientProvider } from '@tanstack/react-query';
+
+import Toast from 'react-native-toast-message';
+
+import { ThemeProvider } from 'styled-components/native';
+
+import theme from './src/themes';
+
+import { queryClient } from './src/services/react-query';
+
+import { toastConfig } from '@config/toast-config';
+
+import { Routes } from '@routes/index';
+
+import { Loading } from '@components/Loading';
 
 export default function App() {
+  const [fontsLoaded] = useFonts({
+    RobotoSlab_400Regular,
+    RobotoSlab_500Medium,
+  });
+
   return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider theme={theme}>
+        <SafeAreaProvider style={{ flex: 1 }}>
+          <StatusBar
+            barStyle="light-content"
+            backgroundColor="transparent"
+            translucent
+          />
+
+          <GestureHandlerRootView style={{ flex: 1 }}>
+            {!fontsLoaded ? <Loading /> : <Routes />}
+
+            <Toast config={toastConfig} />
+          </GestureHandlerRootView>
+        </SafeAreaProvider>
+      </ThemeProvider>
+    </QueryClientProvider>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
