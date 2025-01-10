@@ -1,4 +1,4 @@
-import styled from 'styled-components/native';
+import styled, { css } from 'styled-components/native';
 
 import { Platform } from 'react-native';
 
@@ -29,6 +29,8 @@ export const Title = styled.Text`
 `;
 
 export const FormContainer = styled.View`
+  width: 100%;
+
   margin-top: 10px;
 `;
 
@@ -48,9 +50,11 @@ export const ForgotPasswordButton = styled.TouchableOpacity.attrs({
 `;
 
 export const ForgotPasswordText = styled.Text`
-  color: ${({ theme }) => theme.colors['green-color']};
-  font-size: ${RFValue(20)}px;
-  font-family: ${({ theme }) => theme.fonts.regular};
+  ${({ theme }) => css`
+    font-family: ${theme.FONT_FAMILY.REGULAR};
+    font-size: ${RFValue(theme.FONT_SIZE.MD)}px;
+    color: ${theme.COLORS['white-color']};
+  `};
 `;
 
 export const Footer = styled.View`
@@ -64,7 +68,9 @@ export const FooterCreateAccountButton = styled.TouchableOpacity`
 `;
 
 export const FooterCreateAccountButtonText = styled.Text`
-  color: ${({ theme }) => theme.colors['black-color-100']};
-  font-size: ${RFValue(20)}px;
-  font-family: ${({ theme }) => theme.fonts.regular};
+  ${({ theme }) => css`
+    font-family: ${theme.FONT_FAMILY.REGULAR};
+    font-size: ${RFValue(theme.FONT_SIZE.LG)}px;
+    color: ${theme.COLORS['white-color']};
+  `};
 `;

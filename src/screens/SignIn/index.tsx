@@ -4,20 +4,33 @@ import { TextInput } from 'react-native';
 
 import { useNavigation } from '@react-navigation/native';
 
+import { z as zod } from 'zod';
+
 import { Controller, useForm } from 'react-hook-form';
 
-import { z as zod } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
 
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
-import { useTheme } from 'styled-components/native';
+import { useMutation } from '@tanstack/react-query';
 
 import logoImage from '../../assets/logo-AMIP.png';
 
 import { Input } from '@components/Form/Input';
 import { Button } from '@components/Form/Button';
 
-import { FormContainer, LogoImage, SignInContainer, Title } from './styles';
+import {
+  Footer,
+  FooterCreateAccountButton,
+  FooterCreateAccountButtonText,
+  ForgotPasswordButton,
+  ForgotPasswordContent,
+  ForgotPasswordText,
+  FormContainer,
+  LogoImage,
+  SignInContainer,
+  Title,
+} from './styles';
 
 const signInValidationSchema = zod.object({
   email: zod.string().email(),
@@ -27,19 +40,30 @@ const signInValidationSchema = zod.object({
 type IFormDataSubmit = zod.infer<typeof signInValidationSchema>;
 
 export function SignInScreen() {
-  const theme = useTheme();
-  const navigation = useNavigation();
+  // const navigation = useNavigation();
 
   const {
     control,
     handleSubmit,
     formState: { errors },
-  } = useForm();
+  } = useForm<IFormDataSubmit>({
+    resolver: zodResolver(signInValidationSchema),
+  });
 
   // FORM
   const emailRef = useRef<TextInput>(null);
   const passwordRef = useRef<TextInput>(null);
   // END FORM
+
+  // FUNCTION
+
+  const handleFormSubmit = useCallback(
+    async ({ email, password }: IFormDataSubmit) => {
+      console.log(email, password);
+    },
+    [],
+  );
+  // END FUNCTION
 
   return (
     <KeyboardAwareScrollView>
@@ -49,13 +73,59 @@ export function SignInScreen() {
         <Title>Acesse sua conta.</Title>
 
         <FormContainer>
-          <Controller control={control} name="email" render={() => <Input />} />
+          <Controller
+            control={control}
+            name="email"
+            render={({ field: { value, onChange } }) => (
+              <Input
+                ref={emailRef}
+                autoCapitalize="none"
+                value={value}
+                error={errors.email?.message}
+                onChangeText={(text) => {
+                  onChange(text);
+                }}
+                onSubmitEditing={() => {
+                  passwordRef.current?.focus();
+                }}
+              />
+            )}
+          />
+
           <Controller
             control={control}
             name="password"
-            render={() => <Input secureTextFieldEntry />}
+            render={({ field: { value, onChange } }) => (
+              <Input
+                ref={passwordRef}
+                secureTextFieldEntry
+                value={value}
+                onChangeText={(text) => {
+                  onChange(text);
+                }}
+                error={errors.password?.message}
+              />
+            )}
           />
+
+          <Button activeOpacity={0.7} onPress={handleSubmit(handleFormSubmit)}>
+            Entrar
+          </Button>
         </FormContainer>
+
+        <ForgotPasswordContent>
+          <ForgotPasswordButton>
+            <ForgotPasswordText>Esqueceu a senha?</ForgotPasswordText>
+          </ForgotPasswordButton>
+        </ForgotPasswordContent>
+
+        <Footer>
+          <FooterCreateAccountButton>
+            <FooterCreateAccountButtonText>
+              Criar conta!
+            </FooterCreateAccountButtonText>
+          </FooterCreateAccountButton>
+        </Footer>
       </SignInContainer>
     </KeyboardAwareScrollView>
   );

@@ -10,13 +10,16 @@ interface IContainerProps {
 
 export const Container = styled.TouchableOpacity<IContainerProps>`
   width: 100%;
-  height: ${RFValue(60)}px;
-  background: ${({ theme }) => theme.colors['blue-dark-color']};
-  border-radius: ${RFValue(10)}px;
-  margin-top: ${RFValue(8)}px;
+  height: ${RFValue(50)}px;
 
-  justify-content: center;
   align-items: center;
+  justify-content: center;
+
+  background: ${({ theme }) => theme.COLORS['green-color']};
+
+  border-radius: ${RFValue(10)}px;
+
+  margin-top: ${RFValue(8)}px;
 
   ${({ loading }) =>
     loading &&
@@ -26,9 +29,10 @@ export const Container = styled.TouchableOpacity<IContainerProps>`
 `;
 
 export const ButtonText = styled.Text`
-  font-family: ${({ theme }) => theme.fonts.medium};
-  color: ${({ theme }) => theme.colors['white-color']};
+  font-family: ${({ theme }) => theme.FONT_FAMILY.BOLD};
   font-size: ${RFValue(18)}px;
+  color: ${({ theme }) => theme.COLORS['white-color']};
+
   text-transform: uppercase;
 `;
 

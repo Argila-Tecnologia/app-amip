@@ -13,17 +13,20 @@ interface ContainerProps {
 
 export const Container = styled.View<ContainerProps>`
   width: 100%;
-  height: ${RFValue(60)}px;
-  padding: ${RFValue(0)}px ${RFValue(16)}px;
-  background: ${({ theme }) => theme.COLORS['gray-color-100']};
-  border-radius: ${RFValue(10)}px;
-  margin-bottom: ${RFValue(8)}px;
-
-  border-width: ${RFValue(2)}px;
-  border-color: ${({ theme }) => theme.COLORS['gray-color-100']};
+  height: ${RFValue(50)}px;
 
   flex-direction: row;
   align-items: center;
+
+  background: ${({ theme }) => theme.COLORS['gray-color-100']};
+
+  border-width: ${RFValue(2)}px;
+  border-color: ${({ theme }) => theme.COLORS['gray-color-100']};
+  border-radius: ${RFValue(10)}px;
+
+  margin-bottom: ${RFValue(8)}px;
+
+  padding: ${RFValue(0)}px ${RFValue(16)}px;
 
   ${(props) =>
     props.isErrored &&
