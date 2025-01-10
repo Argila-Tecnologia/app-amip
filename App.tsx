@@ -25,6 +25,7 @@ import { toastConfig } from '@config/toast-config';
 import { Routes } from '@routes/index';
 
 import { Loading } from '@components/Loading';
+import { AppProvider } from '@hooks/index';
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -43,9 +44,11 @@ export default function App() {
           />
 
           <GestureHandlerRootView style={{ flex: 1 }}>
-            {!fontsLoaded ? <Loading /> : <Routes />}
+            <AppProvider>
+              {!fontsLoaded ? <Loading /> : <Routes />}
 
-            <Toast config={toastConfig} />
+              <Toast config={toastConfig} />
+            </AppProvider>
           </GestureHandlerRootView>
         </SafeAreaProvider>
       </ThemeProvider>

@@ -8,7 +8,7 @@ interface IContainerProps {
   loading: boolean;
 }
 
-export const Container = styled.TouchableOpacity<IContainerProps>`
+export const ButtonContainer = styled.TouchableOpacity<IContainerProps>`
   width: 100%;
   height: ${RFValue(50)}px;
 

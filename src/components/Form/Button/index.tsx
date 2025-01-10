@@ -6,7 +6,7 @@ import { Feather } from '@expo/vector-icons';
 
 import { useTheme } from 'styled-components';
 
-import { Container, ButtonText, Icon } from './styles';
+import { ButtonContainer, ButtonText, Icon } from './styles';
 
 interface IButtonProps extends TouchableOpacityProps {
   children: string;
@@ -23,7 +23,7 @@ export function Button({
   const theme = useTheme();
 
   return (
-    <Container loading={loading} {...rest}>
+    <ButtonContainer loading={loading} disabled={loading} {...rest}>
       {icon && (
         <Icon name={icon} size={24} color={theme.colors['blue-dark-color']} />
       )}
@@ -32,6 +32,6 @@ export function Button({
       ) : (
         <ButtonText>{children}</ButtonText>
       )}
-    </Container>
+    </ButtonContainer>
   );
 }

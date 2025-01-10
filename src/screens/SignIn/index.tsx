@@ -6,13 +6,15 @@ import { useNavigation } from '@react-navigation/native';
 
 import { z as zod } from 'zod';
 
+import Toast from 'react-native-toast-message';
+
 import { Controller, useForm } from 'react-hook-form';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
-import { useMutation } from '@tanstack/react-query';
+import { useAuth } from '@hooks/auth';
 
 import logoImage from '../../assets/logo-AMIP.png';
 
@@ -40,7 +42,10 @@ const signInValidationSchema = zod.object({
 type IFormDataSubmit = zod.infer<typeof signInValidationSchema>;
 
 export function SignInScreen() {
-  // const navigation = useNavigation();
+  const [loadingSignIn, setIsLoadingSignIn] = useState(false);
+
+  const navigation = useNavigation();
+  const { signIn } = useAuth();
 
   const {
     control,
@@ -59,9 +64,22 @@ export function SignInScreen() {
 
   const handleFormSubmit = useCallback(
     async ({ email, password }: IFormDataSubmit) => {
-      console.log(email, password);
+      try {
+        setIsLoadingSignIn(true);
+
+        await signIn({ email, password });
+
+        navigation.navigate('tabNewsScreen');
+      } catch (error) {
+        Toast.show({
+          type: 'error',
+          position: 'bottom',
+          text1: 'Credencial inválida',
+          text2: 'Verifique as informações e tente novamente',
+        });
+      }
     },
-    [],
+    [signIn, navigation],
   );
   // END FUNCTION
 
@@ -108,7 +126,11 @@ export function SignInScreen() {
             )}
           />
 
-          <Button activeOpacity={0.7} onPress={handleSubmit(handleFormSubmit)}>
+          <Button
+            activeOpacity={0.7}
+            loading={loadingSignIn}
+            onPress={handleSubmit(handleFormSubmit)}
+          >
             Entrar
           </Button>
         </FormContainer>

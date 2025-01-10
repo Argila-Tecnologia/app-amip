@@ -1,27 +1,27 @@
 export declare global {
   namespace ReactNavigation {
     interface RootParamList {
-      TabNews: NonNullable | undefined;
-      TabChampionships: NonNullable | undefined;
-      TabMuseum: NonNullable | undefined;
+      tabNewsScreen: NonNullable<unknown> | undefined;
+      tabChampionshipsScreen: NonNullable<unknown> | undefined;
+      tabMuseumScreen: NonNullable<unknown> | undefined;
 
-      DetailsNewsScreen: NonNullable | undefined;
-      DetailsChampionshipsScreen: NonNullable | undefined;
-      DetailsMuseumScreen: NonNullable | undefined;
-      ProfileScreen: undefined;
-      SubscriptionScreen: NonNullable | undefined;
-      EditInformationScreen: undefined;
-      PasswordUpdateScreen: undefined;
-      ContactScreen: undefined;
+      detailsNewsScreen: NonNullable<unknown> | undefined;
+      detailsChampionshipsScreen: NonNullable<unknown> | undefined;
+      detailsMuseumScreen: NonNullable<unknown> | undefined;
+      profileScreen: undefined;
+      subscriptionScreen: NonNullable<unknown> | undefined;
+      editInformationScreen: undefined;
+      passwordUpdateScreen: undefined;
+      contactScreen: undefined;
 
       // AUTH ROUTES
-      SignIn: undefined;
-      SignUp: undefined;
-      ForgotPasswordScreen: undefined;
+      signInScreen: undefined;
+      signUpScreen: undefined;
+      forgotPasswordScreen: undefined;
 
-      News: undefined;
-      Championships: undefined;
-      Museum: undefined;
+      newsScreen: undefined;
+      championshipsScreen: undefined;
+      museumScreen: undefined;
     }
   }
 }
