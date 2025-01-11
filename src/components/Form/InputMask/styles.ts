@@ -9,7 +9,6 @@ import { RFValue } from 'react-native-responsive-fontsize';
 import { Feather } from '@expo/vector-icons';
 
 interface IContentProps {
-  isFocused: boolean;
   isError: boolean;
 }
 
@@ -46,12 +45,6 @@ export const InputContent = styled(View)<IContentProps>`
     isError &&
     css`
       border-color: ${theme.COLORS['red-color']};
-    `}
-
-  ${({ isFocused, theme }) =>
-    isFocused &&
-    css`
-      border-color: ${theme.COLORS['primary-color']};
     `}
 `;
 

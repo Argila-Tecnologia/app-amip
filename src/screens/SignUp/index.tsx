@@ -6,6 +6,8 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { z as zod } from 'zod';
 
+import { zodResolver } from '@hookform/resolvers/zod';
+
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 import { Controller, useForm } from 'react-hook-form';
@@ -69,7 +71,9 @@ export function SignUpScreen() {
     control,
     handleSubmit,
     formState: { errors },
-  } = useForm<IFormDataSubmit>();
+  } = useForm<IFormDataSubmit>({
+    resolver: zodResolver(signUpValidationSchema),
+  });
   // END FORM
 
   // FUNCTIONS
@@ -170,6 +174,7 @@ export function SignUpScreen() {
                   placeholder="Informe o e-mail"
                   placeholderTextColor={theme.COLORS['gray-color-400']}
                   editable={!loadingCreateAccount}
+                  keyboardType="email-address"
                   value={value}
                   returnKeyType="next"
                   error={errors.email?.message}
@@ -244,6 +249,7 @@ export function SignUpScreen() {
                   placeholder="Ex.: DDD + Nº de telefone"
                   placeholderTextColor={theme.COLORS['gray-color-400']}
                   editable={!loadingCreateAccount}
+                  keyboardType="numeric"
                   value={value}
                   returnKeyType="next"
                   error={errors.phone?.message}

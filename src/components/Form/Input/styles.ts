@@ -7,7 +7,6 @@ import { Feather } from '@expo/vector-icons';
 import { RFValue } from 'react-native-responsive-fontsize';
 
 interface ContainerProps {
-  isFocused: boolean;
   isErrored: boolean;
 }
 
@@ -21,23 +20,17 @@ export const Container = styled.View<ContainerProps>`
   background: ${({ theme }) => theme.COLORS['gray-color-100']};
 
   border-width: ${RFValue(2)}px;
-  border-color: ${({ theme }) => theme.COLORS['gray-color-100']};
+  border-color: ${({ theme }) => theme.COLORS['blue-dark-color']};
   border-radius: ${RFValue(10)}px;
 
   margin-bottom: ${RFValue(8)}px;
 
-  padding: ${RFValue(0)}px ${RFValue(16)}px;
+  padding: ${RFValue(0)}px ${RFValue(8)}px;
 
   ${(props) =>
     props.isErrored &&
     css`
       border-color: ${({ theme }) => theme.COLORS['red-color']};
-    `}
-
-  ${(props) =>
-    props.isFocused &&
-    css`
-      border-color: ${({ theme }) => theme.COLORS['blue-dark-color']};
     `}
 `;
 

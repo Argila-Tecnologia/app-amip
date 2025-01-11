@@ -27,7 +27,7 @@ export const Input = forwardRef<TextInput, IInputProps>(
     // END FUNCTIONS
 
     return (
-      <Container isFocused isErrored={!!error}>
+      <Container isErrored={!!error}>
         {icon && <Icon name={icon} size={24} />}
 
         <TextInputField

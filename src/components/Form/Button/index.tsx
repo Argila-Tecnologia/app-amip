@@ -4,7 +4,7 @@ import { TouchableOpacityProps, ActivityIndicator } from 'react-native';
 
 import { Feather } from '@expo/vector-icons';
 
-import { useTheme } from 'styled-components';
+import { useTheme } from 'styled-components/native';
 
 import { ButtonContainer, ButtonText, Icon } from './styles';
 
@@ -25,10 +25,10 @@ export function Button({
   return (
     <ButtonContainer loading={loading} disabled={loading} {...rest}>
       {icon && (
-        <Icon name={icon} size={24} color={theme.colors['blue-dark-color']} />
+        <Icon name={icon} size={24} color={theme.COLORS['blue-dark-color']} />
       )}
       {loading ? (
-        <ActivityIndicator size={25} color={theme.colors['black-color']} />
+        <ActivityIndicator size={25} color={theme.COLORS['black-color']} />
       ) : (
         <ButtonText>{children}</ButtonText>
       )}

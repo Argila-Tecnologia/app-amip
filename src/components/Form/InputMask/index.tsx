@@ -27,7 +27,7 @@ export function InputMask({
     <InputContainer>
       {label && <InputLabel>{label}</InputLabel>}
 
-      <InputContent style={contentStyle} isFocused isError={!!error}>
+      <InputContent style={contentStyle} isError={!!error}>
         <TextInputField
           keyboardAppearance="dark"
           placeholderTextColor={theme.COLORS['gray-color-200']}

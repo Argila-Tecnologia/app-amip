@@ -35,8 +35,8 @@ import {
 } from './styles';
 
 const signInValidationSchema = zod.object({
-  email: zod.string().email(),
-  password: zod.string(),
+  email: zod.string().email().min(1),
+  password: zod.string().min(1),
 });
 
 type IFormDataSubmit = zod.infer<typeof signInValidationSchema>;
@@ -98,6 +98,7 @@ export function SignInScreen() {
               <Input
                 ref={emailRef}
                 autoCapitalize="none"
+                keyboardType="email-address"
                 value={value}
                 error={errors.email?.message}
                 onChangeText={(text) => {
