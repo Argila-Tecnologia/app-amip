@@ -142,7 +142,11 @@ export function SignInScreen() {
         </ForgotPasswordContent>
 
         <Footer>
-          <FooterCreateAccountButton>
+          <FooterCreateAccountButton
+            onPress={() => {
+              navigation.navigate('signUpScreen');
+            }}
+          >
             <FooterCreateAccountButtonText>
               Criar conta!
             </FooterCreateAccountButtonText>

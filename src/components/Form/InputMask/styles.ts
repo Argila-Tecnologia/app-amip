@@ -19,7 +19,7 @@ export const InputContainer = styled.View`
 
 export const InputLabel = styled.Text`
   ${({ theme }) => css`
-    font-family: ${theme.FONTS.REGULAR};
+    font-family: ${theme.FONT_FAMILY.REGULAR};
     font-size: ${RFValue(theme.FONT_SIZE.MD)}px;
     color: ${theme.COLORS['black-color']};
   `};
@@ -63,5 +63,5 @@ export const TextInputField = styled(MaskedTextInput)`
   flex: 1;
 
   font-size: ${RFValue(16)}px;
-  font-family: ${({ theme }) => theme.FONTS.REGULAR};
+  font-family: ${({ theme }) => theme.FONT_FAMILY.REGULAR};
 `;

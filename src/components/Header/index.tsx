@@ -1,18 +1,18 @@
-import React, { useCallback } from 'react';
+import React, { ComponentProps, useCallback } from 'react';
 
 import { useNavigation } from '@react-navigation/native';
 
 import { Feather } from '@expo/vector-icons';
 
-import { useTheme } from 'styled-components';
+import { useTheme } from 'styled-components/native';
 
-import { Container, BackButton, Title } from './styles';
+import { HeaderContainer, HeaderBackButton, HeaderTitle } from './styles';
 
-interface IProps {
+interface IHeaderProps extends ComponentProps<typeof HeaderContainer> {
   title: string;
 }
 
-const Header: React.FC<IProps> = ({ title }) => {
+export function Header({ title, ...rest }: IHeaderProps) {
   const theme = useTheme();
 
   const navigation = useNavigation();
@@ -22,18 +22,16 @@ const Header: React.FC<IProps> = ({ title }) => {
   }, [navigation]);
 
   return (
-    <Container>
-      <BackButton onPress={handleGoBackNavigation}>
+    <HeaderContainer {...rest}>
+      <HeaderBackButton onPress={handleGoBackNavigation}>
         <Feather
           name="chevron-left"
           size={25}
-          color={theme.colors['white-color']}
+          color={theme.COLORS['white-color']}
         />
-      </BackButton>
+      </HeaderBackButton>
 
-      <Title>{title}</Title>
-    </Container>
+      <HeaderTitle>{title}</HeaderTitle>
+    </HeaderContainer>
   );
-};
-
-export { Header };
+}

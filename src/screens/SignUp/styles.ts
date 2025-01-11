@@ -16,15 +16,21 @@ export const SignUpContent = styled.View`
   padding: ${RFValue(16)}px;
 `;
 
+export const FormContainer = styled.View`
+  width: 100%;
+
+  flex: 1;
+`;
+
 export const BoxMaritalStatus = styled.View``;
 
-export const BoxButton = styled.View`
+export const FooterContainer = styled.View`
   flex: 1;
 
   flex-direction: row;
   justify-content: flex-end;
 
-  margin-top: ${RFValue(10)}px;
+  margin-top: ${RFValue(20)}px;
   margin-bottom: ${RFValue(10)}px;
 `;
 
