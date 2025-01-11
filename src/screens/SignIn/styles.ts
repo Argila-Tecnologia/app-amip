@@ -2,6 +2,8 @@ import styled, { css } from 'styled-components/native';
 
 import { Platform } from 'react-native';
 
+import { Image } from 'expo-image';
+
 import { RFValue } from 'react-native-responsive-fontsize';
 
 export const SignInContainer = styled.View`
@@ -13,7 +15,7 @@ export const SignInContainer = styled.View`
     ${Platform.OS === 'android' ? 150 : 40}px;
 `;
 
-export const LogoImage = styled.Image`
+export const LogoImage = styled(Image)`
   width: ${RFValue(176)}px;
   height: ${RFValue(200)}px;
 

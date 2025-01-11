@@ -84,8 +84,6 @@ export function SignUpScreen() {
 
     const dateFormat = format(date, 'dd/MM/yyyy');
     setDateBirthday(dateFormat);
-
-    // console.log(date);
   }, []);
 
   const handleFormSubmit = useCallback(
