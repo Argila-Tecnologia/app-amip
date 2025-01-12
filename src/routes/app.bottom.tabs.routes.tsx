@@ -6,6 +6,7 @@ import { useTheme } from 'styled-components/native';
 
 import { NewsScreen } from '@screens/News';
 import { ChampionshipsScreen } from '@screens/Championships';
+import { MuseumsScreen } from '@screens/Museum';
 
 const { Navigator, Screen } = createBottomTabNavigator();
 
@@ -46,6 +47,16 @@ export function AppBottomTabs() {
           title: 'Campeonatos',
           tabBarIcon: ({ color }) => (
             <MaterialCommunityIcons name="trophy" size={30} color={color} />
+          ),
+        }}
+      />
+
+      <Screen
+        name="museumsScreen"
+        component={MuseumsScreen}
+        options={{
+          tabBarIcon: ({ color }) => (
+            <MaterialCommunityIcons name="bank" size={30} color={color} />
           ),
         }}
       />
