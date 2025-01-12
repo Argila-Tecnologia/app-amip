@@ -69,7 +69,7 @@ export function SignInScreen() {
 
         await signIn({ email, password });
 
-        navigation.navigate('tabNewsScreen');
+        navigation.navigate('appBottomTabs');
       } catch (error) {
         Toast.show({
           type: 'error',
