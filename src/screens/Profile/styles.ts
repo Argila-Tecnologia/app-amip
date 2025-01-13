@@ -25,6 +25,13 @@ export const ProfileAvatarImageNameContainer = styled.View`
 export const ProfileAvatarButton = styled.TouchableOpacity.attrs({
   activeOpacity: 0.7,
 })`
+  width: ${RFValue(166)}px;
+  height: ${RFValue(166)}px;
+
+  background-color: ${({ theme }) => theme.COLORS['gray-color-200']};
+
+  border-radius: ${RFValue(98)}px;
+
   margin-top: ${RFValue(32)}px;
 
   position: relative;

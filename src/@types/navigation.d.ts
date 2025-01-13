@@ -13,7 +13,7 @@ export declare global {
       detailsMuseumScreen: { museumId: string };
 
       profileScreen: undefined;
-      editInformationScreen: undefined;
+      editProfileInformationScreen: undefined;
       passwordUpdateScreen: undefined;
 
       subscriptionScreen: { championshipId: string } | undefined;

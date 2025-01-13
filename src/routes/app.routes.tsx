@@ -1,12 +1,20 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import { SignInScreen } from '@screens/SignIn';
+
 import { SignUpScreen } from '@screens/SignUp';
+
 import { ContactScreen } from '@screens/Contact';
+
 import { ForgotPasswordScreen } from '@screens/ForgotPassword';
+
 import { DetailsNewsScreen } from '@screens/News/DetailNews';
+
 import { AppBottomTabs } from './app.bottom.tabs.routes';
+
 import { DetailsChampionshipScreen } from '@screens/Championships/DetailsChampionship';
+
+import { ProfileScreen } from '@screens/Profile';
 
 const { Navigator, Screen } = createNativeStackNavigator();
 
@@ -32,6 +40,8 @@ export function AppRoutes() {
         name="detailsChampionshipsScreen"
         component={DetailsChampionshipScreen}
       />
+
+      <Screen name="profileScreen" component={ProfileScreen} />
 
       <Screen name="contactScreen" component={ContactScreen} />
     </Navigator>

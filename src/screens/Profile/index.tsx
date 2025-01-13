@@ -10,15 +10,11 @@ import * as ImagePicker from 'expo-image-picker';
 
 import * as FileSystem from 'expo-file-system';
 
-import { RFPercentage } from 'react-native-responsive-fontsize';
-
 import { useTheme } from 'styled-components/native';
 
 import { AxiosError } from 'axios';
 
 import Toast from 'react-native-toast-message';
-
-import { z as zod } from 'zod';
 
 import { api } from '@services/api';
 
@@ -160,7 +156,27 @@ export function ProfileScreen() {
           });
         }
       }
-    } catch (error) {}
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        if (error.response) {
+          Toast.show({
+            type: 'error',
+            position: 'bottom',
+            text1: 'Equipe AMIP',
+            text2: 'Não foi possível atualizar a foto!',
+          });
+
+          return;
+        }
+      }
+
+      Toast.show({
+        type: 'error',
+        position: 'bottom',
+        text1: 'Equipe AMIP',
+        text2: 'Não foi possível atualizar a foto!',
+      });
+    }
   }, [handleToggleTakePhotoModal, player, updatePlayerProfile]);
 
   const handleTakePhotoGallery = useCallback(async () => {
@@ -238,7 +254,27 @@ export function ProfileScreen() {
           });
         }
       }
-    } catch (error) {}
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        if (error.response) {
+          Toast.show({
+            type: 'error',
+            position: 'bottom',
+            text1: 'Equipe AMIP',
+            text2: 'Não foi possível atualizar a foto!',
+          });
+
+          return;
+        }
+      }
+
+      Toast.show({
+        type: 'error',
+        position: 'bottom',
+        text1: 'Equipe AMIP',
+        text2: 'Não foi possível atualizar a foto!',
+      });
+    }
   }, [handleToggleTakePhotoModal, player, updatePlayerProfile]);
   // END UPDATE PHOTO
 
@@ -251,21 +287,34 @@ export function ProfileScreen() {
       <ScrollView showsVerticalScrollIndicator={false}>
         <ProfileContent>
           <ProfileAvatarImageNameContainer>
-            {player && player.avatar_url && (
+            {player && (
               <>
-                <ProfileAvatarButton>
-                  <ProfileAvatarImage
-                    source={{ uri: player.avatar_url }}
-                    contentFit="cover"
-                  />
+                <ProfileAvatarButton
+                  disabled={loadingUpdatePhoto}
+                  onPress={handleToggleTakePhotoModal}
+                >
+                  {loadingUpdatePhoto ? (
+                    <Loading />
+                  ) : (
+                    <>
+                      <ProfileAvatarImage
+                        source={{
+                          uri: player.avatar_url
+                            ? player.avatar_url
+                            : noImage(player.name),
+                        }}
+                        contentFit="cover"
+                      />
 
-                  <ProfileAvatarCamera>
-                    <Feather
-                      name="camera"
-                      size={24}
-                      color={theme.COLORS['white-color']}
-                    />
-                  </ProfileAvatarCamera>
+                      <ProfileAvatarCamera>
+                        <Feather
+                          name="camera"
+                          size={24}
+                          color={theme.COLORS['white-color']}
+                        />
+                      </ProfileAvatarCamera>
+                    </>
+                  )}
                 </ProfileAvatarButton>
 
                 <ProfileName>{player.name}</ProfileName>
