@@ -76,7 +76,7 @@ export function DetailsNewsScreen() {
       {isLoadingNews ? (
         <Loading />
       ) : (
-        <ScrollView>
+        <ScrollView showsVerticalScrollIndicator={false}>
           {news && (
             <DetailsNewsContent>
               <DetailsNewsTitle>{news.title}</DetailsNewsTitle>

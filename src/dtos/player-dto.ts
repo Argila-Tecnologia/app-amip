@@ -10,5 +10,6 @@ export type IPlayerDTO = {
   reference: string;
   city: string;
   uf: string;
+  avatar: string;
   avatar_url: string;
 };

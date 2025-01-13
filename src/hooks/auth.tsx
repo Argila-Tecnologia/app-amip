@@ -35,7 +35,7 @@ interface IAuthContextDataProps {
   isLoadingStorageData: boolean;
   signIn({ email, password }: ICredentials): Promise<void>;
   signOut(): void;
-  updatePlayer(player: IPlayerDTO): Promise<void>;
+  updatePlayerProfile(player: IPlayerDTO): Promise<void>;
 }
 
 interface IAuthProviderProps {
@@ -115,7 +115,7 @@ const AuthProvider = ({ children }: IAuthProviderProps) => {
     }
   }, []);
 
-  const updatePlayer = useCallback(async (player: IPlayerDTO) => {
+  const updatePlayerProfile = useCallback(async (player: IPlayerDTO) => {
     setPlayer(player);
 
     await playerAdd(player);
@@ -166,7 +166,7 @@ const AuthProvider = ({ children }: IAuthProviderProps) => {
         isLoadingStorageData: isLoadingUserStorageData,
         signIn,
         signOut,
-        updatePlayer,
+        updatePlayerProfile,
       }}
     >
       {children}

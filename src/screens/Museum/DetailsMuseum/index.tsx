@@ -75,7 +75,7 @@ export function DetailsMuseum() {
       {isLoadingDetailMuseum ? (
         <Loading />
       ) : (
-        <ScrollView>
+        <ScrollView showsVerticalScrollIndicator={false}>
           {museum && (
             <DetailMuseumContent>
               <DetailMuseumTitle>{museum.title}</DetailMuseumTitle>

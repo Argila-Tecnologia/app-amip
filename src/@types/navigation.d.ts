@@ -28,6 +28,8 @@ export declare global {
       newsScreen: undefined;
       championshipsScreen: undefined;
       museumsScreen: undefined;
+
+      playersScreen: undefined;
     }
   }
 }

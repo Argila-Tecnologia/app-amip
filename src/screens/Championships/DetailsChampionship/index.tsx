@@ -116,7 +116,7 @@ export function DetailsChampionshipScreen() {
       {isLoadingDetailChampionship ? (
         <Loading />
       ) : (
-        <ScrollView>
+        <ScrollView showsVerticalScrollIndicator={false}>
           {championship && (
             <DetailChampionshipContent>
               <DetailChampionshipTitle>
