@@ -15,6 +15,7 @@ import { AppBottomTabs } from './app.bottom.tabs.routes';
 import { DetailsChampionshipScreen } from '@screens/Championships/DetailsChampionship';
 
 import { ProfileScreen } from '@screens/Profile';
+import { EditProfileInformationScreen } from '@screens/Profile/EditProfileInformation';
 
 const { Navigator, Screen } = createNativeStackNavigator();
 
@@ -42,6 +43,10 @@ export function AppRoutes() {
       />
 
       <Screen name="profileScreen" component={ProfileScreen} />
+      <Screen
+        name="editProfileInformationScreen"
+        component={EditProfileInformationScreen}
+      />
 
       <Screen name="contactScreen" component={ContactScreen} />
     </Navigator>

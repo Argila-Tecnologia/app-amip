@@ -3,6 +3,8 @@ export type IPlayerDTO = {
   name: string;
   email: string;
   cpf: string;
+  birthday: string;
+  phone: string;
   street_name: string;
   street_number: string;
   neighborhood: string;

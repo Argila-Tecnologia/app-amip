@@ -16,6 +16,8 @@ export const EditProfileContent = styled.View`
   margin-top: ${RFValue(20)}px;
 `;
 
+export const EditProfileForm = styled.View``;
+
 export const EditProfileMaritalStatusContainer = styled.View``;
 
 export const Label = styled.Text`
