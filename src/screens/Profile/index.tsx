@@ -343,7 +343,7 @@ export function ProfileScreen() {
               <>
                 <ProfileOptionButton
                   onPress={() => {
-                    navigation.navigate('editInformationScreen');
+                    navigation.navigate('editProfileInformationScreen');
                   }}
                 >
                   <ProfileOptionButtonIcon>
@@ -361,7 +361,7 @@ export function ProfileScreen() {
 
                 <ProfileOptionButton
                   onPress={() => {
-                    navigation.navigate('passwordUpdateScreen');
+                    navigation.navigate('editPasswordScreen');
                   }}
                 >
                   <ProfileOptionButtonIcon>

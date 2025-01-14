@@ -6,17 +6,25 @@ export declare global {
       // tabMuseumScreen: NonNullable<unknown> | undefined;
       appBottomTabs: NonNullable<unknown> | undefined;
 
+      newsScreen: undefined;
+
       detailsNewsScreen: { newsId: string };
+
+      championshipsScreen: undefined;
 
       detailsChampionshipsScreen: { championshipId: string };
 
+      museumsScreen: undefined;
+
       detailsMuseumScreen: { museumId: string };
+
+      subscriptionScreen: { championshipId: string } | undefined;
+
+      playersScreen: undefined;
 
       profileScreen: undefined;
       editProfileInformationScreen: undefined;
-      passwordUpdateScreen: undefined;
-
-      subscriptionScreen: { championshipId: string } | undefined;
+      editPasswordScreen: undefined;
 
       contactScreen: undefined;
 
@@ -24,12 +32,6 @@ export declare global {
       signInScreen: undefined;
       signUpScreen: undefined;
       forgotPasswordScreen: undefined;
-
-      newsScreen: undefined;
-      championshipsScreen: undefined;
-      museumsScreen: undefined;
-
-      playersScreen: undefined;
     }
   }
 }

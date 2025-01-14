@@ -34,7 +34,7 @@ type IDetailsMuseumRouteParams = {
   museumId: string;
 };
 
-export function DetailsMuseum() {
+export function DetailsMuseumScreen() {
   const [isCustomGalleryOpen, setIsCustomGalleryOpen] = useState(false);
 
   const route = useRoute();

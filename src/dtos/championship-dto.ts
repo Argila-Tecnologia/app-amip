@@ -9,4 +9,5 @@ export type IChampionshipsDTO = {
   link: string;
   avatar_url: string;
   video_url: string;
+  categories_name: string[];
 };

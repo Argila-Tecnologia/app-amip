@@ -16,6 +16,10 @@ import { DetailsChampionshipScreen } from '@screens/Championships/DetailsChampio
 
 import { ProfileScreen } from '@screens/Profile';
 import { EditProfileInformationScreen } from '@screens/Profile/EditProfileInformation';
+import { EditPasswordScreen } from '@screens/Profile/EditPassword';
+
+import { SubscriptionScreen } from '@screens/Subscription';
+import { DetailsMuseumScreen } from '@screens/Museum/DetailsMuseum';
 
 const { Navigator, Screen } = createNativeStackNavigator();
 
@@ -27,12 +31,6 @@ export function AppRoutes() {
       }}
       initialRouteName="appBottomTabs"
     >
-      {/* AUTH ROUTES */}
-      <Screen name="signInScreen" component={SignInScreen} />
-      <Screen name="signUpScreen" component={SignUpScreen} />
-
-      <Screen name="forgotPasswordScreen" component={ForgotPasswordScreen} />
-
       <Screen name="appBottomTabs" component={AppBottomTabs} />
 
       <Screen name="detailsNewsScreen" component={DetailsNewsScreen} />
@@ -42,13 +40,24 @@ export function AppRoutes() {
         component={DetailsChampionshipScreen}
       />
 
+      <Screen name="detailMuseumScreen" component={DetailsMuseumScreen} />
+
+      {/* AUTH ROUTES */}
+      <Screen name="signInScreen" component={SignInScreen} />
+      <Screen name="signUpScreen" component={SignUpScreen} />
+
+      <Screen name="forgotPasswordScreen" component={ForgotPasswordScreen} />
+
       <Screen name="profileScreen" component={ProfileScreen} />
       <Screen
         name="editProfileInformationScreen"
         component={EditProfileInformationScreen}
       />
+      <Screen name="editPasswordScreen" component={EditPasswordScreen} />
 
       <Screen name="contactScreen" component={ContactScreen} />
+
+      <Screen name="subscriptionScreen" component={SubscriptionScreen} />
     </Navigator>
   );
 }
