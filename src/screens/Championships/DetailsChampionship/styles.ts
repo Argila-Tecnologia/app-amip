@@ -6,6 +6,8 @@ import { RFValue } from 'react-native-responsive-fontsize';
 
 export const DetailChampionshipContainer = styled.View`
   flex: 1;
+
+  background-color: ${({ theme }) => theme.COLORS['gray-color-100']};
 `;
 
 export const DetailChampionshipContent = styled.View`
@@ -27,24 +29,28 @@ export const DetailChampionshipTitle = styled.Text`
 `;
 
 export const DetailChampionshipInfoContainer = styled.View`
-  width: ${RFValue(100)}%;
+  width: ${RFValue(85)}%;
 
   flex-direction: column;
   align-items: center;
 
-  margin: ${RFValue(10)}px ${RFValue(15)}px ${RFValue(20)}px ${RFValue(15)}px;
+  margin-top: ${RFValue(10)}px;
+  margin-bottom: ${RFValue(20)}px;
+
+  border: 1px solid;
+  border-color: red;
 `;
 
 export const DetailChampionshipImage = styled(Image)`
-  width: ${RFValue(100)}%;
-  height: ${RFValue(400)}px;
+  width: ${RFValue(320)}px;
+  height: ${RFValue(320)}px;
 
   margin-top: ${RFValue(5)}px;
   margin-bottom: ${RFValue(20)}px;
 ` as unknown as typeof Image;
 
 export const DetailChampionshipInfoDescription = styled.Text`
-  width: ${RFValue(100)}%;
+  width: ${RFValue(85)}%;
 
   font-family: ${({ theme }) => theme.FONT_FAMILY.REGULAR};
   text-align: justify;
@@ -70,6 +76,8 @@ export const DetailChampionshipPlaceDateContent = styled.View`
   flex: 1;
 
   margin: 0 ${RFValue(4)}px;
+
+  border: 1px solid pink;
 `;
 
 export const DetailChampionshipPlaceDateText = styled.Text`

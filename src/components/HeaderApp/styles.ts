@@ -6,14 +6,14 @@ import { RFValue } from 'react-native-responsive-fontsize';
 
 export const HeaderAppContainer = styled.View`
   width: 100%;
-  height: ${RFValue(90)}px;
+  /* height: ${RFValue(90)}px; */
 
   flex-direction: row;
   align-items: center;
 
   background-color: ${({ theme }) => theme.COLORS['gray-color-300']};
 
-  padding: ${RFValue(8)}px;
+  padding: 0 ${RFValue(16)}px;
 `;
 
 export const HeaderAppBox = styled.View`

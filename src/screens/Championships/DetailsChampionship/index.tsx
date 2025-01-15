@@ -103,6 +103,8 @@ export function DetailsChampionshipScreen() {
         if (response.status === 200) {
           const detailsChampionshipData = response.data as IChampionshipsDTO;
 
+          console.log('retorno', detailsChampionshipData);
+
           return detailsChampionshipData;
         }
       },
@@ -146,7 +148,7 @@ export function DetailsChampionshipScreen() {
 
                   <DetailChampionshipPlaceDateContent>
                     <DetailChampionshipPlaceDateText>
-                      Local: {championship.place}
+                      mkmkmkmkmkmkmkmkmLocal: {championship.place}
                     </DetailChampionshipPlaceDateText>
                   </DetailChampionshipPlaceDateContent>
 
@@ -159,11 +161,11 @@ export function DetailsChampionshipScreen() {
                       />
                     </DetailChampionshipIconContainer>
 
-                    <DetailChampionshipPlaceDateContent>
+                    {/* <DetailChampionshipPlaceDateContent>
                       <DetailChampionshipPlaceDateText>
                         Data: {championship.date}
                       </DetailChampionshipPlaceDateText>
-                    </DetailChampionshipPlaceDateContent>
+                    </DetailChampionshipPlaceDateContent> */}
                   </DetailChampionshipPlaceDateContainer>
                 </DetailChampionshipPlaceDateContainer>
 

@@ -36,8 +36,12 @@ export function HeaderApp() {
 
   // FUNCTION
   const handleProfile = useCallback(() => {
-    navigation.navigate('profileScreen');
-  }, [navigation]);
+    if (player.id) {
+      navigation.navigate('profileScreen');
+    } else {
+      navigation.navigate('signInScreen');
+    }
+  }, [navigation, player.id]);
   // END FUNCTION
 
   return (

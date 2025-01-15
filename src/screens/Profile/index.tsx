@@ -323,7 +323,7 @@ export function ProfileScreen() {
           </ProfileAvatarImageNameContainer>
 
           <ProfileOptionsContent>
-            {!player && (
+            {player.id && (
               <ProfileOptionButton>
                 <ProfileOptionButtonIcon>
                   <Feather
@@ -393,7 +393,7 @@ export function ProfileScreen() {
               <ProfileOptionButtonTitle>Contato</ProfileOptionButtonTitle>
             </ProfileOptionButton>
 
-            {player && (
+            {player.id && (
               <ProfileOptionButton onPress={handleSignOut}>
                 <ProfileOptionButtonIcon>
                   <Feather

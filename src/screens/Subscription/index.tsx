@@ -236,7 +236,7 @@ export function SubscriptionScreen() {
                       autoCorrect={false}
                       value={value}
                       placeholder="Informe o nome"
-                      placeholderTextColor={theme.colors['gray-color-400']}
+                      placeholderTextColor={theme.COLORS['gray-color-400']}
                       error={errors.name?.message}
                       returnKeyType="next"
                       onChangeText={(text) => {
@@ -259,7 +259,7 @@ export function SubscriptionScreen() {
                       autoCapitalize="none"
                       value={value}
                       placeholder="Informe o e-mail"
-                      placeholderTextColor={theme.colors['gray-color-400']}
+                      placeholderTextColor={theme.COLORS['gray-color-400']}
                       keyboardType="email-address"
                       error={errors.email?.message}
                       returnKeyType="next"
@@ -283,7 +283,7 @@ export function SubscriptionScreen() {
                       autoCapitalize="none"
                       value={value}
                       placeholder="Ex.: DDD + Nº de telefone"
-                      placeholderTextColor={theme.colors['gray-color-400']}
+                      placeholderTextColor={theme.COLORS['gray-color-400']}
                       keyboardType="numeric"
                       error={errors.whatsapp?.message}
                       returnKeyType="next"
@@ -307,7 +307,7 @@ export function SubscriptionScreen() {
                       autoCapitalize="none"
                       value={value}
                       placeholder="Informe o clube"
-                      placeholderTextColor={theme.colors['gray-color-400']}
+                      placeholderTextColor={theme.COLORS['gray-color-400']}
                       error={errors.club?.message}
                       returnKeyType="next"
                       onChangeText={(text) => {

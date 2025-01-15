@@ -62,7 +62,7 @@ export function ContactScreen() {
             <MaterialCommunityIcons
               name="email"
               size={30}
-              color={theme.colors['blue-dark-color']}
+              color={theme.COLORS['blue-dark-color']}
             />
           </ContactIcon>
 
@@ -74,7 +74,7 @@ export function ContactScreen() {
             <MaterialCommunityIcons
               name="whatsapp"
               size={30}
-              color={theme.colors['blue-dark-color']}
+              color={theme.COLORS['blue-dark-color']}
             />
           </ContactIcon>
 

@@ -40,7 +40,7 @@ export function AppRoutes() {
         component={DetailsChampionshipScreen}
       />
 
-      <Screen name="detailMuseumScreen" component={DetailsMuseumScreen} />
+      <Screen name="detailsMuseumScreen" component={DetailsMuseumScreen} />
 
       {/* AUTH ROUTES */}
       <Screen name="signInScreen" component={SignInScreen} />

@@ -86,7 +86,7 @@ export function MuseumsScreen() {
                   <Feather
                     name="chevron-right"
                     size={25}
-                    color={theme.colors['black-color']}
+                    color={theme.COLORS['black-color']}
                   />
                 </MuseumHeader>
 

@@ -28,6 +28,7 @@ import {
   ChampionshipsImage,
   ChampionshipsItemContent,
   ChampionshipsList,
+  Divider,
 } from './styles';
 
 export function ChampionshipsScreen() {
@@ -74,6 +75,7 @@ export function ChampionshipsScreen() {
             }
             data={championships}
             keyExtractor={(item) => item.id}
+            ItemSeparatorComponent={() => <Divider />}
             renderItem={({ item: championshipItem }) => (
               <ChampionshipsButton
                 onPress={() => {

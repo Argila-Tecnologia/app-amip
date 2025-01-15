@@ -10,6 +10,8 @@ import { IChampionshipsDTO } from '@dtos/championship-dto';
 
 export const ChampionshipsContainer = styled.View`
   flex: 1;
+
+  background-color: ${({ theme }) => theme.COLORS['gray-color-100']};
 `;
 
 export const ChampionshipsContent = styled.View`
