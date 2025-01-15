@@ -350,7 +350,7 @@ export function ProfileScreen() {
                     <Feather
                       name="refresh-cw"
                       size={27}
-                      color={theme.colors['black-color']}
+                      color={theme.COLORS['black-color']}
                     />
                   </ProfileOptionButtonIcon>
 
@@ -368,7 +368,7 @@ export function ProfileScreen() {
                     <Feather
                       name="lock"
                       size={27}
-                      color={theme.colors['black-color']}
+                      color={theme.COLORS['black-color']}
                     />
                   </ProfileOptionButtonIcon>
 
@@ -386,7 +386,7 @@ export function ProfileScreen() {
                 <Feather
                   name="phone-call"
                   size={27}
-                  color={theme.colors['black-color']}
+                  color={theme.COLORS['black-color']}
                 />
               </ProfileOptionButtonIcon>
 
@@ -399,7 +399,7 @@ export function ProfileScreen() {
                   <Feather
                     name="log-out"
                     size={27}
-                    color={theme.colors['black-color']}
+                    color={theme.COLORS['black-color']}
                   />
                 </ProfileOptionButtonIcon>
 
