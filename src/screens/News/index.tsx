@@ -69,7 +69,7 @@ export function NewsScreen() {
           <Loading />
         ) : (
           <NewsList
-            contentContainerStyle={news?.length === 0 ? { flex: 1 } : {}}
+            contentContainerStyle={news && news.length === 0 ? { flex: 1 } : {}}
             data={news}
             keyExtractor={(item) => item.id}
             renderItem={({ item: newsItem }) => (

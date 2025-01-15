@@ -17,7 +17,7 @@ import {
   authTokenRemove,
 } from '@storage/auth-token-storage';
 
-import { playerAdd, playerGet, playerRemove } from '@storage/player-storage';
+import { playerAddStorage, playerRemoveStorage } from '@storage/player-storage';
 
 interface IAuthState {
   player: IPlayerDTO;
@@ -32,9 +32,9 @@ interface ICredentials {
 
 interface IAuthContextDataProps {
   player: IPlayerDTO;
-  isLoadingStorageData: boolean;
+  isLoadingUserStorageData: boolean;
   signIn({ email, password }: ICredentials): Promise<void>;
-  signOut(): void;
+  signOut(): Promise<void>;
   updatePlayerProfile(player: IPlayerDTO): Promise<void>;
 }
 
@@ -66,7 +66,7 @@ const AuthProvider = ({ children }: IAuthProviderProps) => {
       try {
         setIsLoadingUserStorageData(true);
 
-        await playerAdd(playerData);
+        await playerAddStorage(playerData);
         await authTokenAdd({ token, refresh_token });
       } catch (error) {
         throw error;
@@ -106,7 +106,7 @@ const AuthProvider = ({ children }: IAuthProviderProps) => {
 
       setPlayer({} as IPlayerDTO);
 
-      await playerRemove();
+      await playerRemoveStorage();
       await authTokenRemove();
     } catch (error) {
       throw error;
@@ -118,33 +118,33 @@ const AuthProvider = ({ children }: IAuthProviderProps) => {
   const updatePlayerProfile = useCallback(async (player: IPlayerDTO) => {
     setPlayer(player);
 
-    await playerAdd(player);
+    await playerAddStorage(player);
   }, []);
 
   const loadData = useCallback(async () => {
     try {
       setIsLoadingUserStorageData(true);
 
-      const playerLogged = await playerGet();
-      const { token, refresh_token } = await authTokenGet();
+      const { token } = await authTokenGet();
 
-      if (playerLogged && token && refresh_token) {
+      if (token) {
         api.defaults.headers.common.Authorization = `Bearer ${token}`;
 
         const response = await api.get('/players/me');
 
         if (response.status === 200) {
-          const { player } = response.data;
+          const playerData = response.data;
 
-          userAndTokenUpdate(player, token);
+          userAndTokenUpdate(playerData, token);
         }
       }
     } catch (error) {
-      throw error;
+      // throw error;
+      await signOut();
     } finally {
       setIsLoadingUserStorageData(false);
     }
-  }, [userAndTokenUpdate]);
+  }, [userAndTokenUpdate, signOut]);
 
   useEffect(() => {
     loadData();
@@ -163,7 +163,7 @@ const AuthProvider = ({ children }: IAuthProviderProps) => {
     <AuthContext.Provider
       value={{
         player,
-        isLoadingStorageData: isLoadingUserStorageData,
+        isLoadingUserStorageData,
         signIn,
         signOut,
         updatePlayerProfile,

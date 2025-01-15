@@ -70,7 +70,9 @@ export function MuseumsScreen() {
       ) : (
         <MuseumsContent>
           <MuseumList
-            contentContainerStyle={museums?.length === 0 ? { flex: 1 } : {}}
+            contentContainerStyle={
+              museums && museums.length === 0 ? { flex: 1 } : {}
+            }
             data={museums}
             keyExtractor={(museumItem) => museumItem.id}
             ItemSeparatorComponent={() => <Divider />}

@@ -88,7 +88,7 @@ api.registerInterceptTokenManager = (signOut) => {
         return new Promise((resolve, reject) => {
           try {
             api
-              .post('/sessions/refresh-token', {
+              .post('/authenticate_player/refresh_token', {
                 refresh_token,
               })
               .then(async (response) => {

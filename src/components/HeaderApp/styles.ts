@@ -13,7 +13,7 @@ export const HeaderAppContainer = styled.View`
 
   background-color: ${({ theme }) => theme.COLORS['gray-color-300']};
 
-  padding: ${RFValue(0)}px ${RFValue(8)}px;
+  padding: ${RFValue(8)}px;
 `;
 
 export const HeaderAppBox = styled.View`

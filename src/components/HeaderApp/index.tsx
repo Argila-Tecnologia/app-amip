@@ -2,6 +2,8 @@ import { useCallback } from 'react';
 
 import { useNavigation } from '@react-navigation/native';
 
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+
 import { Feather } from '@expo/vector-icons';
 
 import { useTheme } from 'styled-components/native';
@@ -28,6 +30,9 @@ export function HeaderApp() {
   const { player } = useAuth();
   const navigation = useNavigation();
   const theme = useTheme();
+  const insets = useSafeAreaInsets();
+
+  const paddingTop = insets.top + 10;
 
   // FUNCTION
   const handleProfile = useCallback(() => {
@@ -36,7 +41,7 @@ export function HeaderApp() {
   // END FUNCTION
 
   return (
-    <HeaderAppContainer>
+    <HeaderAppContainer style={{ paddingTop }}>
       <HeaderAppBox>
         <HeaderAppLogoImage source={logoImage} />
 
@@ -44,7 +49,7 @@ export function HeaderApp() {
       </HeaderAppBox>
 
       <HeaderAppProfileButton onPress={handleProfile}>
-        {player ? (
+        {player.id ? (
           <HeaderAppBoxProfile>
             <HeaderAppPersonText numberOfLines={2} ellipsizeMode="tail">
               Olá, {'\n'}

@@ -10,12 +10,16 @@ import { AppRoutes } from './app.routes';
 import { Loading } from '@components/Loading';
 
 export function Routes() {
-  const { isLoadingStorageData } = useAuth();
+  const { isLoadingUserStorageData } = useAuth();
 
   const themeStyledComponents = useTheme();
 
   const theme = DefaultTheme;
   theme.colors.background = themeStyledComponents.COLORS['blue-dark-color'];
+
+  if (isLoadingUserStorageData) {
+    return <Loading />;
+  }
 
   return (
     <View
@@ -25,7 +29,7 @@ export function Routes() {
       }}
     >
       <NavigationContainer theme={theme}>
-        {isLoadingStorageData ? <Loading /> : <AppRoutes />}
+        <AppRoutes />
       </NavigationContainer>
     </View>
   );

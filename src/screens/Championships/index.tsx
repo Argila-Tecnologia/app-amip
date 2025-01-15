@@ -70,7 +70,7 @@ export function ChampionshipsScreen() {
         ) : (
           <ChampionshipsList
             contentContainerStyle={
-              championships?.length === 0 ? { flex: 1 } : {}
+              championships && championships.length === 0 ? { flex: 1 } : {}
             }
             data={championships}
             keyExtractor={(item) => item.id}
