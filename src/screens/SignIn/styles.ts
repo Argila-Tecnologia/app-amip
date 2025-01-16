@@ -12,12 +12,12 @@ export const SignInContainer = styled.View`
   justify-content: center;
 
   padding: ${RFValue(0)}px ${RFValue(30)}px
-    ${Platform.OS === 'android' ? 150 : 40}px;
+    ${Platform.OS === 'android' ? 10 : 40}px;
 `;
 
 export const LogoImage = styled(Image)`
-  width: ${RFValue(176)}px;
-  height: ${RFValue(200)}px;
+  width: ${RFValue(285)}px;
+  height: ${RFValue(431)}px;
 
   margin-top: ${RFValue(50)}px;
 `;
@@ -39,7 +39,7 @@ export const FormContainer = styled.View`
 export const ForgotPasswordContent = styled.View`
   width: 100%;
 
-  margin-top: ${RFValue(15)}px;
+  margin-top: ${RFValue(5)}px;
 
   justify-content: center;
   align-items: flex-end;
@@ -54,13 +54,13 @@ export const ForgotPasswordButton = styled.TouchableOpacity.attrs({
 export const ForgotPasswordText = styled.Text`
   ${({ theme }) => css`
     font-family: ${theme.FONT_FAMILY.REGULAR};
-    font-size: ${RFValue(theme.FONT_SIZE.MD)}px;
+    font-size: ${RFValue(theme.FONT_SIZE.SM)}px;
     color: ${theme.COLORS['white-color']};
   `};
 `;
 
 export const Footer = styled.View`
-  margin-top: ${RFValue(30)}px;
+  margin-top: ${RFValue(20)}px;
 `;
 
 export const FooterCreateAccountButton = styled.TouchableOpacity`

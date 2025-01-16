@@ -16,7 +16,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 
 import { useAuth } from '@hooks/auth';
 
-import logoImage from '../../assets/logo-AMIP.png';
+import logoImage from '../../assets/AMIP_LOGO.png';
 
 import { Input } from '@components/Form/Input';
 import { Button } from '@components/Form/Button';
@@ -31,7 +31,6 @@ import {
   FormContainer,
   LogoImage,
   SignInContainer,
-  Title,
 } from './styles';
 
 const signInValidationSchema = zod.object({
@@ -75,7 +74,7 @@ export function SignInScreen() {
           type: 'error',
           position: 'bottom',
           text1: 'Credencial inválida',
-          text2: 'Verifique as informações e tente novamente',
+          text2: 'Verifique as informações e tente novamente.',
         });
       }
     },
@@ -88,7 +87,7 @@ export function SignInScreen() {
       <SignInContainer>
         <LogoImage source={logoImage} />
 
-        <Title>Acesse sua conta.</Title>
+        {/* <Title>Acesse sua conta.</Title> */}
 
         <FormContainer>
           <Controller
@@ -99,6 +98,7 @@ export function SignInScreen() {
                 ref={emailRef}
                 autoCapitalize="none"
                 keyboardType="email-address"
+                placeholder="E-mail"
                 value={value}
                 error={errors.email?.message}
                 onChangeText={(text) => {
@@ -118,6 +118,7 @@ export function SignInScreen() {
               <Input
                 ref={passwordRef}
                 secureTextFieldEntry
+                placeholder="Senha"
                 value={value}
                 onChangeText={(text) => {
                   onChange(text);
