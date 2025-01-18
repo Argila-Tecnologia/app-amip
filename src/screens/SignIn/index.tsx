@@ -85,7 +85,7 @@ export function SignInScreen() {
   return (
     <KeyboardAwareScrollView>
       <SignInContainer>
-        <LogoImage source={logoImage} />
+        <LogoImage source={logoImage} contentFit="contain" />
 
         {/* <Title>Acesse sua conta.</Title> */}
 

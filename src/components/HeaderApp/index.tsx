@@ -21,7 +21,6 @@ import {
   HeaderAppTitle,
   HeaderAppProfileButton,
   HeaderAppBoxProfile,
-  HeaderAppPersonText,
   HeaderAppPersonPhotoImage,
   HeaderAppPersonPhotoIcon,
 } from './styles';
@@ -55,10 +54,10 @@ export function HeaderApp() {
       <HeaderAppProfileButton onPress={handleProfile}>
         {player.id ? (
           <HeaderAppBoxProfile>
-            <HeaderAppPersonText numberOfLines={2} ellipsizeMode="tail">
+            {/* <HeaderAppPersonText numberOfLines={2} ellipsizeMode="tail">
               Olá, {'\n'}
               {player.name}
-            </HeaderAppPersonText>
+            </HeaderAppPersonText> */}
 
             <HeaderAppPersonPhotoImage
               source={{

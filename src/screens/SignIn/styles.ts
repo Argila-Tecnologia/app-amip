@@ -16,11 +16,12 @@ export const SignInContainer = styled.View`
 `;
 
 export const LogoImage = styled(Image)`
-  width: ${RFValue(285)}px;
-  height: ${RFValue(431)}px;
+  width: 70%;
+  height: ${RFValue(331)}px;
 
   margin-top: ${RFValue(50)}px;
-`;
+  margin-bottom: ${RFValue(20)}px;
+` as unknown as typeof Image;
 
 export const Title = styled.Text`
   font-family: ${({ theme }) => theme.FONT_FAMILY.BOLD};
