@@ -11,6 +11,8 @@ export const SignInContainer = styled.View`
   align-items: center;
   justify-content: center;
 
+  /* background-color: ${({ theme }) => theme.COLORS['blue-dark-color']}; */
+
   padding: ${RFValue(0)}px ${RFValue(30)}px
     ${Platform.OS === 'android' ? 10 : 40}px;
 `;

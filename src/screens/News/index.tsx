@@ -70,6 +70,7 @@ export function NewsScreen() {
         ) : (
           <NewsList
             contentContainerStyle={news && news.length === 0 ? { flex: 1 } : {}}
+            showsVerticalScrollIndicator={false}
             data={news}
             keyExtractor={(item) => item.id}
             renderItem={({ item: newsItem }) => (
@@ -86,7 +87,7 @@ export function NewsScreen() {
                   <Feather
                     name="chevron-right"
                     size={25}
-                    color={theme.COLORS['black-color']}
+                    color={theme.COLORS['gray-color-400']}
                   />
                 </NewsHeader>
 
@@ -98,6 +99,12 @@ export function NewsScreen() {
                   <NewsDescription numberOfLines={3} ellipsizeMode="tail">
                     {newsItem.content}
                   </NewsDescription>
+
+                  <Feather
+                    name="chevron-right"
+                    size={25}
+                    color={theme.COLORS['gray-color-400']}
+                  />
                 </NewsItem>
               </NewsButton>
             )}

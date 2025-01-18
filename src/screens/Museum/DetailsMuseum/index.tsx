@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
+
 import { ScrollView } from 'react-native';
 
 import { useRoute } from '@react-navigation/native';
+
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import {
   ImageGallery,
@@ -25,6 +28,7 @@ import {
   DetailMuseumContent,
   DetailMuseumGalleryImages,
   DetailMuseumImage,
+  DetailMuseumImageContainer,
   DetailMuseumItemMuseum,
   DetailMuseumMuseumDescription,
   DetailMuseumTitle,
@@ -38,8 +42,11 @@ export function DetailsMuseumScreen() {
   const [isCustomGalleryOpen, setIsCustomGalleryOpen] = useState(false);
 
   const route = useRoute();
+  const insets = useSafeAreaInsets();
 
   const { museumId } = route.params as IDetailsMuseumRouteParams;
+
+  const paddingBottom = insets.bottom;
 
   const openCustomGallery = () => setIsCustomGalleryOpen(true);
   const closeCustomGallery = () => setIsCustomGalleryOpen(false);
@@ -75,24 +82,29 @@ export function DetailsMuseumScreen() {
       {isLoadingDetailMuseum ? (
         <Loading />
       ) : (
-        <ScrollView showsVerticalScrollIndicator={false}>
+        <ScrollView
+          style={{ flexGrow: 1 }}
+          showsVerticalScrollIndicator={false}
+        >
           {museum && (
             <DetailMuseumContent>
               <DetailMuseumTitle>{museum.title}</DetailMuseumTitle>
 
               <DetailMuseumItemMuseum>
                 {museum.image_url && (
-                  <DetailMuseumImage
-                    source={{ uri: museum.image_url }}
-                    contentFit="cover"
-                  />
+                  <DetailMuseumImageContainer>
+                    <DetailMuseumImage
+                      source={{ uri: museum.image_url }}
+                      contentFit="cover"
+                    />
+                  </DetailMuseumImageContainer>
                 )}
 
                 <DetailMuseumMuseumDescription>
                   {museum.description}
                 </DetailMuseumMuseumDescription>
 
-                <DetailMuseumGalleryImages>
+                <DetailMuseumGalleryImages style={{ paddingBottom }}>
                   {museum.gallery_images &&
                     museum.gallery_images.length > 0 && (
                       <>

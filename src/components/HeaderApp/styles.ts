@@ -11,9 +11,9 @@ export const HeaderAppContainer = styled.View`
   flex-direction: row;
   align-items: center;
 
-  background-color: ${({ theme }) => theme.COLORS['gray-color-300']};
+  background-color: ${({ theme }) => theme.COLORS['blue-dark-color']};
 
-  padding: 0 ${RFValue(16)}px;
+  padding: 0 ${RFValue(8)}px ${RFValue(10)}px;
 `;
 
 export const HeaderAppBox = styled.View`

@@ -4,6 +4,8 @@ import { Alert, ScrollView, Linking } from 'react-native';
 
 import { useNavigation, useRoute } from '@react-navigation/native';
 
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+
 import { Feather } from '@expo/vector-icons';
 
 import { useTheme } from 'styled-components/native';
@@ -27,6 +29,7 @@ import {
   DetailChampionshipContent,
   DetailChampionshipIconContainer,
   DetailChampionshipImage,
+  DetailChampionshipImageContainer,
   DetailChampionshipInfoContainer,
   DetailChampionshipInfoDescription,
   DetailChampionshipLinkVideoButton,
@@ -46,8 +49,11 @@ export function DetailsChampionshipScreen() {
   const route = useRoute();
   const navigation = useNavigation();
   const { player } = useAuth();
+  const insets = useSafeAreaInsets();
 
   const { championshipId } = route.params as IDetailChampionshipRouteParams;
+
+  const paddingBottom = insets.bottom;
 
   // FUNCTIONS
   const handlePressLinkVideo = useCallback(async (video: string) => {
@@ -118,7 +124,13 @@ export function DetailsChampionshipScreen() {
       {isLoadingDetailChampionship ? (
         <Loading />
       ) : (
-        <ScrollView showsVerticalScrollIndicator={false}>
+        <ScrollView
+          contentContainerStyle={{
+            paddingBottom,
+          }}
+          style={{ flexGrow: 1 }}
+          showsVerticalScrollIndicator={false}
+        >
           {championship && (
             <DetailChampionshipContent>
               <DetailChampionshipTitle>
@@ -127,10 +139,12 @@ export function DetailsChampionshipScreen() {
 
               <DetailChampionshipInfoContainer>
                 {championship.avatar_url && (
-                  <DetailChampionshipImage
-                    source={{ uri: championship.avatar_url }}
-                    contentFit="cover"
-                  />
+                  <DetailChampionshipImageContainer>
+                    <DetailChampionshipImage
+                      source={{ uri: championship.avatar_url }}
+                      contentFit="cover"
+                    />
+                  </DetailChampionshipImageContainer>
                 )}
 
                 <DetailChampionshipInfoDescription>
@@ -148,25 +162,23 @@ export function DetailsChampionshipScreen() {
 
                   <DetailChampionshipPlaceDateContent>
                     <DetailChampionshipPlaceDateText>
-                      mkmkmkmkmkmkmkmkmLocal: {championship.place}
+                      Local: {championship.place}
                     </DetailChampionshipPlaceDateText>
                   </DetailChampionshipPlaceDateContent>
 
-                  <DetailChampionshipPlaceDateContainer>
-                    <DetailChampionshipIconContainer>
-                      <Feather
-                        name="calendar"
-                        size={15}
-                        color={theme.COLORS['black-color']}
-                      />
-                    </DetailChampionshipIconContainer>
+                  <DetailChampionshipIconContainer>
+                    <Feather
+                      name="calendar"
+                      size={15}
+                      color={theme.COLORS['black-color']}
+                    />
+                  </DetailChampionshipIconContainer>
 
-                    {/* <DetailChampionshipPlaceDateContent>
-                      <DetailChampionshipPlaceDateText>
-                        Data: {championship.date}
-                      </DetailChampionshipPlaceDateText>
-                    </DetailChampionshipPlaceDateContent> */}
-                  </DetailChampionshipPlaceDateContainer>
+                  <DetailChampionshipPlaceDateContent>
+                    <DetailChampionshipPlaceDateText>
+                      Data: {championship.date}
+                    </DetailChampionshipPlaceDateText>
+                  </DetailChampionshipPlaceDateContent>
                 </DetailChampionshipPlaceDateContainer>
 
                 {championship.value > 0 && (

@@ -29,31 +29,42 @@ export const DetailMuseumTitle = styled.Text`
 `;
 
 export const DetailMuseumItemMuseum = styled.View`
-  width: 110%;
+  width: 100%;
 
   flex-direction: column;
   align-items: center;
 
-  margin: ${RFValue(10)}px ${RFValue(0)}px ${RFValue(20)}px ${RFValue(0)}px;
+  /* margin: ${RFValue(10)}px ${RFValue(0)}px ${RFValue(20)}px ${RFValue(
+    0,
+  )}px; */
+`;
+
+export const DetailMuseumImageContainer = styled.View`
+  width: 100%;
+  height: ${RFValue(400)}px;
+
+  border-radius: 10px;
+
+  overflow: hidden;
+
+  margin: ${RFValue(20)}px 0;
 `;
 
 export const DetailMuseumImage = styled(Image)`
   width: 100%;
-  height: ${RFValue(400)}px;
-
-  margin-top: ${RFValue(5)}px;
-  margin-bottom: ${RFValue(20)}px;
+  height: 100%;
 ` as unknown as typeof Image;
 
 export const DetailMuseumMuseumDescription = styled.Text`
   width: 100%;
 
   font-family: ${({ theme }) => theme.FONT_FAMILY.REGULAR};
+  font-size: ${({ theme }) => theme.FONT_SIZE.LG}px;
   text-align: justify;
   margin-top: ${RFValue(10)}px;
-  margin-bottom: ${RFValue(15)}px;
+  margin-bottom: ${RFValue(30)}px;
 `;
 
 export const DetailMuseumGalleryImages = styled.View`
-  width: ${RFValue(100)}%;
+  width: 100%;
 `;

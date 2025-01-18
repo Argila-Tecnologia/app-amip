@@ -10,6 +10,8 @@ import { INewsDTO } from '@dtos/news-dto';
 
 export const NewsContainer = styled.View`
   flex: 1;
+
+  background-color: ${({ theme }) => theme.COLORS['gray-color-100']};
 `;
 
 export const NewsContent = styled.View`
@@ -65,8 +67,8 @@ export const NewsItem = styled.View`
 `;
 
 export const NewsImage = styled(Image)`
-  width: ${RFValue(65)}px;
-  height: ${RFValue(65)}px;
+  width: ${RFValue(50)}px;
+  height: ${RFValue(50)}px;
 
   margin-right: ${RFValue(15)}px;
 
@@ -85,6 +87,8 @@ export const NewsDescription = styled.Text`
   `};
 
   text-align: justify;
+
+  margin-right: 20px;
 `;
 
 export const NewsEmptyContainer = styled.View`

@@ -15,7 +15,7 @@ export function Routes() {
   const themeStyledComponents = useTheme();
 
   const theme = DefaultTheme;
-  theme.colors.background = themeStyledComponents.COLORS['blue-dark-color'];
+  theme.colors.background = themeStyledComponents.COLORS['gray-color-300'];
 
   if (isLoadingUserStorageData) {
     return <Loading />;
@@ -25,7 +25,7 @@ export function Routes() {
     <View
       style={{
         flex: 1,
-        backgroundColor: themeStyledComponents.COLORS['blue-dark-color'],
+        backgroundColor: themeStyledComponents.COLORS['gray-color-300'],
       }}
     >
       <NavigationContainer theme={theme}>

@@ -2,8 +2,6 @@ import { useCallback, useRef, useState } from 'react';
 
 import { Pressable, TextInput } from 'react-native';
 
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-
 import { z as zod } from 'zod';
 
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -56,9 +54,6 @@ export function SignUpScreen() {
 
   const { signIn } = useAuth();
   const theme = useTheme();
-  const insets = useSafeAreaInsets();
-
-  const paddingTop = insets.top + 10;
 
   const nameRef = useRef<TextInput>(null);
   const emailRef = useRef<TextInput>(null);
@@ -135,7 +130,7 @@ export function SignUpScreen() {
   return (
     <KeyboardAwareScrollView>
       <SignUpContainer>
-        <Header style={{ paddingTop }} title="Crie sua conta" />
+        <Header title="Crie sua conta" />
 
         <SignUpContent>
           <FormContainer>

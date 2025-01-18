@@ -4,14 +4,14 @@ import { RFValue } from 'react-native-responsive-fontsize';
 
 export const HeaderContainer = styled.View`
   width: 100%;
-  height: ${RFValue(70)}px;
+  /* height: ${RFValue(70)}px; */
 
   flex-direction: row;
   align-items: center;
 
   background-color: ${({ theme }) => theme.COLORS['blue-dark-color']};
 
-  padding: ${RFValue(0)}px ${RFValue(8)}px;
+  padding: ${RFValue(0)}px ${RFValue(8)}px ${RFValue(10)}px;
 `;
 
 export const HeaderBackButton = styled.TouchableOpacity.attrs({

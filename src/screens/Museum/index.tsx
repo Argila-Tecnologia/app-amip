@@ -73,6 +73,7 @@ export function MuseumsScreen() {
             contentContainerStyle={
               museums && museums.length === 0 ? { flex: 1 } : {}
             }
+            showsVerticalScrollIndicator={false}
             data={museums}
             keyExtractor={(museumItem) => museumItem.id}
             ItemSeparatorComponent={() => <Divider />}
@@ -82,12 +83,6 @@ export function MuseumsScreen() {
                   <MuseumHeaderTitleContainer>
                     <MuseumHeaderTitle>{museumItem.title}</MuseumHeaderTitle>
                   </MuseumHeaderTitleContainer>
-
-                  <Feather
-                    name="chevron-right"
-                    size={25}
-                    color={theme.COLORS['black-color']}
-                  />
                 </MuseumHeader>
 
                 <MuseumItemContent>
@@ -101,6 +96,12 @@ export function MuseumsScreen() {
                   <MuseumDescription numberOfLines={3} ellipsizeMode="tail">
                     {museumItem.description}
                   </MuseumDescription>
+
+                  <Feather
+                    name="chevron-right"
+                    size={25}
+                    color={theme.COLORS['gray-color-400']}
+                  />
                 </MuseumItemContent>
               </MuseumButton>
             )}

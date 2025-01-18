@@ -141,18 +141,14 @@ export function ProfileScreen() {
         );
 
         if (avatarUpdateResponse.status === 200) {
-          const playerUpdated = player;
-
-          playerUpdated.avatar = avatarUpdateResponse.data.parent.avatar;
-          playerUpdated.avatar_url =
-            avatarUpdateResponse.data.parent.avatar_url;
+          const playerUpdated = avatarUpdateResponse.data;
 
           await updatePlayerProfile(playerUpdated);
 
           Toast.show({
             type: 'success',
             text2: 'Foto atualizada',
-            position: 'top',
+            position: 'bottom',
           });
         }
       }
@@ -176,6 +172,8 @@ export function ProfileScreen() {
         text1: 'Equipe AMIP',
         text2: 'Não foi possível atualizar a foto!',
       });
+    } finally {
+      setIsLoadingUpdatePhoto(false);
     }
   }, [handleToggleTakePhotoModal, player, updatePlayerProfile]);
 
@@ -232,25 +230,19 @@ export function ProfileScreen() {
           '/players/update/avatar',
           playerPhotoUploadForm,
           {
-            headers: {
-              'Content-Type': 'multipart/form-data',
-            },
+            headers: { 'Content-Type': 'multipart/form-data' },
           },
         );
 
         if (avatarUpdateResponse.status === 200) {
-          const playerUpdated = player;
-
-          playerUpdated.avatar = avatarUpdateResponse.data.parent.avatar;
-          playerUpdated.avatar_url =
-            avatarUpdateResponse.data.parent.avatar_url;
+          const playerUpdated = avatarUpdateResponse.data;
 
           await updatePlayerProfile(playerUpdated);
 
           Toast.show({
             type: 'success',
             text2: 'Foto atualizada',
-            position: 'top',
+            position: 'bottom',
           });
         }
       }
@@ -274,8 +266,11 @@ export function ProfileScreen() {
         text1: 'Equipe AMIP',
         text2: 'Não foi possível atualizar a foto!',
       });
+    } finally {
+      setIsLoadingUpdatePhoto(false);
     }
   }, [handleToggleTakePhotoModal, player, updatePlayerProfile]);
+
   // END UPDATE PHOTO
 
   // END FUNCTIONS
@@ -284,7 +279,7 @@ export function ProfileScreen() {
     <ProfileContainer>
       <Header title="Perfil" />
 
-      <ScrollView showsVerticalScrollIndicator={false}>
+      <ScrollView style={{ flexGrow: 1 }} showsVerticalScrollIndicator={false}>
         <ProfileContent>
           <ProfileAvatarImageNameContainer>
             {player && (
@@ -323,22 +318,6 @@ export function ProfileScreen() {
           </ProfileAvatarImageNameContainer>
 
           <ProfileOptionsContent>
-            {player.id && (
-              <ProfileOptionButton>
-                <ProfileOptionButtonIcon>
-                  <Feather
-                    name="log-in"
-                    size={27}
-                    color={theme.COLORS['black-color']}
-                  />
-                </ProfileOptionButtonIcon>
-
-                <ProfileOptionButtonTitle>
-                  Atualizar perfil
-                </ProfileOptionButtonTitle>
-              </ProfileOptionButton>
-            )}
-
             {player && (
               <>
                 <ProfileOptionButton
@@ -409,16 +388,17 @@ export function ProfileScreen() {
               </ProfileOptionButton>
             )}
           </ProfileOptionsContent>
-
-          {/* MODALS */}
-          <ChooseTakePhotoModal
-            isOpenModal={openTakePhotoModal}
-            onCloseModal={handleToggleTakePhotoModal}
-            onTakePhotoCamera={handleTakePhotoCamera}
-            onTakePhotoGallery={handleTakePhotoGallery}
-          />
         </ProfileContent>
       </ScrollView>
+
+      {/* MODALS */}
+
+      <ChooseTakePhotoModal
+        isOpenModal={openTakePhotoModal}
+        onCloseModal={handleToggleTakePhotoModal}
+        onTakePhotoCamera={handleTakePhotoCamera}
+        onTakePhotoGallery={handleTakePhotoGallery}
+      />
     </ProfileContainer>
   );
 }

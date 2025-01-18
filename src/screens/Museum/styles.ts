@@ -67,8 +67,8 @@ export const MuseumItemContent = styled.View`
 `;
 
 export const MuseumImage = styled(Image)`
-  width: ${RFValue(65)}px;
-  height: ${RFValue(65)}px;
+  width: ${RFValue(50)}px;
+  height: ${RFValue(50)}px;
 
   margin-right: ${RFValue(15)}px;
 
@@ -87,6 +87,8 @@ export const MuseumDescription = styled.Text`
   `};
 
   text-align: justify;
+
+  margin-right: 20px;
 `;
 
 export const MuseumsEmptyContainer = styled.View`

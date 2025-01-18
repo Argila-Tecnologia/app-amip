@@ -67,8 +67,8 @@ export const ChampionshipsItemContent = styled.View`
 `;
 
 export const ChampionshipsImage = styled(Image)`
-  width: ${RFValue(65)}px;
-  height: ${RFValue(65)}px;
+  width: ${RFValue(50)}px;
+  height: ${RFValue(50)}px;
 
   margin-right: ${RFValue(15)}px;
 
@@ -87,6 +87,8 @@ export const ChampionshipsDescription = styled.Text`
   `};
 
   text-align: justify;
+
+  margin-right: 20px;
 `;
 
 export const ChampionshipsEmptyContainer = styled.View`

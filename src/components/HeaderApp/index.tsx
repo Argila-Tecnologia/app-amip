@@ -18,7 +18,6 @@ import {
   HeaderAppContainer,
   HeaderAppBox,
   HeaderAppLogoImage,
-  HeaderAppTitle,
   HeaderAppProfileButton,
   HeaderAppBoxProfile,
   HeaderAppPersonPhotoImage,
@@ -48,7 +47,7 @@ export function HeaderApp() {
       <HeaderAppBox>
         <HeaderAppLogoImage source={logoImage} />
 
-        <HeaderAppTitle>AMIP</HeaderAppTitle>
+        {/* <HeaderAppTitle>AMIP</HeaderAppTitle> */}
       </HeaderAppBox>
 
       <HeaderAppProfileButton onPress={handleProfile}>

@@ -73,6 +73,7 @@ export function ChampionshipsScreen() {
             contentContainerStyle={
               championships && championships.length === 0 ? { flex: 1 } : {}
             }
+            showsVerticalScrollIndicator={false}
             data={championships}
             keyExtractor={(item) => item.id}
             ItemSeparatorComponent={() => <Divider />}
@@ -88,12 +89,6 @@ export function ChampionshipsScreen() {
                       {championshipItem.name}
                     </ChampionshipsHeaderTitleText>
                   </ChampionshipsHeaderTitleContainer>
-
-                  <Feather
-                    name="chevron-right"
-                    size={25}
-                    color={theme.COLORS['black-color']}
-                  />
                 </ChampionshipsHeaderContainer>
 
                 <ChampionshipsItemContent>
@@ -110,6 +105,12 @@ export function ChampionshipsScreen() {
                   >
                     {championshipItem.description}
                   </ChampionshipsDescription>
+
+                  <Feather
+                    name="chevron-right"
+                    size={25}
+                    color={theme.COLORS['gray-color-400']}
+                  />
                 </ChampionshipsItemContent>
               </ChampionshipsButton>
             )}

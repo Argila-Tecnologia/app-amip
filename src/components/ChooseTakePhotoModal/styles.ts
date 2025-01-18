@@ -2,7 +2,9 @@ import styled from 'styled-components/native';
 
 import { RFValue } from 'react-native-responsive-fontsize';
 
-export const ChooseTakePhotoModalContent = styled.View`
+import { BottomSheetView } from '@gorhom/bottom-sheet';
+
+export const ChooseTakePhotoModalContent = styled(BottomSheetView)`
   height: ${RFValue(100)}px;
 
   flex: 1;

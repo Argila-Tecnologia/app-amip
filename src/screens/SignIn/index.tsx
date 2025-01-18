@@ -4,6 +4,8 @@ import { TextInput } from 'react-native';
 
 import { useNavigation } from '@react-navigation/native';
 
+import { useTheme } from 'styled-components/native';
+
 import { z as zod } from 'zod';
 
 import Toast from 'react-native-toast-message';
@@ -45,6 +47,7 @@ export function SignInScreen() {
 
   const navigation = useNavigation();
   const { signIn } = useAuth();
+  const theme = useTheme();
 
   const {
     control,
@@ -83,7 +86,9 @@ export function SignInScreen() {
   // END FUNCTION
 
   return (
-    <KeyboardAwareScrollView>
+    <KeyboardAwareScrollView
+      style={{ backgroundColor: theme.COLORS['blue-dark-color'] }}
+    >
       <SignInContainer>
         <LogoImage source={logoImage} contentFit="contain" />
 
@@ -101,6 +106,7 @@ export function SignInScreen() {
                 placeholder="E-mail"
                 value={value}
                 error={errors.email?.message}
+                returnKeyType="next"
                 onChangeText={(text) => {
                   onChange(text);
                 }}
@@ -120,10 +126,12 @@ export function SignInScreen() {
                 secureTextFieldEntry
                 placeholder="Senha"
                 value={value}
+                error={errors.password?.message}
+                returnKeyType="done"
                 onChangeText={(text) => {
                   onChange(text);
                 }}
-                error={errors.password?.message}
+                onSubmitEditing={handleSubmit(handleFormSubmit)}
               />
             )}
           />

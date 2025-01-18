@@ -116,9 +116,9 @@ const AuthProvider = ({ children }: IAuthProviderProps) => {
   }, []);
 
   const updatePlayerProfile = useCallback(async (player: IPlayerDTO) => {
-    setPlayer(player);
-
     await playerAddStorage(player);
+
+    setPlayer(player);
   }, []);
 
   const loadData = useCallback(async () => {

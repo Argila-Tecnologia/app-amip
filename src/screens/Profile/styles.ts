@@ -105,6 +105,6 @@ export const ProfileOptionButtonIcon = styled.View`
 `;
 
 export const ProfileOptionButtonTitle = styled.Text`
-  font-size: ${({ theme }) => RFValue(theme.FONT_SIZE.XL)}px;
+  font-size: ${({ theme }) => RFValue(theme.FONT_SIZE.LG)}px;
   color: ${({ theme }) => theme.COLORS['black-color']};
 `;

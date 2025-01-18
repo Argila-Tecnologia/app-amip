@@ -17,12 +17,14 @@ import { Header } from '@components/Header';
 
 import {
   BoxNews,
+  DetailNewsDescription,
+  DetailNewsImageContainer,
   DetailNewsLinkVideoButton,
   DetailNewsLinkVideoButtonText,
   DetailsNewsContainer,
   DetailsNewsContent,
   DetailsNewsTitle,
-  ImageNews,
+  DetailNewsImage,
 } from './styles';
 
 type IDetailNewsRouteParams = {
@@ -76,29 +78,36 @@ export function DetailsNewsScreen() {
       {isLoadingNews ? (
         <Loading />
       ) : (
-        <ScrollView showsVerticalScrollIndicator={false}>
+        <ScrollView
+          style={{ flexGrow: 1 }}
+          showsVerticalScrollIndicator={false}
+        >
           {news && (
             <DetailsNewsContent>
               <DetailsNewsTitle>{news.title}</DetailsNewsTitle>
 
               <BoxNews>
                 {news.image_url && (
-                  <ImageNews
-                    source={{ uri: news.image_url }}
-                    contentFit="cover"
-                  />
+                  <DetailNewsImageContainer>
+                    <DetailNewsImage
+                      source={{ uri: news.image_url }}
+                      contentFit="cover"
+                    />
+                  </DetailNewsImageContainer>
                 )}
-              </BoxNews>
 
-              <DetailNewsLinkVideoButton
-                onPress={() => {
-                  handlePressLinkVideo(news.video);
-                }}
-              >
-                <DetailNewsLinkVideoButtonText>
-                  Veja mais detalhes da matéria neste link!
-                </DetailNewsLinkVideoButtonText>
-              </DetailNewsLinkVideoButton>
+                <DetailNewsDescription>{news.content}</DetailNewsDescription>
+
+                <DetailNewsLinkVideoButton
+                  onPress={() => {
+                    handlePressLinkVideo(news.video);
+                  }}
+                >
+                  <DetailNewsLinkVideoButtonText>
+                    Veja mais detalhes da matéria neste link!
+                  </DetailNewsLinkVideoButtonText>
+                </DetailNewsLinkVideoButton>
+              </BoxNews>
             </DetailsNewsContent>
           )}
         </ScrollView>

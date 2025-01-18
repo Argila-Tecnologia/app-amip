@@ -1,6 +1,6 @@
-import BottomSheet from '@gorhom/bottom-sheet';
-
 import { useEffect, useRef, useMemo, useCallback } from 'react';
+
+import BottomSheet from '@gorhom/bottom-sheet';
 
 import { useTheme } from 'styled-components/native';
 
@@ -20,7 +20,7 @@ interface IChooseTakePhotoModalProps {
   onTakePhotoGallery: () => void;
 }
 
-const INITIAL_POSITION_BOTTOM_SHEET = -1;
+const INITIAL_POSITION_BOTTOM_SHEET = 10;
 
 export function ChooseTakePhotoModal({
   isOpenModal,
@@ -58,13 +58,13 @@ export function ChooseTakePhotoModal({
       ref={bottomSheetRef}
       index={INITIAL_POSITION_BOTTOM_SHEET} // NOTE bottom sheet initial hidden
       snapPoints={snapPoints}
-      // enableHandlePanningGesture={false}
       onChange={(index) => {
         if (index === 0) {
           onCloseModal();
         }
       }}
     >
+      {/* <BottomSheetView style={{ flex: 1 }}> */}
       <ChooseTakePhotoModalContent>
         <BoxOptionsTakePhoto>
           <TakePhotoButton onPress={onTakePhotoCamera}>
@@ -86,6 +86,7 @@ export function ChooseTakePhotoModal({
           </TakePhotoButton>
         </BoxOptionsTakePhoto>
       </ChooseTakePhotoModalContent>
+      {/* </BottomSheetView> */}
     </BottomSheet>
   );
 }
