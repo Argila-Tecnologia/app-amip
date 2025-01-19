@@ -1,4 +1,4 @@
-import styled from 'styled-components/native';
+import styled, { css } from 'styled-components/native';
 import { RFValue } from 'react-native-responsive-fontsize';
 
 export const ForgotPasswordContainer = styled.View`
@@ -22,15 +22,18 @@ export const ForgotPasswordInfo = styled.View`
 export const ForgotPasswordInfoTitle = styled.Text`
   align-items: flex-start;
 
-  font-size: ${RFValue(22)}px;
-  font-family: ${({ theme }) => theme.fonts.medium};
-  color: ${({ theme }) => theme.colors['black-color']};
+  ${({ theme }) => css`
+    font-family: ${theme.FONT_FAMILY.BOLD};
+    font-size: ${RFValue(theme.FONT_SIZE.LG)}px;
+    color: ${theme.COLORS['black-color']};
+  `};
+
   text-align: left;
 `;
 
 export const ForgotPasswordInfoText = styled.Text`
-  font-size: ${RFValue(18)}px;
-  color: ${({ theme }) => theme.colors['black-color']};
+  font-size: ${({ theme }) => RFValue(theme.FONT_SIZE.LG)}px;
+  color: ${({ theme }) => theme.COLORS['black-color']};
 
   margin-top: ${RFValue(10)}px;
 `;
@@ -51,16 +54,18 @@ export const ForgotPasswordFooterCreateAccountButton = styled.TouchableOpacity.a
   },
 )`
   width: 100%;
-  height: ${RFValue(60)}px;
+  height: ${RFValue(50)}px;
 
-  background: ${({ theme }) => theme.colors['blue-dark-color']};
+  background: ${({ theme }) => theme.COLORS['blue-dark-color']};
   border-radius: ${RFValue(10)}px;
 `;
 
 export const ForgotPasswordFooterCreateAccountButtonText = styled.Text`
-  font-family: ${({ theme }) => theme.fonts.medium};
-  font-size: ${RFValue(20)}px;
-  color: ${({ theme }) => theme.colors['white-color']};
+  ${({ theme }) => css`
+    font-family: ${theme.FONT_FAMILY.BOLD};
+    font-size: ${RFValue(theme.FONT_SIZE.LG)}px;
+    color: ${theme.COLORS['white-color']};
+  `};
 
   text-transform: uppercase;
   text-align: center;

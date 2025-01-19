@@ -1,4 +1,4 @@
-import styled from 'styled-components/native';
+import styled, { css } from 'styled-components/native';
 
 import { Switch, TouchableOpacity } from 'react-native';
 
@@ -23,9 +23,11 @@ export const EditProfileForm = styled.View``;
 export const EditProfileMaritalStatusContainer = styled.View``;
 
 export const Label = styled.Text`
-  font-family: ${({ theme }) => theme.fonts.regular};
-  font-size: ${RFValue(15)}px;
-  color: ${({ theme }) => theme.colors['gray-color-400']};
+  ${({ theme }) => css`
+    font-family: ${theme.FONT_FAMILY.REGULAR};
+    font-size: ${RFValue(theme.FONT_SIZE.MD)}px;
+    color: ${theme.COLORS['gray-color-400']};
+  `};
 `;
 
 export const EditProfileButtonContainer = styled.View`
@@ -49,14 +51,17 @@ export const EditProfileActionButton = styled(TouchableOpacity).attrs({
 
   margin-left: ${RFValue(65)}px;
 
-  background-color: ${({ theme }) => theme.colors['blue-dark-color']};
+  background-color: ${({ theme }) => theme.COLORS['blue-dark-color']};
   border-radius: 6px;
 `;
 
 export const EditProfileActionButtonText = styled.Text`
-  font-family: ${({ theme }) => theme.fonts.medium};
-  color: ${({ theme }) => theme.colors['white-color']};
-  font-size: ${RFValue(18)}px;
+  ${({ theme }) => css`
+    font-family: ${theme.FONT_FAMILY.BOLD};
+    font-size: ${RFValue(theme.FONT_SIZE.LG)}px;
+    color: ${theme.COLORS['white-color']};
+  `};
+
   text-transform: uppercase;
 `;
 

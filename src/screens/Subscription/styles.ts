@@ -39,7 +39,7 @@ export const SubscriptionActionButton = styled(TouchableOpacity).attrs({
   activeOpacity: 0.7,
 })`
   width: ${RFValue(250)}px;
-  height: ${RFValue(60)}px;
+  height: ${RFValue(50)}px;
 
   align-items: center;
   justify-content: center;
