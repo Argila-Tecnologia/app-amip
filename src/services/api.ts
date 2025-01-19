@@ -123,7 +123,7 @@ api.registerInterceptTokenManager = (signOut) => {
           } catch (error: any) {
             /**
              * CASO DÊ ERRO PARA OBTER O TOKEN
-             * PECORREMOS A FILA DE REQUISIÇÕES
+             * PERCORREMOS A FILA DE REQUISIÇÕES
              * E INFORMAMOS O ERRO NA REQUEST
              *
              */

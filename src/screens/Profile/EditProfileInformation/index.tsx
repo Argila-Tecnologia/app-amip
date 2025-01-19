@@ -163,7 +163,7 @@ export function EditProfileInformationScreen() {
   );
   // END FUNCTIONS
 
-  const { isLoading: isLoadingEditProfile } = useQuery({
+  const { isLoading: isLoadingEditProfile } = useQuery<IPlayerDTO | undefined>({
     queryKey: ['editProfile'],
     queryFn: async () => {
       const response = await api.get('/players/me');
@@ -184,6 +184,8 @@ export function EditProfileInformationScreen() {
 
         setValue('birthday', dateFormatted);
         // setDateBirthday(dateFormatted);
+
+        return responsePlayer;
       }
     },
   });

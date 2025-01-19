@@ -230,7 +230,9 @@ export function ProfileScreen() {
           '/players/update/avatar',
           playerPhotoUploadForm,
           {
-            headers: { 'Content-Type': 'multipart/form-data' },
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            },
           },
         );
 
@@ -351,7 +353,9 @@ export function ProfileScreen() {
                     />
                   </ProfileOptionButtonIcon>
 
-                  <ProfileOptionButtonTitle>Senha</ProfileOptionButtonTitle>
+                  <ProfileOptionButtonTitle>
+                    Atualizar senha
+                  </ProfileOptionButtonTitle>
                 </ProfileOptionButton>
               </>
             )}
