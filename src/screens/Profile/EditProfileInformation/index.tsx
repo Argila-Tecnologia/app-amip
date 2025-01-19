@@ -205,7 +205,7 @@ export function EditProfileInformationScreen() {
                   <Input
                     ref={nameRef}
                     placeholder="Informe o nome"
-                    placeholderTextColor={theme.colors['gray-color-400']}
+                    placeholderTextColor={theme.COLORS['gray-color-400']}
                     autoCorrect={false}
                     returnKeyType="next"
                     error={errors.name?.message}
@@ -227,7 +227,7 @@ export function EditProfileInformationScreen() {
                   <Input
                     ref={emailRef}
                     placeholder="Informe o e-mail"
-                    placeholderTextColor={theme.colors['gray-color-400']}
+                    placeholderTextColor={theme.COLORS['gray-color-400']}
                     keyboardType="email-address"
                     autoCorrect={false}
                     autoCapitalize="none"
@@ -254,7 +254,7 @@ export function EditProfileInformationScreen() {
                       ref={birthdayRef}
                       style={{ color: '#000' }}
                       placeholder="Informe a data de nascimento"
-                      placeholderTextColor={theme.colors['gray-color-400']}
+                      placeholderTextColor={theme.COLORS['gray-color-400']}
                       editable={false}
                       returnKeyType="next"
                       error={errors.birthday?.message}
@@ -274,7 +274,7 @@ export function EditProfileInformationScreen() {
                 render={({ field: { value, onChange } }) => (
                   <InputMask
                     placeholder="Ex.: DDD + Nº de telefone"
-                    placeholderTextColor={theme.colors['gray-color-400']}
+                    placeholderTextColor={theme.COLORS['gray-color-400']}
                     autoCorrect={false}
                     autoCapitalize="none"
                     returnKeyType="next"

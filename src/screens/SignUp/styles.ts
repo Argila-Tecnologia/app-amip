@@ -1,11 +1,16 @@
 import styled, { css } from 'styled-components/native';
 
-import { Switch, TouchableOpacity } from 'react-native';
+import { Switch, TouchableOpacity, Platform } from 'react-native';
 
 import { RFValue } from 'react-native-responsive-fontsize';
 
 export const SignUpContainer = styled.View`
   flex: 1;
+
+  background-color: ${({ theme }) => theme.COLORS['gray-color-100']};
+
+  padding: ${RFValue(0)}px ${RFValue(0)}px
+    ${Platform.OS === 'android' ? 280 : 40}px;
 `;
 
 export const SignUpContent = styled.View`

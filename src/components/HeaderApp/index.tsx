@@ -12,7 +12,7 @@ import { useAuth } from '@hooks/auth';
 
 import { noImage } from '@utils/no-image';
 
-import logoImage from '../../assets/logo-AMIP.png';
+import logoImage from '../../assets/AMIP_LOGO.png';
 
 import {
   HeaderAppContainer,
@@ -45,7 +45,7 @@ export function HeaderApp() {
   return (
     <HeaderAppContainer style={{ paddingTop }}>
       <HeaderAppBox>
-        <HeaderAppLogoImage source={logoImage} />
+        <HeaderAppLogoImage source={logoImage} contentFit="contain" />
 
         {/* <HeaderAppTitle>AMIP</HeaderAppTitle> */}
       </HeaderAppBox>

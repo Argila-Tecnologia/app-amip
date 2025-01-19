@@ -6,6 +6,8 @@ import { RFValue } from 'react-native-responsive-fontsize';
 
 export const ProfileContainer = styled.View`
   flex: 1;
+
+  background-color: ${({ theme }) => theme.COLORS['gray-color-100']};
 `;
 
 export const ProfileContent = styled.View`

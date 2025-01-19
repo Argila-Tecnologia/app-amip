@@ -25,6 +25,7 @@ import {
   DetailsNewsContent,
   DetailsNewsTitle,
   DetailNewsImage,
+  DetailNewsLinkVideoButtonTextLink,
 } from './styles';
 
 type IDetailNewsRouteParams = {
@@ -104,7 +105,10 @@ export function DetailsNewsScreen() {
                   }}
                 >
                   <DetailNewsLinkVideoButtonText>
-                    Veja mais detalhes da matéria neste link!
+                    Veja mais detalhes da matéria{' '}
+                    <DetailNewsLinkVideoButtonTextLink>
+                      neste link!
+                    </DetailNewsLinkVideoButtonTextLink>
                   </DetailNewsLinkVideoButtonText>
                 </DetailNewsLinkVideoButton>
               </BoxNews>

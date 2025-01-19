@@ -4,6 +4,8 @@ import { RFValue } from 'react-native-responsive-fontsize';
 
 export const ContactContainer = styled.View`
   flex: 1;
+
+  background-color: ${({ theme }) => theme.COLORS['gray-color-100']};
 `;
 
 export const ContactContent = styled.View`

@@ -16,6 +16,7 @@ import { HeaderApp } from '@components/HeaderApp';
 import { Loading } from '@components/Loading';
 
 import {
+  Divider,
   NewsButton,
   NewsContainer,
   NewsContent,
@@ -73,6 +74,7 @@ export function NewsScreen() {
             showsVerticalScrollIndicator={false}
             data={news}
             keyExtractor={(item) => item.id}
+            ItemSeparatorComponent={() => <Divider />}
             renderItem={({ item: newsItem }) => (
               <NewsButton
                 onPress={() => {

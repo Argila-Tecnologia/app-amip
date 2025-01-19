@@ -1,6 +1,6 @@
 import styled, { css } from 'styled-components/native';
 import { RFValue } from 'react-native-responsive-fontsize';
-import { TouchableOpacity } from 'react-native';
+import { Platform, TouchableOpacity } from 'react-native';
 
 interface ICategoryButtonProps {
   active: boolean;
@@ -8,6 +8,11 @@ interface ICategoryButtonProps {
 
 export const SubscriptionContainer = styled.View`
   flex: 1;
+
+  background-color: ${({ theme }) => theme.COLORS['gray-color-100']};
+
+  padding: ${RFValue(0)}px ${RFValue(0)}px
+    ${Platform.OS === 'android' ? 250 : 40}px;
 `;
 
 export const SubscriptionContent = styled.View`
@@ -83,7 +88,7 @@ export const SubscriptionCategoriesContainer = styled.View`
   flex: 1;
 
   margin-top: ${RFValue(10)}px;
-  margin-bottom: ${RFValue(10)}px;
+  margin-bottom: ${RFValue(90)}px;
 `;
 
 export const SubscriptionCategoriesTitle = styled.Text`

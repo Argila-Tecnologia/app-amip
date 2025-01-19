@@ -33,11 +33,11 @@ export const InputContent = styled(View)<IContentProps>`
 
   padding: 0 ${RFValue(16)}px;
 
-  background: ${({ theme }) => theme.COLORS['white-color']};
+  background: ${({ theme }) => theme.COLORS['gray-color-100']};
 
   border-radius: ${RFValue(10)}px;
   border-width: ${RFValue(2)}px;
-  border-color: ${({ theme }) => theme.COLORS['gray-color-200']};
+  border-color: ${({ theme }) => theme.COLORS['blue-dark-color']};
 
   margin-bottom: ${RFValue(8)}px;
 

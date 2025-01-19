@@ -23,12 +23,12 @@ export const HeaderAppBox = styled.View`
 `;
 
 export const HeaderAppLogoImage = styled(Image)`
-  width: ${RFValue(55)}px;
+  width: 20%;
   height: ${RFValue(70)}px;
 
-  margin-left: ${RFValue(5)}px;
+  margin-left: ${RFValue(10)}px;
   margin-right: ${RFValue(10)}px;
-`;
+` as unknown as typeof Image;
 
 export const HeaderAppTitle = styled.Text`
   ${({ theme }) => css`
@@ -69,6 +69,7 @@ export const HeaderAppPersonPhotoImage = styled(Image)`
 
   border-radius: ${RFValue(25)}px;
 
+  margin-top: ${RFValue(20)}px;
   margin-left: ${RFValue(0)}px;
   margin-right: ${RFValue(5)}px;
 ` as unknown as typeof Image;

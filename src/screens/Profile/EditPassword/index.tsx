@@ -12,8 +12,6 @@ import Toast from 'react-native-toast-message';
 
 import { AxiosError } from 'axios';
 
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-
 import { useTheme } from 'styled-components/native';
 
 import { api } from '@services/api';
@@ -28,7 +26,6 @@ import {
   EditPasswordContainer,
   EditPasswordContent,
   EditPasswordFooterContainer,
-  EditPasswordFormContainer,
 } from './styles';
 
 const editPasswordValidationSchema = zod
@@ -130,86 +127,83 @@ export function EditPasswordScreen() {
   // END FUNCTIONS
 
   return (
-    <KeyboardAwareScrollView>
-      <EditPasswordContainer>
-        <Header title="Atualizar senha" />
+    // <KeyboardAwareScrollView>
+    <EditPasswordContainer>
+      <Header title="Atualizar senha" />
 
-        <EditPasswordContent>
-          <EditPasswordFormContainer>
-            <Controller
-              control={control}
-              name="old_password"
-              render={({ field: { value, onChange } }) => (
-                <Input
-                  ref={oldPasswordRef}
-                  autoCapitalize="none"
-                  autoCorrect={false}
-                  icon="lock"
-                  placeholder="Senha atual"
-                  placeholderTextColor={theme.COLORS['gray-color-400']}
-                  secureTextFieldEntry
-                  returnKeyType="next"
-                  error={errors.old_password?.message}
-                  value={value}
-                  onChangeText={(text) => {
-                    onChange(text);
-                  }}
-                  onSubmitEditing={() => {
-                    passwordRef.current?.focus();
-                  }}
-                />
-              )}
+      <EditPasswordContent>
+        <Controller
+          control={control}
+          name="old_password"
+          render={({ field: { value, onChange } }) => (
+            <Input
+              ref={oldPasswordRef}
+              autoCapitalize="none"
+              autoCorrect={false}
+              icon="lock"
+              placeholder="Senha atual"
+              placeholderTextColor={theme.COLORS['gray-color-400']}
+              secureTextFieldEntry
+              returnKeyType="next"
+              error={errors.old_password?.message}
+              value={value}
+              onChangeText={(text) => {
+                onChange(text);
+              }}
+              onSubmitEditing={() => {
+                passwordRef.current?.focus();
+              }}
             />
+          )}
+        />
 
-            <Controller
-              control={control}
-              name="password"
-              render={({ field: { value, onChange } }) => (
-                <Input
-                  ref={passwordRef}
-                  autoCapitalize="none"
-                  autoCorrect={false}
-                  icon="lock"
-                  placeholder="Nova senha"
-                  placeholderTextColor={theme.COLORS['gray-color-400']}
-                  secureTextFieldEntry
-                  returnKeyType="next"
-                  error={errors.password?.message}
-                  value={value}
-                  onChangeText={(text) => {
-                    onChange(text);
-                  }}
-                  onSubmitEditing={() => {
-                    passwordConfirmRef.current?.focus();
-                  }}
-                />
-              )}
+        <Controller
+          control={control}
+          name="password"
+          render={({ field: { value, onChange } }) => (
+            <Input
+              ref={passwordRef}
+              autoCapitalize="none"
+              autoCorrect={false}
+              icon="lock"
+              placeholder="Nova senha"
+              placeholderTextColor={theme.COLORS['gray-color-400']}
+              secureTextFieldEntry
+              returnKeyType="next"
+              error={errors.password?.message}
+              value={value}
+              onChangeText={(text) => {
+                onChange(text);
+              }}
+              onSubmitEditing={() => {
+                passwordConfirmRef.current?.focus();
+              }}
             />
+          )}
+        />
 
-            <Controller
-              control={control}
-              name="password_confirmation"
-              render={({ field: { value, onChange } }) => (
-                <Input
-                  ref={passwordConfirmRef}
-                  autoCapitalize="none"
-                  autoCorrect={false}
-                  icon="lock"
-                  placeholder="Confirme a nova senha"
-                  placeholderTextColor={theme.COLORS['gray-color-400']}
-                  secureTextFieldEntry
-                  returnKeyType="send"
-                  error={errors.password_confirmation?.message}
-                  value={value}
-                  onChangeText={(text) => {
-                    onChange(text);
-                  }}
-                  onSubmitEditing={handleSubmit(handleEditPassword)}
-                />
-              )}
+        <Controller
+          control={control}
+          name="password_confirmation"
+          render={({ field: { value, onChange } }) => (
+            <Input
+              ref={passwordConfirmRef}
+              autoCapitalize="none"
+              autoCorrect={false}
+              icon="lock"
+              placeholder="Confirme a nova senha"
+              placeholderTextColor={theme.COLORS['gray-color-400']}
+              secureTextFieldEntry
+              returnKeyType="send"
+              error={errors.password_confirmation?.message}
+              value={value}
+              onChangeText={(text) => {
+                onChange(text);
+              }}
+              onSubmitEditing={handleSubmit(handleEditPassword)}
             />
-          </EditPasswordFormContainer>
-        </EditPasswordContent>
+          )}
+        />
 
         <EditPasswordFooterContainer>
           <Button
@@ -219,7 +213,8 @@ export function EditPasswordScreen() {
             Atualizar senha
           </Button>
         </EditPasswordFooterContainer>
-      </EditPasswordContainer>
-    </KeyboardAwareScrollView>
+      </EditPasswordContent>
+    </EditPasswordContainer>
+    // </KeyboardAwareScrollView>
   );
 }

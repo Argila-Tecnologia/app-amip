@@ -6,6 +6,8 @@ import { RFValue } from 'react-native-responsive-fontsize';
 
 export const DetailsNewsContainer = styled.View`
   flex: 1;
+
+  background-color: ${({ theme }) => theme.COLORS['gray-color-100']};
 `;
 
 export const DetailsNewsContent = styled.View`
@@ -78,6 +80,16 @@ export const DetailNewsLinkVideoButtonText = styled.Text`
     font-family: ${theme.FONT_FAMILY.REGULAR};
     font-size: ${RFValue(theme.FONT_SIZE.SM)}px;
     color: ${theme.COLORS['black-color']};
+  `};
+
+  text-align: justify;
+`;
+
+export const DetailNewsLinkVideoButtonTextLink = styled.Text`
+  ${({ theme }) => css`
+    font-family: ${theme.FONT_FAMILY.BOLD};
+    font-size: ${RFValue(theme.FONT_SIZE.SM)}px;
+    color: ${theme.COLORS['green-color']};
   `};
 
   text-align: justify;

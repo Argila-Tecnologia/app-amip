@@ -109,8 +109,6 @@ export function DetailsChampionshipScreen() {
         if (response.status === 200) {
           const detailsChampionshipData = response.data as IChampionshipsDTO;
 
-          console.log('retorno', detailsChampionshipData);
-
           return detailsChampionshipData;
         }
       },

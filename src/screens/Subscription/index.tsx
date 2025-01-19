@@ -6,8 +6,6 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 
 import { Feather } from '@expo/vector-icons';
 
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-
 import { Controller, useForm } from 'react-hook-form';
 
 import { z as zod } from 'zod';
@@ -217,159 +215,157 @@ export function SubscriptionScreen() {
   // END USE QUERY
 
   return (
-    <KeyboardAwareScrollView>
-      <SubscriptionContainer>
-        <Header title="Faça sua inscrição" />
+    <SubscriptionContainer>
+      <Header title="Faça sua inscrição" />
 
-        {isLoadingCategoriesAndChampionship ? (
-          <Loading />
-        ) : (
-          <SubscriptionContent>
-            {categoriesAndChampionship && (
-              <SubscriptionForm>
-                <Controller
-                  control={control}
-                  name="name"
-                  render={({ field: { value, onChange } }) => (
-                    <Input
-                      ref={nameRef}
-                      autoCorrect={false}
-                      value={value}
-                      placeholder="Informe o nome"
-                      placeholderTextColor={theme.COLORS['gray-color-400']}
-                      error={errors.name?.message}
-                      returnKeyType="next"
-                      onChangeText={(text) => {
-                        onChange(text);
-                      }}
-                      onSubmitEditing={() => {
-                        emailRef.current?.focus();
-                      }}
-                    />
-                  )}
-                />
-
-                <Controller
-                  control={control}
-                  name="email"
-                  render={({ field: { value, onChange } }) => (
-                    <Input
-                      ref={emailRef}
-                      autoCorrect={false}
-                      autoCapitalize="none"
-                      value={value}
-                      placeholder="Informe o e-mail"
-                      placeholderTextColor={theme.COLORS['gray-color-400']}
-                      keyboardType="email-address"
-                      error={errors.email?.message}
-                      returnKeyType="next"
-                      onChangeText={(text) => {
-                        onChange(text);
-                      }}
-                      onSubmitEditing={() => {
-                        whatsappRef.current?.focus();
-                      }}
-                    />
-                  )}
-                />
-
-                <Controller
-                  control={control}
-                  name="whatsapp"
-                  render={({ field: { value, onChange } }) => (
-                    <InputMask
-                      mask="(99)99999-9999"
-                      autoCorrect={false}
-                      autoCapitalize="none"
-                      value={value}
-                      placeholder="Ex.: DDD + Nº de telefone"
-                      placeholderTextColor={theme.COLORS['gray-color-400']}
-                      keyboardType="numeric"
-                      error={errors.whatsapp?.message}
-                      returnKeyType="next"
-                      onChangeText={(text) => {
-                        onChange(text);
-                      }}
-                      onSubmitEditing={() => {
-                        clubRef.current?.focus();
-                      }}
-                    />
-                  )}
-                />
-
-                <Controller
-                  control={control}
-                  name="club"
-                  render={({ field: { value, onChange } }) => (
-                    <Input
-                      ref={clubRef}
-                      autoCorrect={false}
-                      autoCapitalize="none"
-                      value={value}
-                      placeholder="Informe o clube"
-                      placeholderTextColor={theme.COLORS['gray-color-400']}
-                      error={errors.club?.message}
-                      returnKeyType="next"
-                      onChangeText={(text) => {
-                        onChange(text);
-                      }}
-                      onSubmitEditing={() => {
-                        valueRef.current?.focus();
-                      }}
-                    />
-                  )}
-                />
-
-                {categoriesAndChampionship.championship.value > 0 && (
-                  <SubscriptionPlaceDateChampionshipContainer>
-                    <SubscriptionIconContainer>
-                      <Feather
-                        name="dollar-sign"
-                        size={15}
-                        color={theme.COLORS['black-color']}
-                      />
-                    </SubscriptionIconContainer>
-
-                    <SubscriptionPlaceDateChampionshipContent>
-                      <SubscriptionPlaceDateChampionshipText>
-                        Valor:{' '}
-                        {categoriesAndChampionship.championship.value / 100}
-                      </SubscriptionPlaceDateChampionshipText>
-                    </SubscriptionPlaceDateChampionshipContent>
-                  </SubscriptionPlaceDateChampionshipContainer>
+      {isLoadingCategoriesAndChampionship ? (
+        <Loading />
+      ) : (
+        <SubscriptionContent>
+          {categoriesAndChampionship && (
+            <SubscriptionForm>
+              <Controller
+                control={control}
+                name="name"
+                render={({ field: { value, onChange } }) => (
+                  <Input
+                    ref={nameRef}
+                    autoCorrect={false}
+                    value={value}
+                    placeholder="Informe o nome"
+                    placeholderTextColor={theme.COLORS['gray-color-400']}
+                    error={errors.name?.message}
+                    returnKeyType="next"
+                    onChangeText={(text) => {
+                      onChange(text);
+                    }}
+                    onSubmitEditing={() => {
+                      emailRef.current?.focus();
+                    }}
+                  />
                 )}
+              />
 
-                <SubscriptionCategoriesContainer>
-                  <SubscriptionCategoriesTitle>
-                    Categorias
-                  </SubscriptionCategoriesTitle>
+              <Controller
+                control={control}
+                name="email"
+                render={({ field: { value, onChange } }) => (
+                  <Input
+                    ref={emailRef}
+                    autoCorrect={false}
+                    autoCapitalize="none"
+                    value={value}
+                    placeholder="Informe o e-mail"
+                    placeholderTextColor={theme.COLORS['gray-color-400']}
+                    keyboardType="email-address"
+                    error={errors.email?.message}
+                    returnKeyType="next"
+                    onChangeText={(text) => {
+                      onChange(text);
+                    }}
+                    onSubmitEditing={() => {
+                      whatsappRef.current?.focus();
+                    }}
+                  />
+                )}
+              />
 
-                  <SubscriptionCategoryContent>
-                    {categoriesAndChampionship.categories.map((category) => (
-                      <SubscriptionCategoryActionButton
-                        key={category.id}
-                        active={selectedCategories.includes(category.name)}
-                        onPress={() => handleSelectedCategories(category.name)}
-                      >
-                        <SubscriptionCategoryActionButtonText>
-                          {category.name}
-                        </SubscriptionCategoryActionButtonText>
-                      </SubscriptionCategoryActionButton>
-                    ))}
-                  </SubscriptionCategoryContent>
-                </SubscriptionCategoriesContainer>
+              <Controller
+                control={control}
+                name="whatsapp"
+                render={({ field: { value, onChange } }) => (
+                  <InputMask
+                    mask="(99)99999-9999"
+                    autoCorrect={false}
+                    autoCapitalize="none"
+                    value={value}
+                    placeholder="Ex.: DDD + Nº de telefone"
+                    placeholderTextColor={theme.COLORS['gray-color-400']}
+                    keyboardType="numeric"
+                    error={errors.whatsapp?.message}
+                    returnKeyType="next"
+                    onChangeText={(text) => {
+                      onChange(text);
+                    }}
+                    onSubmitEditing={() => {
+                      clubRef.current?.focus();
+                    }}
+                  />
+                )}
+              />
 
-                <Button
-                  loading={loadingSendSubscription}
-                  onPress={handleSubmit(handleSubscription)}
-                >
-                  Realizar inscrição
-                </Button>
-              </SubscriptionForm>
-            )}
-          </SubscriptionContent>
-        )}
-      </SubscriptionContainer>
-    </KeyboardAwareScrollView>
+              <Controller
+                control={control}
+                name="club"
+                render={({ field: { value, onChange } }) => (
+                  <Input
+                    ref={clubRef}
+                    autoCorrect={false}
+                    autoCapitalize="none"
+                    value={value}
+                    placeholder="Informe o clube"
+                    placeholderTextColor={theme.COLORS['gray-color-400']}
+                    error={errors.club?.message}
+                    returnKeyType="next"
+                    onChangeText={(text) => {
+                      onChange(text);
+                    }}
+                    onSubmitEditing={() => {
+                      valueRef.current?.focus();
+                    }}
+                  />
+                )}
+              />
+
+              {categoriesAndChampionship.championship.value > 0 && (
+                <SubscriptionPlaceDateChampionshipContainer>
+                  <SubscriptionIconContainer>
+                    <Feather
+                      name="dollar-sign"
+                      size={15}
+                      color={theme.COLORS['black-color']}
+                    />
+                  </SubscriptionIconContainer>
+
+                  <SubscriptionPlaceDateChampionshipContent>
+                    <SubscriptionPlaceDateChampionshipText>
+                      Valor:{' '}
+                      {categoriesAndChampionship.championship.value / 100}
+                    </SubscriptionPlaceDateChampionshipText>
+                  </SubscriptionPlaceDateChampionshipContent>
+                </SubscriptionPlaceDateChampionshipContainer>
+              )}
+
+              <SubscriptionCategoriesContainer>
+                <SubscriptionCategoriesTitle>
+                  Categorias
+                </SubscriptionCategoriesTitle>
+
+                <SubscriptionCategoryContent>
+                  {categoriesAndChampionship.categories.map((category) => (
+                    <SubscriptionCategoryActionButton
+                      key={category.id}
+                      active={selectedCategories.includes(category.name)}
+                      onPress={() => handleSelectedCategories(category.name)}
+                    >
+                      <SubscriptionCategoryActionButtonText>
+                        {category.name}
+                      </SubscriptionCategoryActionButtonText>
+                    </SubscriptionCategoryActionButton>
+                  ))}
+                </SubscriptionCategoryContent>
+              </SubscriptionCategoriesContainer>
+
+              <Button
+                loading={loadingSendSubscription}
+                onPress={handleSubmit(handleSubscription)}
+              >
+                Realizar inscrição
+              </Button>
+            </SubscriptionForm>
+          )}
+        </SubscriptionContent>
+      )}
+    </SubscriptionContainer>
   );
 }
