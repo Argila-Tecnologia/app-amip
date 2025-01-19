@@ -7,6 +7,7 @@ import { useTheme } from 'styled-components/native';
 import { NewsScreen } from '@screens/News';
 import { ChampionshipsScreen } from '@screens/Championships';
 import { MuseumsScreen } from '@screens/Museum';
+import { Platform } from 'react-native';
 
 const { Navigator, Screen } = createBottomTabNavigator();
 
@@ -17,15 +18,14 @@ export function AppBottomTabs() {
     <Navigator
       initialRouteName="newsScreen"
       screenOptions={{
-        tabBarActiveTintColor: theme.COLORS['green-light-color'],
-        tabBarInactiveTintColor: theme.COLORS['gray-color-300'],
         headerShown: false,
         tabBarShowLabel: false,
+        tabBarActiveTintColor: theme.COLORS['green-light-color'],
+        tabBarInactiveTintColor: theme.COLORS['gray-color-300'],
         tabBarStyle: {
-          height: 50,
-        },
-        tabBarLabelStyle: {
-          fontSize: 15,
+          height: Platform.OS === 'android' ? 86 : 96,
+          borderTopWidth: 0,
+          paddingTop: 15,
         },
       }}
     >

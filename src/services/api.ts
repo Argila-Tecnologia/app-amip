@@ -4,7 +4,10 @@ import { AppError } from '@utils/app-error';
 
 import { API_URL } from '@env';
 
-import { authTokenGet, authTokenAdd } from '@storage/auth-token-storage';
+import {
+  authTokenGetStorageStorage,
+  authTokenAddStorage,
+} from '@storage/auth-token-storage';
 
 /**
  * INTERFACE PORQUE NÃO TEMOS ACESSO A FUNÇÃO SIGNOUT
@@ -45,7 +48,7 @@ api.registerInterceptTokenManager = (signOut) => {
     async (requestError) => {
       // VERIFICANDO O TOKEN
       if (requestError?.response?.status === 401) {
-        const { refresh_token } = await authTokenGet();
+        const { refresh_token } = await authTokenGetStorageStorage();
 
         if (!refresh_token) {
           signOut();
@@ -94,7 +97,7 @@ api.registerInterceptTokenManager = (signOut) => {
               .then(async (response) => {
                 const data = response.data;
 
-                await authTokenAdd({
+                await authTokenAddStorage({
                   token: data.token,
                   refresh_token: data.refresh_token,
                 });

@@ -12,9 +12,9 @@ import { IPlayerDTO } from '@dtos/player-dto';
 import { api } from '@services/api';
 
 import {
-  authTokenAdd,
-  authTokenGet,
-  authTokenRemove,
+  authTokenAddStorage,
+  authTokenGetStorageStorage,
+  authTokenRemoveStorage,
 } from '@storage/auth-token-storage';
 
 import { playerAddStorage, playerRemoveStorage } from '@storage/player-storage';
@@ -49,7 +49,7 @@ const AuthContext = createContext<IAuthContextDataProps>(
 const AuthProvider = ({ children }: IAuthProviderProps) => {
   const [player, setPlayer] = useState<IPlayerDTO>({} as IPlayerDTO);
   const [isLoadingUserStorageData, setIsLoadingUserStorageData] =
-    useState(true);
+    useState(false);
 
   // FUNCTIONS
   const userAndTokenUpdate = useCallback(
@@ -67,7 +67,7 @@ const AuthProvider = ({ children }: IAuthProviderProps) => {
         setIsLoadingUserStorageData(true);
 
         await playerAddStorage(playerData);
-        await authTokenAdd({ token, refresh_token });
+        await authTokenAddStorage({ token, refresh_token });
       } catch (error) {
         throw error;
       } finally {
@@ -107,7 +107,7 @@ const AuthProvider = ({ children }: IAuthProviderProps) => {
       setPlayer({} as IPlayerDTO);
 
       await playerRemoveStorage();
-      await authTokenRemove();
+      await authTokenRemoveStorage();
     } catch (error) {
       throw error;
     } finally {
@@ -125,7 +125,7 @@ const AuthProvider = ({ children }: IAuthProviderProps) => {
     try {
       setIsLoadingUserStorageData(true);
 
-      const { token } = await authTokenGet();
+      const { token } = await authTokenGetStorageStorage();
 
       if (token) {
         api.defaults.headers.common.Authorization = `Bearer ${token}`;
@@ -139,12 +139,12 @@ const AuthProvider = ({ children }: IAuthProviderProps) => {
         }
       }
     } catch (error) {
-      // throw error;
-      await signOut();
+      throw error;
+      // await signOut();
     } finally {
       setIsLoadingUserStorageData(false);
     }
-  }, [userAndTokenUpdate, signOut]);
+  }, [userAndTokenUpdate]);
 
   useEffect(() => {
     loadData();

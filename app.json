@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "AMIP TM",
-    "slug": "amip-tm",
+    "name": "AMIP TDM",
+    "slug": "amip-tdm",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",

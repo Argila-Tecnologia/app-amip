@@ -70,9 +70,8 @@ export function SignInScreen() {
         setIsLoadingSignIn(true);
 
         await signIn({ email, password });
-
-        navigation.navigate('appBottomTabs');
       } catch (error) {
+        console.log('🚀 ~ error:', error);
         Toast.show({
           type: 'error',
           position: 'bottom',
@@ -81,7 +80,7 @@ export function SignInScreen() {
         });
       }
     },
-    [signIn, navigation],
+    [signIn],
   );
   // END FUNCTION
 

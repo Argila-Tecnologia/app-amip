@@ -1,5 +1,7 @@
 import { useCallback } from 'react';
 
+import { Platform } from 'react-native';
+
 import { useNavigation } from '@react-navigation/native';
 
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -30,7 +32,7 @@ export function HeaderApp() {
   const theme = useTheme();
   const insets = useSafeAreaInsets();
 
-  const paddingTop = insets.top + 10;
+  const paddingTop = Platform.OS === 'android' ? insets.top + 10 : insets.top;
 
   // FUNCTION
   const handleProfile = useCallback(() => {

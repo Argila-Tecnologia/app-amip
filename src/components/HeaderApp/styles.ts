@@ -10,21 +10,20 @@ export const HeaderAppContainer = styled.View`
 
   flex-direction: row;
   align-items: center;
+  justify-content: space-between;
 
   background-color: ${({ theme }) => theme.COLORS['blue-dark-color']};
 
-  padding: 0 ${RFValue(8)}px ${RFValue(10)}px;
+  padding: 0 ${RFValue(8)}px ${RFValue(15)}px;
 `;
 
 export const HeaderAppBox = styled.View`
   flex: 1;
-  flex-direction: row;
-  align-items: center;
 `;
 
 export const HeaderAppLogoImage = styled(Image)`
-  width: 20%;
-  height: ${RFValue(70)}px;
+  width: 30%;
+  height: ${RFValue(60)}px;
 
   margin-left: ${RFValue(10)}px;
   margin-right: ${RFValue(10)}px;
@@ -42,15 +41,17 @@ export const HeaderAppTitle = styled.Text`
 
 export const HeaderAppProfileButton = styled.TouchableOpacity.attrs({
   activeOpacity: 0.7,
-})``;
-
-export const HeaderAppBoxProfile = styled.View`
+})`
   flex: 1;
   flex-direction: row;
   align-items: center;
   justify-content: flex-end;
 
-  margin-right: ${RFValue(5)}px;
+  margin-top: 10px;
+`;
+
+export const HeaderAppBoxProfile = styled.View`
+  margin-right: ${RFValue(10)}px;
 `;
 
 export const HeaderAppPersonText = styled.Text`
@@ -68,10 +69,6 @@ export const HeaderAppPersonPhotoImage = styled(Image)`
   height: ${RFValue(50)}px;
 
   border-radius: ${RFValue(25)}px;
-
-  margin-top: ${RFValue(20)}px;
-  margin-left: ${RFValue(0)}px;
-  margin-right: ${RFValue(5)}px;
 ` as unknown as typeof Image;
 
 export const HeaderAppPersonPhotoIcon = styled.View`
@@ -85,6 +82,6 @@ export const HeaderAppPersonPhotoIcon = styled.View`
 
   border-radius: ${RFValue(25)}px;
 
-  margin-left: ${RFValue(0)}px;
-  margin-right: ${RFValue(5)}px;
+  /* margin-left: ${RFValue(0)}px;
+  margin-right: ${RFValue(5)}px; */
 `;

@@ -123,15 +123,15 @@ export const SubscriptionCategoryActionButton = styled(
   background: ${({ theme, active }) =>
     active ? theme.COLORS['green-light-color'] : 'transparent'};
 
-  color: ${({ theme, active }) =>
-    active ? theme.COLORS['green-light-color'] : theme.COLORS['black-color']};
-
   transition: 0.7s;
 
   border: ${RFValue(1)}px;
 
   border-radius: ${RFValue(6)}px;
-  border-color: ${({ theme }) => theme.COLORS['blue-dark-color']};
+  border-color: ${({ theme, active }) =>
+    active
+      ? theme.COLORS['green-light-color']
+      : theme.COLORS['blue-dark-color']};
 `;
 
 export const SubscriptionCategoryActionButtonText = styled.Text`
