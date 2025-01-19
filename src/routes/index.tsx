@@ -11,6 +11,10 @@ import { Loading } from '@components/Loading';
 
 export function Routes() {
   const { isLoadingUserStorageData } = useAuth();
+  console.log(
+    '🚀 ~ Routes ~ isLoadingUserStorageData:',
+    isLoadingUserStorageData,
+  );
 
   const themeStyledComponents = useTheme();
 
