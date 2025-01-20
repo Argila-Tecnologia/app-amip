@@ -49,7 +49,7 @@ const AuthContext = createContext<IAuthContextDataProps>(
 const AuthProvider = ({ children }: IAuthProviderProps) => {
   const [player, setPlayer] = useState<IPlayerDTO>({} as IPlayerDTO);
   const [isLoadingUserStorageData, setIsLoadingUserStorageData] =
-    useState(false);
+    useState(true);
 
   // FUNCTIONS
   const userAndTokenUpdate = useCallback(
