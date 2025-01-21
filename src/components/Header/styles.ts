@@ -17,6 +17,9 @@ export const HeaderContainer = styled.View`
 export const HeaderBackButton = styled.TouchableOpacity.attrs({
   activeOpacity: 0.7,
 })`
+  flex-direction: row;
+  align-items: center;
+
   margin-right: ${RFValue(10)}px;
 `;
 
@@ -25,5 +28,7 @@ export const HeaderTitle = styled.Text`
     font-family: ${theme.FONT_FAMILY.BOLD};
     font-size: ${RFValue(theme.FONT_SIZE.LG)}px;
     color: ${theme.COLORS['white-color']};
-  `}
+  `};
+
+  margin-left: ${RFValue(5)}px;
 `;

@@ -36,9 +36,9 @@ export function Header({ title }: IHeaderProps) {
           size={25}
           color={theme.COLORS['white-color']}
         />
-      </HeaderBackButton>
 
-      <HeaderTitle>{title}</HeaderTitle>
+        <HeaderTitle>{title}</HeaderTitle>
+      </HeaderBackButton>
     </HeaderContainer>
   );
 }

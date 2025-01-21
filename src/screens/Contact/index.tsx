@@ -72,7 +72,7 @@ export function ContactScreen() {
             />
           </ContactIcon>
 
-          <ContactText>amip@gmail.com</ContactText>
+          <ContactText>Envie um e-mail</ContactText>
         </ContactButton>
 
         <ContactButton color="green" onPress={handleWhatsapp}>
@@ -84,7 +84,7 @@ export function ContactScreen() {
             />
           </ContactIcon>
 
-          <ContactText>(81) 99313-9096</ContactText>
+          <ContactText>Nos envie uma mensagem</ContactText>
         </ContactButton>
       </ContactContent>
     </ContactContainer>

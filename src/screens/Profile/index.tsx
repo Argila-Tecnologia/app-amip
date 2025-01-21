@@ -2,7 +2,9 @@ import React, { useCallback, useState } from 'react';
 
 import { useNavigation } from '@react-navigation/native';
 
-import { Alert, Keyboard, ScrollView } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+
+import { Alert, Keyboard, Platform, ScrollView } from 'react-native';
 
 import { Feather } from '@expo/vector-icons';
 
@@ -22,7 +24,6 @@ import { useAuth } from '@hooks/auth';
 
 import { noImage } from '@utils/no-image';
 
-import { Header } from '@components/Header';
 import { Loading } from '@components/Loading';
 import { ChooseTakePhotoModal } from '@components/ChooseTakePhotoModal';
 
@@ -33,11 +34,19 @@ import {
   ProfileAvatarImageNameContainer,
   ProfileContainer,
   ProfileContent,
+  ProfileHeader,
+  ProfileHeaderBackButton,
+  ProfileHeaderLogoutButton,
+  ProfileHeaderLogoutContainer,
+  ProfileHeaderTitle,
+  ProfileHeaderTitleContainer,
   ProfileName,
   ProfileOptionButton,
   ProfileOptionButtonIcon,
   ProfileOptionButtonTitle,
   ProfileOptionsContent,
+  ProfileRemoveAccountButton,
+  ProfileRemoveAccountText,
 } from './styles';
 
 export function ProfileScreen() {
@@ -47,8 +56,16 @@ export function ProfileScreen() {
   const { player, updatePlayerProfile, signOut } = useAuth();
   const theme = useTheme();
   const navigation = useNavigation();
+  const insets = useSafeAreaInsets();
+
+  const paddingTop =
+    Platform.OS === 'android' ? insets.top + 20 : insets.top + 10;
 
   // FUNCTIONS
+  const handleGoBackNavigation = useCallback(() => {
+    navigation.goBack();
+  }, [navigation]);
+
   const handleToggleTakePhotoModal = useCallback(() => {
     Keyboard.dismiss();
 
@@ -272,93 +289,115 @@ export function ProfileScreen() {
       setIsLoadingUpdatePhoto(false);
     }
   }, [handleToggleTakePhotoModal, player, updatePlayerProfile]);
-
   // END UPDATE PHOTO
+
+  // REMOVE ACCOUNT
+  const handleRemoveAccount = useCallback(() => {
+    console.log('navegar para a tela de remover conta');
+  }, []);
+  // END REMOVE ACCOUNT
 
   // END FUNCTIONS
 
   return (
     <ProfileContainer>
-      <Header title="Perfil" />
+      <ProfileHeader style={{ paddingTop }}>
+        <ProfileHeaderTitleContainer>
+          <ProfileHeaderBackButton onPress={handleGoBackNavigation}>
+            <Feather
+              name="chevron-left"
+              size={25}
+              color={theme.COLORS['white-color']}
+            />
+
+            <ProfileHeaderTitle>Perfil</ProfileHeaderTitle>
+          </ProfileHeaderBackButton>
+        </ProfileHeaderTitleContainer>
+
+        <ProfileHeaderLogoutContainer>
+          <ProfileHeaderLogoutButton
+            activeOpacity={0.7}
+            onPress={handleSignOut}
+          >
+            <Feather
+              name="log-out"
+              size={25}
+              color={theme.COLORS['white-color']}
+            />
+          </ProfileHeaderLogoutButton>
+        </ProfileHeaderLogoutContainer>
+      </ProfileHeader>
 
       <ScrollView style={{ flexGrow: 1 }} showsVerticalScrollIndicator={false}>
         <ProfileContent>
           <ProfileAvatarImageNameContainer>
-            {player && (
-              <>
-                <ProfileAvatarButton
-                  disabled={loadingUpdatePhoto}
-                  onPress={handleToggleTakePhotoModal}
-                >
-                  {loadingUpdatePhoto ? (
-                    <Loading />
-                  ) : (
-                    <>
-                      <ProfileAvatarImage
-                        source={{
-                          uri: player.avatar_url
-                            ? player.avatar_url
-                            : noImage(player.name),
-                        }}
-                        contentFit="cover"
-                      />
+            <ProfileAvatarButton
+              disabled={loadingUpdatePhoto}
+              onPress={handleToggleTakePhotoModal}
+            >
+              {loadingUpdatePhoto ? (
+                <Loading />
+              ) : (
+                <>
+                  <ProfileAvatarImage
+                    source={{
+                      uri: player.avatar_url
+                        ? player.avatar_url
+                        : noImage(player.name),
+                    }}
+                    contentFit="cover"
+                  />
 
-                      <ProfileAvatarCamera>
-                        <Feather
-                          name="camera"
-                          size={24}
-                          color={theme.COLORS['white-color']}
-                        />
-                      </ProfileAvatarCamera>
-                    </>
-                  )}
-                </ProfileAvatarButton>
+                  <ProfileAvatarCamera>
+                    <Feather
+                      name="camera"
+                      size={24}
+                      color={theme.COLORS['white-color']}
+                    />
+                  </ProfileAvatarCamera>
+                </>
+              )}
+            </ProfileAvatarButton>
 
-                <ProfileName>{player.name}</ProfileName>
-              </>
-            )}
+            <ProfileName>{player.name}</ProfileName>
           </ProfileAvatarImageNameContainer>
 
           <ProfileOptionsContent>
-            {player && (
-              <>
-                <ProfileOptionButton
-                  onPress={() => {
-                    navigation.navigate('editProfileInformationScreen');
-                  }}
-                >
-                  <ProfileOptionButtonIcon>
-                    <Feather
-                      name="refresh-cw"
-                      size={27}
-                      color={theme.COLORS['black-color']}
-                    />
-                  </ProfileOptionButtonIcon>
+            <ProfileOptionButton
+              onPress={() => {
+                navigation.navigate('editProfileInformationScreen');
+              }}
+            >
+              <ProfileOptionButtonIcon>
+                <Feather
+                  name="refresh-cw"
+                  size={27}
+                  color={theme.COLORS['black-color']}
+                />
+              </ProfileOptionButtonIcon>
 
-                  <ProfileOptionButtonTitle>
-                    Atualizar perfil
-                  </ProfileOptionButtonTitle>
-                </ProfileOptionButton>
+              <ProfileOptionButtonTitle>
+                Atualizar perfil
+              </ProfileOptionButtonTitle>
+            </ProfileOptionButton>
 
-                <ProfileOptionButton
-                  onPress={() => {
-                    navigation.navigate('editPasswordScreen');
-                  }}
-                >
-                  <ProfileOptionButtonIcon>
-                    <Feather
-                      name="lock"
-                      size={27}
-                      color={theme.COLORS['black-color']}
-                    />
-                  </ProfileOptionButtonIcon>
+            <ProfileOptionButton
+              onPress={() => {
+                navigation.navigate('editPasswordScreen');
+              }}
+            >
+              <ProfileOptionButtonIcon>
+                <Feather
+                  name="lock"
+                  size={27}
+                  color={theme.COLORS['black-color']}
+                />
+              </ProfileOptionButtonIcon>
 
-                  <ProfileOptionButtonTitle>
-                    Atualizar senha
-                  </ProfileOptionButtonTitle>
-                </ProfileOptionButton>
-              </>
-            )}
+              <ProfileOptionButtonTitle>
+                Atualizar senha
+              </ProfileOptionButtonTitle>
+            </ProfileOptionButton>
 
             <ProfileOptionButton
               onPress={() => {
@@ -375,23 +414,14 @@ export function ProfileScreen() {
 
               <ProfileOptionButtonTitle>Contato</ProfileOptionButtonTitle>
             </ProfileOptionButton>
-
-            {player.id && (
-              <ProfileOptionButton onPress={handleSignOut}>
-                <ProfileOptionButtonIcon>
-                  <Feather
-                    name="log-out"
-                    size={27}
-                    color={theme.COLORS['black-color']}
-                  />
-                </ProfileOptionButtonIcon>
-
-                <ProfileOptionButtonTitle>
-                  Sair da conta
-                </ProfileOptionButtonTitle>
-              </ProfileOptionButton>
-            )}
           </ProfileOptionsContent>
+
+          <ProfileRemoveAccountButton
+            activeOpacity={0.7}
+            onPress={handleRemoveAccount}
+          >
+            <ProfileRemoveAccountText>Remover conta</ProfileRemoveAccountText>
+          </ProfileRemoveAccountButton>
         </ProfileContent>
       </ScrollView>
 
