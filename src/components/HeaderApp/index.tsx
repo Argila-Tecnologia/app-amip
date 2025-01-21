@@ -32,7 +32,7 @@ export function HeaderApp() {
   const theme = useTheme();
   const insets = useSafeAreaInsets();
 
-  const paddingTop = Platform.OS === 'android' ? insets.top + 10 : insets.top;
+  const paddingTop = Platform.OS === 'android' ? insets.top + 15 : insets.top;
 
   // FUNCTION
   const handleProfile = useCallback(() => {

@@ -25,7 +25,7 @@ export function AppBottomTabs() {
         tabBarStyle: {
           height: Platform.OS === 'android' ? 86 : 96,
           borderTopWidth: 0,
-          paddingTop: 15,
+          paddingTop: Platform.OS === 'android' ? 20 : 15,
         },
       }}
     >

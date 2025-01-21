@@ -1,5 +1,7 @@
 import React, { useCallback } from 'react';
 
+import { Platform } from 'react-native';
+
 import { useNavigation } from '@react-navigation/native';
 
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -19,7 +21,8 @@ export function Header({ title }: IHeaderProps) {
   const insets = useSafeAreaInsets();
   const navigation = useNavigation();
 
-  const paddingTop = insets.top + 10;
+  const paddingTop =
+    Platform.OS === 'android' ? insets.top + 20 : insets.top + 10;
 
   const handleGoBackNavigation = useCallback(() => {
     navigation.goBack();

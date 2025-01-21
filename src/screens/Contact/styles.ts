@@ -14,28 +14,40 @@ export const ContactContent = styled.View`
   padding: ${RFValue(50)}px ${RFValue(30)}px;
 `;
 
-export const ContactButton = styled.TouchableOpacity.attrs({
-  activeOpacity: 0.7,
-})`
+interface IContactButtonProps {
+  color: 'blue' | 'green';
+}
+
+export const ContactButton = styled.TouchableOpacity.attrs<IContactButtonProps>(
+  {
+    activeOpacity: 0.7,
+  },
+)`
+  /* height: 60px; */
+
   flex-direction: row;
   align-items: center;
 
-  margin-bottom: ${RFValue(10)}px;
+  background-color: ${({ theme, color }) =>
+    color === 'blue'
+      ? theme.COLORS['blue-dark-color']
+      : theme.COLORS['green-dark-color']};
 
-  padding: ${RFValue(10)}px;
+  border-radius: 10px;
+
+  margin-bottom: ${RFValue(30)}px;
+
+  padding: ${RFValue(15)}px;
 `;
 
 export const ContactIcon = styled.View`
-  width: ${RFValue(35)}px;
-  height: ${RFValue(35)}px;
-
-  margin-right: ${RFValue(10)}px;
+  margin-right: ${RFValue(20)}px;
 `;
 
 export const ContactText = styled.Text`
   ${({ theme }) => css`
     font-family: ${theme.FONT_FAMILY.REGULAR};
     font-size: ${RFValue(theme.FONT_SIZE.MD)}px;
-    color: ${theme.COLORS['black-color']};
+    color: ${theme.COLORS['white-color']};
   `}
 `;

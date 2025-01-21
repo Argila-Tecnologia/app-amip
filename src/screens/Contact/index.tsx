@@ -24,10 +24,16 @@ export function ContactScreen() {
   const theme = useTheme();
 
   // FUNCTION
-  const handleEmail = useCallback(() => {
-    Linking.openURL(
+  const handleEmail = useCallback(async () => {
+    const canOpenMail = await Linking.canOpenURL(
       'mailto:amip@gmail.com?subject=[AMIP] Mais informações&body=Gostaria de mais informações',
     );
+
+    if (canOpenMail) {
+      await Linking.openURL(
+        'mailto:amip@gmail.com?subject=[AMIP] Mais informações&body=Gostaria de mais informações',
+      );
+    }
   }, []);
 
   const handleWhatsapp = useCallback(() => {
@@ -35,7 +41,7 @@ export function ContactScreen() {
       .then((supported) => {
         if (supported) {
           return Linking.openURL(
-            'whatsapp://send?phone=+5581993139096&text=Gostaria de mais informações',
+            `whatsapp://send?phone=${WHATSAPP_PHONE_NUMBER}&text=Gostaria de mais informações`,
           );
         }
         return Linking.openURL(
@@ -46,7 +52,7 @@ export function ContactScreen() {
         Toast.show({
           type: 'error',
           position: 'bottom',
-          text2: 'Verifique se o Whatsapp está instalado no seu dispositivo.',
+          text2: 'Verifique se o WhatsApp está instalado no seu dispositivo.',
         });
       });
   }, []);
@@ -57,24 +63,24 @@ export function ContactScreen() {
       <Header title="Contato" />
 
       <ContactContent>
-        <ContactButton onPress={handleEmail}>
+        <ContactButton color="blue" onPress={handleEmail}>
           <ContactIcon>
             <MaterialCommunityIcons
               name="email"
               size={30}
-              color={theme.COLORS['blue-dark-color']}
+              color={theme.COLORS['white-color']}
             />
           </ContactIcon>
 
           <ContactText>amip@gmail.com</ContactText>
         </ContactButton>
 
-        <ContactButton onPress={handleWhatsapp}>
+        <ContactButton color="green" onPress={handleWhatsapp}>
           <ContactIcon>
             <MaterialCommunityIcons
               name="whatsapp"
               size={30}
-              color={theme.COLORS['blue-dark-color']}
+              color={theme.COLORS['white-color']}
             />
           </ContactIcon>
 

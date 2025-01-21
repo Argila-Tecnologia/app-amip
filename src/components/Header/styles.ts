@@ -11,7 +11,7 @@ export const HeaderContainer = styled.View`
 
   background-color: ${({ theme }) => theme.COLORS['blue-dark-color']};
 
-  padding: ${RFValue(0)}px ${RFValue(8)}px ${RFValue(10)}px;
+  padding: ${RFValue(0)}px ${RFValue(8)}px ${RFValue(15)}px;
 `;
 
 export const HeaderBackButton = styled.TouchableOpacity.attrs({
