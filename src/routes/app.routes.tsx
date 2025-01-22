@@ -17,6 +17,7 @@ import { DetailsChampionshipScreen } from '@screens/Championships/DetailsChampio
 import { ProfileScreen } from '@screens/Profile';
 import { EditProfileInformationScreen } from '@screens/Profile/EditProfileInformation';
 import { EditPasswordScreen } from '@screens/Profile/EditPassword';
+import { DeleteProfileScreen } from '@screens/Profile/DeleteProfile';
 
 import { SubscriptionScreen } from '@screens/Subscription';
 import { DetailsMuseumScreen } from '@screens/Museum/DetailsMuseum';
@@ -54,6 +55,7 @@ export function AppRoutes() {
         component={EditProfileInformationScreen}
       />
       <Screen name="editPasswordScreen" component={EditPasswordScreen} />
+      <Screen name="deleteProfileScreen" component={DeleteProfileScreen} />
 
       <Screen name="contactScreen" component={ContactScreen} />
 

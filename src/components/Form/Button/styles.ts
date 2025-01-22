@@ -29,9 +29,11 @@ export const ButtonContainer = styled.TouchableOpacity<IContainerProps>`
 `;
 
 export const ButtonText = styled.Text`
-  font-family: ${({ theme }) => theme.FONT_FAMILY.BOLD};
-  font-size: ${RFValue(18)}px;
-  color: ${({ theme }) => theme.COLORS['white-color']};
+  ${({ theme }) => css`
+    font-family: ${theme.FONT_FAMILY.BOLD};
+    font-size: ${RFValue(theme.FONT_SIZE.LG)}px;
+    color: ${theme.COLORS['white-color']};
+  `};
 
   text-transform: uppercase;
 `;

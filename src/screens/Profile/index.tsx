@@ -293,8 +293,8 @@ export function ProfileScreen() {
 
   // REMOVE ACCOUNT
   const handleRemoveAccount = useCallback(() => {
-    console.log('navegar para a tela de remover conta');
-  }, []);
+    navigation.navigate('deleteProfileScreen');
+  }, [navigation]);
   // END REMOVE ACCOUNT
 
   // END FUNCTIONS

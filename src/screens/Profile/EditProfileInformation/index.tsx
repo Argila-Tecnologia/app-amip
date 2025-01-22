@@ -34,6 +34,7 @@ import { Header } from '@components/Header';
 import { Loading } from '@components/Loading';
 import { Input } from '@components/Form/Input';
 import { InputMask } from '@components/Form/InputMask';
+import { Button } from '@components/Form/Button';
 
 import {
   EditProfileButtonContainer,
@@ -41,7 +42,6 @@ import {
   EditProfileContent,
   EditProfileForm,
 } from './styles';
-import { Button } from '@components/Form/Button';
 
 const editProfileValidationSchema = zod.object({
   name: zod.string().min(1),
