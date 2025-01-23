@@ -60,7 +60,7 @@ type ISubscriptionRouteParams = {
 
 const subscriptionValidationSchema = zod.object({
   name: zod.string().min(1),
-  email: zod.string().email(),
+  // email: zod.string().email(),
   whatsapp: zod.string().min(1),
   club: zod.string().min(1),
 });
@@ -81,7 +81,7 @@ export function SubscriptionScreen() {
   const { championshipId } = route.params as ISubscriptionRouteParams;
 
   const nameRef = useRef<TextInput>(null);
-  const emailRef = useRef<TextInput>(null);
+  // const emailRef = useRef<TextInput>(null);
   const whatsappRef = useRef<TextInput>(null);
   const clubRef = useRef<TextInput>(null);
   const valueRef = useRef<TextInput>(null);
@@ -117,7 +117,7 @@ export function SubscriptionScreen() {
   );
 
   const handleSubscription = useCallback(
-    async ({ name, email, whatsapp, club }: ISubscriptionFormSubmitData) => {
+    async ({ name, whatsapp, club }: ISubscriptionFormSubmitData) => {
       try {
         setIsLoadingSendSubscription(true);
 
@@ -134,14 +134,11 @@ export function SubscriptionScreen() {
 
         const data = {
           name,
-          email,
           whatsapp,
           club,
           championship_id: championshipId,
           category_name: selectedCategories,
         };
-
-        console.log('Dados', data);
 
         const response = await api.post('/subscriptions', data);
 
@@ -176,7 +173,6 @@ export function SubscriptionScreen() {
             }
           }
         }
-        console.log('Erro', error);
 
         Toast.show({
           type: 'error',
@@ -238,30 +234,6 @@ export function SubscriptionScreen() {
                     placeholder="Informe o nome"
                     placeholderTextColor={theme.COLORS['gray-color-400']}
                     error={errors.name?.message}
-                    returnKeyType="next"
-                    onChangeText={(text) => {
-                      onChange(text);
-                    }}
-                    onSubmitEditing={() => {
-                      emailRef.current?.focus();
-                    }}
-                  />
-                )}
-              />
-
-              <Controller
-                control={control}
-                name="email"
-                render={({ field: { value, onChange } }) => (
-                  <Input
-                    ref={emailRef}
-                    autoCorrect={false}
-                    autoCapitalize="none"
-                    value={value}
-                    placeholder="Informe o e-mail"
-                    placeholderTextColor={theme.COLORS['gray-color-400']}
-                    keyboardType="email-address"
-                    error={errors.email?.message}
                     returnKeyType="next"
                     onChangeText={(text) => {
                       onChange(text);
