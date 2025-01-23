@@ -141,6 +141,8 @@ export function SubscriptionScreen() {
           category_name: selectedCategories,
         };
 
+        console.log('Dados', data);
+
         const response = await api.post('/subscriptions', data);
 
         if (response.status === 201) {
@@ -174,6 +176,7 @@ export function SubscriptionScreen() {
             }
           }
         }
+        console.log('Erro', error);
 
         Toast.show({
           type: 'error',

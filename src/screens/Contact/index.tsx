@@ -8,7 +8,7 @@ import Toast from 'react-native-toast-message';
 
 import { useTheme } from 'styled-components/native';
 
-import { WHATSAPP_PHONE_NUMBER } from '@env';
+import { WHATSAPP_PHONE_NUMBER, EMAIL } from '@env';
 
 import { Header } from '@components/Header';
 
@@ -26,12 +26,12 @@ export function ContactScreen() {
   // FUNCTION
   const handleEmail = useCallback(async () => {
     const canOpenMail = await Linking.canOpenURL(
-      'mailto:amip@gmail.com?subject=[AMIP] Mais informações&body=Gostaria de mais informações',
+      `mailto:${EMAIL}?subject=[AMIP] Mais informações&body=Gostaria de mais informações`,
     );
 
     if (canOpenMail) {
       await Linking.openURL(
-        'mailto:amip@gmail.com?subject=[AMIP] Mais informações&body=Gostaria de mais informações',
+        `mailto:${EMAIL}?subject=[AMIP] Mais informações&body=Gostaria de mais informações`,
       );
     }
   }, []);
