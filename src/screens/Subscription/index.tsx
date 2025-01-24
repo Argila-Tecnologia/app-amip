@@ -151,9 +151,12 @@ export function SubscriptionScreen() {
           club,
           championship_id: championshipId,
           category_name: selectedCategories,
+          player_id: player.id,
         };
 
         const response = await api.post('/subscriptions', data);
+
+        // console.log('Dados', data);
 
         if (response.status === 201) {
           Toast.show({
@@ -173,8 +176,9 @@ export function SubscriptionScreen() {
         setIsLoadingSendSubscription(false);
 
         if (error instanceof AxiosError) {
+          // console.log('Erro axios', error.response);
           if (error.response) {
-            if (error.response.status === 400) {
+            if (error.response.status === 401) {
               Toast.show({
                 type: 'error',
                 position: 'bottom',
@@ -187,6 +191,8 @@ export function SubscriptionScreen() {
           }
         }
 
+        // console.log('Erro fora do axios', error);
+
         Toast.show({
           type: 'error',
           position: 'bottom',
@@ -195,7 +201,7 @@ export function SubscriptionScreen() {
         });
       }
     },
-    [selectedCategories, championshipId, navigation],
+    [selectedCategories, championshipId, player.id, navigation],
   );
   // END FUNCTIONS
 
