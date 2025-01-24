@@ -1,18 +1,13 @@
 import styled, { css } from 'styled-components/native';
-import { RFValue } from 'react-native-responsive-fontsize';
-import { Platform, TouchableOpacity } from 'react-native';
 
-interface ICategoryButtonProps {
-  active: boolean;
-}
+import { RFValue } from 'react-native-responsive-fontsize';
+
+import { TouchableOpacity } from 'react-native';
 
 export const SubscriptionContainer = styled.View`
   flex: 1;
 
   background-color: ${({ theme }) => theme.COLORS['gray-color-100']};
-
-  padding: ${RFValue(0)}px ${RFValue(0)}px
-    ${Platform.OS === 'android' ? 250 : 40}px;
 `;
 
 export const SubscriptionContent = styled.View`
@@ -33,7 +28,9 @@ export const SubscriptionButtonContainer = styled.View`
   margin-bottom: ${RFValue(10)}px;
 `;
 
-export const SubscriptionForm = styled.View``;
+export const SubscriptionForm = styled.View`
+  flex: 1;
+`;
 
 export const SubscriptionActionButton = styled(TouchableOpacity).attrs({
   activeOpacity: 0.7,
@@ -88,7 +85,7 @@ export const SubscriptionCategoriesContainer = styled.View`
   flex: 1;
 
   margin-top: ${RFValue(10)}px;
-  margin-bottom: ${RFValue(90)}px;
+  margin-bottom: ${RFValue(20)}px;
 `;
 
 export const SubscriptionCategoriesTitle = styled.Text`
@@ -104,34 +101,21 @@ export const SubscriptionCategoriesTitle = styled.Text`
 export const SubscriptionCategoryContent = styled.View`
   flex: 1;
 
-  flex-direction: row;
+  /* flex-direction: row; */
 
   margin-top: ${RFValue(15)}px;
 `;
 
-export const SubscriptionCategoryActionButton = styled(
-  TouchableOpacity,
-)<ICategoryButtonProps>`
-  width: ${RFValue(50)}px;
-  height: ${RFValue(50)}px;
+export const SubscriptionCategoryActionButton = styled(TouchableOpacity)`
+  height: ${RFValue(30)}px;
 
+  flex-direction: row;
   align-items: center;
-  justify-content: center;
-
-  margin-right: ${RFValue(15)}px;
-
-  background: ${({ theme, active }) =>
-    active ? theme.COLORS['green-light-color'] : 'transparent'};
+  gap: 10px;
 
   transition: 0.7s;
 
-  border: ${RFValue(1)}px;
-
-  border-radius: ${RFValue(6)}px;
-  border-color: ${({ theme, active }) =>
-    active
-      ? theme.COLORS['green-light-color']
-      : theme.COLORS['blue-dark-color']};
+  margin-bottom: 10px;
 `;
 
 export const SubscriptionCategoryActionButtonText = styled.Text`
