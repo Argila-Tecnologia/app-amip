@@ -22,12 +22,17 @@ import { useTheme } from 'styled-components/native';
 
 import { AxiosError } from 'axios';
 
+import { useAuth } from '@hooks/auth';
+
+import { IChampionshipsDTO } from '@dtos/championship-dto';
+import { IClubDTO } from '@dtos/clubs-dto';
+
 import { Header } from '@components/Header';
 import { Loading } from '@components/Loading';
 import { Input } from '@components/Form/Input';
 import { InputMask } from '@components/Form/InputMask';
+import { SelectPicker } from '@components/Form/SelectPicker';
 import { Button } from '@components/Form/Button';
-import { IChampionshipsDTO } from '@dtos/championship-dto';
 
 import {
   SubscriptionCategoriesContainer,
@@ -43,8 +48,6 @@ import {
   SubscriptionPlaceDateChampionshipContent,
   SubscriptionPlaceDateChampionshipText,
 } from './styles';
-import { IClubDTO } from '@dtos/clubs-dto';
-import { SelectPicker } from '@components/Form/SelectPicker';
 
 type ICategory = {
   id: string;
@@ -80,6 +83,7 @@ export function SubscriptionScreen() {
   const [loadingSendSubscription, setIsLoadingSendSubscription] =
     useState(false);
 
+  const { player } = useAuth();
   const theme = useTheme();
   const route = useRoute();
   const navigation = useNavigation();
@@ -96,6 +100,7 @@ export function SubscriptionScreen() {
     control,
     handleSubmit,
     formState: { errors },
+    setValue,
   } = useForm<ISubscriptionFormSubmitData>({
     resolver: zodResolver(subscriptionValidationSchema),
   });
@@ -129,11 +134,13 @@ export function SubscriptionScreen() {
 
         if (selectedCategories.length === 0) {
           Toast.show({
-            type: 'warning',
+            type: 'error',
             position: 'bottom',
             text1: 'Equipe AMIP',
-            text2: 'Informe as categorias que vai participar.',
+            text2: 'Informe a(s) categoria(s) que vai participar.',
           });
+
+          setIsLoadingSendSubscription(false);
 
           return;
         }
@@ -224,6 +231,11 @@ export function SubscriptionScreen() {
           };
         });
 
+        if (player.id) {
+          setValue('name', player.name);
+          setValue('whatsapp', player.phone);
+        }
+
         return {
           categories: categoryData,
           clubs: clubsSelectPicker,
@@ -299,6 +311,7 @@ export function SubscriptionScreen() {
                     <SelectPicker
                       items={categoriesClubsAndChampionship.clubs}
                       placeholder="Selecione seu clube"
+                      error={errors.club?.message}
                       value={value}
                       onValueChange={(text) => {
                         onChange(text);
