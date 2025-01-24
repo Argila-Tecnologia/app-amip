@@ -84,7 +84,7 @@ export const SubscriptionPlaceDateChampionshipText = styled.Text`
 export const SubscriptionCategoriesContainer = styled.View`
   flex: 1;
 
-  margin-top: ${RFValue(10)}px;
+  margin-top: ${RFValue(30)}px;
   margin-bottom: ${RFValue(20)}px;
 `;
 
