@@ -10,7 +10,7 @@ export const SignUpContainer = styled.View`
   background-color: ${({ theme }) => theme.COLORS['gray-color-100']};
 
   padding: ${RFValue(0)}px ${RFValue(0)}px
-    ${Platform.OS === 'android' ? 280 : 40}px;
+    ${Platform.OS === 'android' ? 20 : 40}px;
 `;
 
 export const SignUpContent = styled.View`
@@ -26,8 +26,6 @@ export const FormContainer = styled.View`
 
   flex: 1;
 `;
-
-export const BoxMaritalStatus = styled.View``;
 
 export const FooterContainer = styled.View`
   flex: 1;

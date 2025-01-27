@@ -35,6 +35,8 @@ import {
   SignUpContainer,
   SignUpContent,
 } from './styles';
+import { genderData } from '@utils/gender-data';
+import { SelectPicker } from '@components/Form/SelectPicker';
 
 const signUpValidationSchema = zod.object({
   name: zod.string(),
@@ -42,6 +44,14 @@ const signUpValidationSchema = zod.object({
   password: zod.string(),
   birthday: zod.string(),
   phone: zod.string(),
+  gender: zod.string(),
+  grip: zod.string(),
+  dominant_hand: zod.string(),
+  rubber: zod.string(),
+  wood: zod.string(),
+  main_title_of_career: zod.string(),
+  ranking: zod.string(),
+  rating: zod.string(),
 });
 
 type IFormDataSubmit = zod.infer<typeof signUpValidationSchema>;
@@ -60,6 +70,14 @@ export function SignUpScreen() {
   const passwordRef = useRef<TextInput>(null);
   const birthdayRef = useRef<TextInput>(null);
   const phoneRef = useRef<TextInput>(null);
+  const genderRef = useRef<TextInput>(null);
+  const gripRef = useRef<TextInput>(null);
+  const dominantHandRef = useRef<TextInput>(null);
+  const rubberRef = useRef<TextInput>(null);
+  const woodRef = useRef<TextInput>(null);
+  const mainTitleOfCareerRef = useRef<TextInput>(null);
+  const rankingRef = useRef<TextInput>(null);
+  const ratingRef = useRef<TextInput>(null);
 
   // FORM
   const {
@@ -82,7 +100,20 @@ export function SignUpScreen() {
   }, []);
 
   const handleFormSubmit = useCallback(
-    async ({ name, email, password, phone }: IFormDataSubmit) => {
+    async ({
+      name,
+      email,
+      password,
+      phone,
+      gender,
+      grip,
+      dominant_hand,
+      rubber,
+      wood,
+      main_title_of_career,
+      ranking,
+      rating,
+    }: IFormDataSubmit) => {
       try {
         setIsLoadingCreateAccount(true);
 
@@ -92,6 +123,14 @@ export function SignUpScreen() {
           password,
           birthday: selectedBirthday,
           phone,
+          gender,
+          grip,
+          dominant_hand,
+          rubber,
+          wood,
+          main_title_of_career,
+          ranking,
+          rating,
         };
 
         const response = await api.post('/players', data);
@@ -248,6 +287,160 @@ export function SignUpScreen() {
                   error={errors.phone?.message}
                   onChangeText={(_, rawText) => {
                     onChange(rawText);
+                  }}
+                  onSubmitEditing={() => {
+                    genderRef.current?.focus();
+                  }}
+                />
+              )}
+            />
+
+            <Controller
+              control={control}
+              name="gender"
+              render={({ field: { value, onChange } }) => (
+                <SelectPicker
+                  items={genderData()}
+                  placeholder="Informe o gênero"
+                  error={errors.gender?.message}
+                  value={value}
+                  onValueChange={(text) => {
+                    onChange(text);
+                  }}
+                />
+              )}
+            />
+
+            <Controller
+              control={control}
+              name="grip"
+              render={({ field: { value, onChange } }) => (
+                <Input
+                  ref={gripRef}
+                  autoCapitalize="none"
+                  placeholder="Informe a empunhadura"
+                  placeholderTextColor={theme.COLORS['gray-color-400']}
+                  editable={!loadingCreateAccount}
+                  value={value}
+                  returnKeyType="next"
+                  error={errors.grip?.message}
+                  onChangeText={(text) => {
+                    onChange(text);
+                  }}
+                  onSubmitEditing={() => {
+                    dominantHandRef.current?.focus();
+                  }}
+                />
+              )}
+            />
+
+            <Controller
+              control={control}
+              name="dominant_hand"
+              render={({ field: { value, onChange } }) => (
+                <Input
+                  ref={nameRef}
+                  autoCapitalize="none"
+                  placeholder="Informe a mão dominante"
+                  placeholderTextColor={theme.COLORS['gray-color-400']}
+                  editable={!loadingCreateAccount}
+                  value={value}
+                  returnKeyType="next"
+                  error={errors.dominant_hand?.message}
+                  onChangeText={(text) => {
+                    onChange(text);
+                  }}
+                  onSubmitEditing={() => {
+                    rubberRef.current?.focus();
+                  }}
+                />
+              )}
+            />
+
+            <Controller
+              control={control}
+              name="rubber"
+              render={({ field: { value, onChange } }) => (
+                <Input
+                  ref={rubberRef}
+                  autoCapitalize="none"
+                  placeholder="Informe a borracha"
+                  placeholderTextColor={theme.COLORS['gray-color-400']}
+                  editable={!loadingCreateAccount}
+                  value={value}
+                  returnKeyType="next"
+                  error={errors.rubber?.message}
+                  onChangeText={(text) => {
+                    onChange(text);
+                  }}
+                  onSubmitEditing={() => {
+                    woodRef.current?.focus();
+                  }}
+                />
+              )}
+            />
+
+            <Controller
+              control={control}
+              name="wood"
+              render={({ field: { value, onChange } }) => (
+                <Input
+                  ref={woodRef}
+                  autoCapitalize="none"
+                  placeholder="Informe o principal título da carreira"
+                  placeholderTextColor={theme.COLORS['gray-color-400']}
+                  editable={!loadingCreateAccount}
+                  value={value}
+                  returnKeyType="next"
+                  error={errors.wood?.message}
+                  onChangeText={(text) => {
+                    onChange(text);
+                  }}
+                  onSubmitEditing={() => {
+                    mainTitleOfCareerRef.current?.focus();
+                  }}
+                />
+              )}
+            />
+
+            <Controller
+              control={control}
+              name="ranking"
+              render={({ field: { value, onChange } }) => (
+                <Input
+                  ref={rankingRef}
+                  autoCapitalize="none"
+                  placeholder="Informe o ranking"
+                  placeholderTextColor={theme.COLORS['gray-color-400']}
+                  editable={!loadingCreateAccount}
+                  value={value}
+                  returnKeyType="next"
+                  error={errors.ranking?.message}
+                  onChangeText={(text) => {
+                    onChange(text);
+                  }}
+                  onSubmitEditing={() => {
+                    ratingRef.current?.focus();
+                  }}
+                />
+              )}
+            />
+
+            <Controller
+              control={control}
+              name="rating"
+              render={({ field: { value, onChange } }) => (
+                <Input
+                  ref={ratingRef}
+                  autoCapitalize="none"
+                  placeholder="Informe o nome"
+                  placeholderTextColor={theme.COLORS['gray-color-400']}
+                  editable={!loadingCreateAccount}
+                  value={value}
+                  returnKeyType="next"
+                  error={errors.rating?.message}
+                  onChangeText={(text) => {
+                    onChange(text);
                   }}
                 />
               )}

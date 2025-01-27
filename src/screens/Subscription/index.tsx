@@ -151,7 +151,7 @@ export function SubscriptionScreen() {
           club,
           championship_id: championshipId,
           category_name: selectedCategories,
-          player_id: player.id,
+          player_id: player.id ? player.id : null,
         };
 
         const response = await api.post('/subscriptions', data);
