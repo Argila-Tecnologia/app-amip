@@ -1,16 +1,16 @@
-export function genderData(): Array<{ label: string; value: string }> {
+export function gripData(): Array<{ label: string; value: string }> {
   return [
     {
       label: 'CLÁSSICO',
-      value: 'CLASSIC',
+      value: 'SHAKEHAND',
     },
     {
       label: 'CANETA',
-      value: 'PEN',
+      value: 'PENHOLDER',
     },
     {
       label: 'CLASSINETA',
-      value: 'PENHOLE',
+      value: 'PENHOLDER-SHAKEHAND',
     },
   ];
 }

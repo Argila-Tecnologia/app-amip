@@ -37,6 +37,8 @@ import {
 } from './styles';
 import { genderData } from '@utils/gender-data';
 import { SelectPicker } from '@components/Form/SelectPicker';
+import { gripData } from '@utils/grip-data';
+import { handData } from '@utils/hand-data';
 
 const signUpValidationSchema = zod.object({
   name: zod.string(),
@@ -52,6 +54,7 @@ const signUpValidationSchema = zod.object({
   main_title_of_career: zod.string(),
   ranking: zod.string(),
   rating: zod.string(),
+  is_player_club: zod.boolean(),
 });
 
 type IFormDataSubmit = zod.infer<typeof signUpValidationSchema>;
@@ -71,8 +74,6 @@ export function SignUpScreen() {
   const birthdayRef = useRef<TextInput>(null);
   const phoneRef = useRef<TextInput>(null);
   const genderRef = useRef<TextInput>(null);
-  const gripRef = useRef<TextInput>(null);
-  const dominantHandRef = useRef<TextInput>(null);
   const rubberRef = useRef<TextInput>(null);
   const woodRef = useRef<TextInput>(null);
   const mainTitleOfCareerRef = useRef<TextInput>(null);
@@ -113,6 +114,7 @@ export function SignUpScreen() {
       main_title_of_career,
       ranking,
       rating,
+      is_player_club,
     }: IFormDataSubmit) => {
       try {
         setIsLoadingCreateAccount(true);
@@ -131,6 +133,7 @@ export function SignUpScreen() {
           main_title_of_career,
           ranking,
           rating,
+          is_player_club,
         };
 
         const response = await api.post('/players', data);
@@ -315,20 +318,13 @@ export function SignUpScreen() {
               control={control}
               name="grip"
               render={({ field: { value, onChange } }) => (
-                <Input
-                  ref={gripRef}
-                  autoCapitalize="none"
-                  placeholder="Informe a empunhadura"
-                  placeholderTextColor={theme.COLORS['gray-color-400']}
-                  editable={!loadingCreateAccount}
-                  value={value}
-                  returnKeyType="next"
+                <SelectPicker
+                  items={gripData()}
+                  placeholder="Empunhadura"
                   error={errors.grip?.message}
-                  onChangeText={(text) => {
+                  value={value}
+                  onValueChange={(text) => {
                     onChange(text);
-                  }}
-                  onSubmitEditing={() => {
-                    dominantHandRef.current?.focus();
                   }}
                 />
               )}
@@ -338,20 +334,13 @@ export function SignUpScreen() {
               control={control}
               name="dominant_hand"
               render={({ field: { value, onChange } }) => (
-                <Input
-                  ref={nameRef}
-                  autoCapitalize="none"
+                <SelectPicker
+                  items={handData()}
                   placeholder="Informe a mão dominante"
-                  placeholderTextColor={theme.COLORS['gray-color-400']}
-                  editable={!loadingCreateAccount}
-                  value={value}
-                  returnKeyType="next"
                   error={errors.dominant_hand?.message}
-                  onChangeText={(text) => {
+                  value={value}
+                  onValueChange={(text) => {
                     onChange(text);
-                  }}
-                  onSubmitEditing={() => {
-                    rubberRef.current?.focus();
                   }}
                 />
               )}
