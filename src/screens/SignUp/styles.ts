@@ -114,3 +114,25 @@ export const EnabledSwitchContainer = styled.View`
 `;
 
 export const EnabledSwitch = styled(Switch)``;
+
+export const MemberActionButton = styled(TouchableOpacity)`
+  height: ${RFValue(30)}px;
+
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+
+  transition: 0.7s;
+
+  margin-top: 10px;
+`;
+
+export const SubscriptionCategoryActionButtonText = styled.Text`
+  ${({ theme }) => css`
+    font-family: ${theme.FONT_FAMILY.BOLD};
+    font-size: ${RFValue(theme.FONT_SIZE.LG)}px;
+    color: ${theme.COLORS['black-color']};
+  `};
+
+  text-transform: uppercase;
+`;

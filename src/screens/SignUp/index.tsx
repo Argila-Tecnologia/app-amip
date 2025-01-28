@@ -14,6 +14,8 @@ import Toast from 'react-native-toast-message';
 
 import DatePicker from 'react-native-date-picker';
 
+import { Feather } from '@expo/vector-icons';
+
 import { useTheme } from 'styled-components/native';
 
 import { format } from 'date-fns';
@@ -32,8 +34,10 @@ import { InputMask } from '@components/Form/InputMask';
 import {
   FooterContainer,
   FormContainer,
+  MemberActionButton,
   SignUpContainer,
   SignUpContent,
+  SubscriptionCategoryActionButtonText,
 } from './styles';
 import { genderData } from '@utils/gender-data';
 import { SelectPicker } from '@components/Form/SelectPicker';
@@ -64,6 +68,8 @@ export function SignUpScreen() {
   const [openDatePicker, setIsOpenDatePicker] = useState(false);
   const [selectedBirthday, setSelectedBirthday] = useState<Date>();
   const [dateBirthday, setDateBirthday] = useState('');
+
+  const [memberClub, setMemberClub] = useState(false);
 
   const { signIn } = useAuth();
   const theme = useTheme();
@@ -167,6 +173,10 @@ export function SignUpScreen() {
     },
     [selectedBirthday, signIn],
   );
+
+  const handleSelectedIsMember = useCallback(() => {
+    setMemberClub((oldState) => !oldState);
+  }, []);
   // END FUNCTIONS
 
   return (
@@ -434,6 +444,22 @@ export function SignUpScreen() {
                 />
               )}
             />
+
+            <MemberActionButton onPress={() => handleSelectedIsMember()}>
+              <Feather
+                name={memberClub ? 'check-square' : 'square'}
+                size={25}
+                color={
+                  memberClub
+                    ? theme.COLORS['green-color']
+                    : theme.COLORS['gray-color']
+                }
+              />
+
+              <SubscriptionCategoryActionButtonText>
+                Você é sócio da AMIP?
+              </SubscriptionCategoryActionButtonText>
+            </MemberActionButton>
           </FormContainer>
 
           <FooterContainer>
