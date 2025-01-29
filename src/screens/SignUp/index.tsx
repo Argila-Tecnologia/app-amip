@@ -68,7 +68,7 @@ type IFormDataSubmit = zod.infer<typeof signUpValidationSchema>;
 export function SignUpScreen() {
   const [loadingCreateAccount, setIsLoadingCreateAccount] = useState(false);
   const [openDatePicker, setIsOpenDatePicker] = useState(false);
-  const [selectedBirthday, setSelectedBirthday] = useState<Date>();
+  const [selectedBirthday, setSelectedBirthday] = useState<Date>(new Date());
   const [dateBirthday, setDateBirthday] = useState('');
 
   const [memberClub, setMemberClub] = useState(false);
@@ -93,20 +93,25 @@ export function SignUpScreen() {
     control,
     handleSubmit,
     formState: { errors },
+    setValue,
   } = useForm<IFormDataSubmit>({
     resolver: zodResolver(signUpValidationSchema),
   });
   // END FORM
 
   // FUNCTIONS
-  const handleSelectedBirthday = useCallback((date: Date) => {
-    setIsOpenDatePicker(false);
+  const handleSelectedBirthday = useCallback(
+    (date: Date) => {
+      setIsOpenDatePicker(false);
 
-    setSelectedBirthday(date);
+      setSelectedBirthday(date);
 
-    const dateFormat = format(date, 'dd/MM/yyyy');
-    setDateBirthday(dateFormat);
-  }, []);
+      const dateFormat = format(date, 'dd/MM/yyyy');
+      setDateBirthday(dateFormat);
+      setValue('birthday', dateFormat);
+    },
+    [setValue],
+  );
 
   const handleFormSubmit = useCallback(
     async ({
@@ -264,7 +269,7 @@ export function SignUpScreen() {
               <Controller
                 control={control}
                 name="birthday"
-                render={({ field: { onChange } }) => (
+                render={() => (
                   <Input
                     ref={birthdayRef}
                     style={{ color: theme.COLORS['black-color'] }}
@@ -275,7 +280,6 @@ export function SignUpScreen() {
                     returnKeyType="next"
                     error={errors.birthday?.message}
                     onChangeText={(value) => {
-                      onChange(value);
                       setDateBirthday(value);
                     }}
                     onSubmitEditing={() => {
@@ -488,7 +492,7 @@ export function SignUpScreen() {
           title="Data de nascimento"
           mode="date"
           locale="pt"
-          date={new Date()}
+          date={selectedBirthday}
           onConfirm={(date) => {
             handleSelectedBirthday(date);
           }}
