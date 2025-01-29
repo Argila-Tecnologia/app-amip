@@ -1,6 +1,6 @@
 import styled, { css } from 'styled-components/native';
 
-import { Switch, TouchableOpacity, Platform } from 'react-native';
+import { TouchableOpacity, Platform } from 'react-native';
 
 import { RFValue } from 'react-native-responsive-fontsize';
 
@@ -19,6 +19,10 @@ export const SignUpContent = styled.View`
   margin-top: ${RFValue(20)}px;
 
   padding: ${RFValue(16)}px;
+`;
+
+export const SignUpSelectPickerContainer = styled.View`
+  margin-bottom: 10px;
 `;
 
 export const FormContainer = styled.View`
@@ -63,58 +67,6 @@ export const BoxActionButtonText = styled.Text`
   text-transform: uppercase;
 `;
 
-export const BoxPostalCode = styled.View`
-  width: 81.5%;
-
-  flex-direction: row;
-  align-items: center;
-`;
-
-export const SearchPostalCodeButton = styled.TouchableOpacity.attrs({
-  activeOpacity: 0.7,
-})`
-  width: 50px;
-  height: 40px;
-
-  align-items: center;
-  justify-content: center;
-
-  margin-bottom: ${RFValue(10)}px;
-  margin-left: ${RFValue(15)}px;
-
-  border-radius: 5px;
-`;
-
-export const BoxState = styled.View``;
-
-export const Label = styled.Text`
-  ${({ theme }) => css`
-    font-family: ${theme.FONT_FAMILY.REGULAR};
-    font-size: ${RFValue(theme.FONT_SIZE.MD)}px;
-    color: ${theme.COLORS['gray-color-400']};
-  `};
-`;
-
-export const BoxCity = styled.View`
-  margin: ${RFValue(8)}px 0;
-`;
-
-export const BoxBloodType = styled.View`
-  margin-bottom: ${RFValue(10)}px;
-`;
-
-export const EnabledSwitchContainer = styled.View`
-  flex: 1;
-
-  flex-direction: row;
-  justify-content: space-between;
-
-  margin-top: ${RFValue(10)}px;
-  margin-bottom: ${RFValue(10)}px;
-`;
-
-export const EnabledSwitch = styled(Switch)``;
-
 export const MemberActionButton = styled(TouchableOpacity)`
   height: ${RFValue(30)}px;
 
@@ -129,10 +81,8 @@ export const MemberActionButton = styled(TouchableOpacity)`
 
 export const SubscriptionCategoryActionButtonText = styled.Text`
   ${({ theme }) => css`
-    font-family: ${theme.FONT_FAMILY.BOLD};
-    font-size: ${RFValue(theme.FONT_SIZE.LG)}px;
+    font-family: ${theme.FONT_FAMILY.REGULAR};
+    font-size: ${RFValue(theme.FONT_SIZE.MD)}px;
     color: ${theme.COLORS['black-color']};
   `};
-
-  text-transform: uppercase;
 `;

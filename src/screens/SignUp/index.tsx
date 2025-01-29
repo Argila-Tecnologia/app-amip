@@ -26,10 +26,15 @@ import { useAuth } from '@hooks/auth';
 
 import { api } from '@services/api';
 
+import { genderData } from '@utils/gender-data';
+import { gripData } from '@utils/grip-data';
+import { handData } from '@utils/hand-data';
+
 import { Header } from '@components/Header';
 import { Input } from '@components/Form/Input';
-import { Button } from '@components/Form/Button';
 import { InputMask } from '@components/Form/InputMask';
+import { SelectPicker } from '@components/Form/SelectPicker';
+import { Button } from '@components/Form/Button';
 
 import {
   FooterContainer,
@@ -37,12 +42,9 @@ import {
   MemberActionButton,
   SignUpContainer,
   SignUpContent,
+  SignUpSelectPickerContainer,
   SubscriptionCategoryActionButtonText,
 } from './styles';
-import { genderData } from '@utils/gender-data';
-import { SelectPicker } from '@components/Form/SelectPicker';
-import { gripData } from '@utils/grip-data';
-import { handData } from '@utils/hand-data';
 
 const signUpValidationSchema = zod.object({
   name: zod.string(),
@@ -308,53 +310,59 @@ export function SignUpScreen() {
               )}
             />
 
-            <Controller
-              control={control}
-              name="gender"
-              render={({ field: { value, onChange } }) => (
-                <SelectPicker
-                  items={genderData()}
-                  placeholder="Informe o gênero"
-                  error={errors.gender?.message}
-                  value={value}
-                  onValueChange={(text) => {
-                    onChange(text);
-                  }}
-                />
-              )}
-            />
+            <SignUpSelectPickerContainer>
+              <Controller
+                control={control}
+                name="gender"
+                render={({ field: { value, onChange } }) => (
+                  <SelectPicker
+                    items={genderData()}
+                    placeholder="Informe o gênero"
+                    error={errors.gender?.message}
+                    value={value}
+                    onValueChange={(text) => {
+                      onChange(text);
+                    }}
+                  />
+                )}
+              />
+            </SignUpSelectPickerContainer>
 
-            <Controller
-              control={control}
-              name="grip"
-              render={({ field: { value, onChange } }) => (
-                <SelectPicker
-                  items={gripData()}
-                  placeholder="Empunhadura"
-                  error={errors.grip?.message}
-                  value={value}
-                  onValueChange={(text) => {
-                    onChange(text);
-                  }}
-                />
-              )}
-            />
+            <SignUpSelectPickerContainer>
+              <Controller
+                control={control}
+                name="grip"
+                render={({ field: { value, onChange } }) => (
+                  <SelectPicker
+                    items={gripData()}
+                    placeholder="Empunhadura"
+                    error={errors.grip?.message}
+                    value={value}
+                    onValueChange={(text) => {
+                      onChange(text);
+                    }}
+                  />
+                )}
+              />
+            </SignUpSelectPickerContainer>
 
-            <Controller
-              control={control}
-              name="dominant_hand"
-              render={({ field: { value, onChange } }) => (
-                <SelectPicker
-                  items={handData()}
-                  placeholder="Informe a mão dominante"
-                  error={errors.dominant_hand?.message}
-                  value={value}
-                  onValueChange={(text) => {
-                    onChange(text);
-                  }}
-                />
-              )}
-            />
+            <SignUpSelectPickerContainer>
+              <Controller
+                control={control}
+                name="dominant_hand"
+                render={({ field: { value, onChange } }) => (
+                  <SelectPicker
+                    items={handData()}
+                    placeholder="Informe a mão dominante"
+                    error={errors.dominant_hand?.message}
+                    value={value}
+                    onValueChange={(text) => {
+                      onChange(text);
+                    }}
+                  />
+                )}
+              />
+            </SignUpSelectPickerContainer>
 
             <Controller
               control={control}
