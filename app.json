@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "AMIP TDM",
-    "slug": "amip-tdm",
+    "name": "AMIP TM",
+    "slug": "amiptm",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
-    "userInterfaceStyle": "light",
+    "userInterfaceStyle": "dark",
     "newArchEnabled": true,
     "splash": {
       "image": "./assets/splash.png",
