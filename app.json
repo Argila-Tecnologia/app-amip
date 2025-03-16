@@ -22,7 +22,6 @@
         "backgroundColor": "#0F243F"
       },
       "permissions": [
-        "android.permission.RECORD_AUDIO",
         "android.permission.RECORD_AUDIO"
       ],
       "package": "br.com.argilatecnologia.amiptm"
@@ -38,6 +37,11 @@
           "photosPermission": "A aplicação acessa sua galeria de fotos, nos conceda permissão."
         }
       ]
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "67fc0b3a-7600-4ff0-baf7-8b28311de725"
+      }
+    }
   }
 }
