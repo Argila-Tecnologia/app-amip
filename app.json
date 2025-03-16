@@ -13,13 +13,19 @@
       "backgroundColor": "#0F243F"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "br.com.argilatecnologia.amiptm"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#0F243F"
-      }
+      },
+      "permissions": [
+        "android.permission.RECORD_AUDIO",
+        "android.permission.RECORD_AUDIO"
+      ],
+      "package": "br.com.argilatecnologia.amiptm"
     },
     "web": {
       "favicon": "./assets/favicon.png"

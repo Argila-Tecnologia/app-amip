@@ -101,6 +101,8 @@ export const ChampionshipsEmptyInfo = styled.Text`
   ${({ theme }) => css`
     font-family: ${theme.FONT_FAMILY.REGULAR};
     font-size: ${RFValue(theme.FONT_SIZE.MD)}px;
-    color: ${theme.COLORS['white-color']};
+    color: ${theme.COLORS['black-color']};
   `};
+
+  text-align: center;
 `;

@@ -71,7 +71,7 @@ export function MuseumsScreen() {
         <MuseumsContent>
           <MuseumList
             contentContainerStyle={
-              museums && museums.length === 0 ? { flex: 1 } : {}
+              !museums || (museums && museums.length === 0) ? { flex: 1 } : {}
             }
             showsVerticalScrollIndicator={false}
             data={museums}

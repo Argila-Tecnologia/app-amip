@@ -70,7 +70,9 @@ export function NewsScreen() {
           <Loading />
         ) : (
           <NewsList
-            contentContainerStyle={news && news.length === 0 ? { flex: 1 } : {}}
+            contentContainerStyle={
+              !news || (news && news.length === 0) ? { flex: 1 } : {}
+            }
             showsVerticalScrollIndicator={false}
             data={news}
             keyExtractor={(item) => item.id}
@@ -114,7 +116,7 @@ export function NewsScreen() {
               <NewsEmptyContainer>
                 <NewsEmptyInfo>
                   Nenhum notícia encontrada.{'\n'}Em breve estaremos com
-                  notícias quentinhas para vocês
+                  notícias quentinhas para vocês.
                 </NewsEmptyInfo>
               </NewsEmptyContainer>
             )}

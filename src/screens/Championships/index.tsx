@@ -71,7 +71,9 @@ export function ChampionshipsScreen() {
         ) : (
           <ChampionshipsList
             contentContainerStyle={
-              championships && championships.length === 0 ? { flex: 1 } : {}
+              !championships || (championships && championships.length === 0)
+                ? { flex: 1 }
+                : {}
             }
             showsVerticalScrollIndicator={false}
             data={championships}
@@ -117,7 +119,7 @@ export function ChampionshipsScreen() {
             ListEmptyComponent={() => (
               <ChampionshipsEmptyContainer>
                 <ChampionshipsEmptyInfo>
-                  Nenhum campeonato no momento. Em breve novos campeonatos
+                  Nenhum campeonato no momento.{'\n'}Em breve novos campeonatos
                   desafiadores estarão aqui.
                 </ChampionshipsEmptyInfo>
               </ChampionshipsEmptyContainer>
