@@ -6,7 +6,6 @@
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "dark",
-    "newArchEnabled": true,
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
@@ -36,7 +35,8 @@
         {
           "photosPermission": "A aplicação acessa sua galeria de fotos, nos conceda permissão."
         }
-      ]
+      ],
+      "expo-image"
     ],
     "extra": {
       "eas": {

@@ -1,31 +1,22 @@
-import { useCallback, useRef, useState } from 'react';
-
-import { Pressable, TextInput } from 'react-native';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { Pressable, TextInput, View } from 'react-native';
 
 import { useNavigation } from '@react-navigation/native';
-
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 import { Controller, useForm } from 'react-hook-form';
 
 import { z as zod } from 'zod';
-
 import { zodResolver } from '@hookform/resolvers/zod';
 
 import { format } from 'date-fns';
-
 import { useQuery } from '@tanstack/react-query';
 
 import { AxiosError } from 'axios';
-
 import DatePicker from 'react-native-date-picker';
-
 import Toast from 'react-native-toast-message';
 
-import { useTheme } from 'styled-components/native';
-
 import { api } from '@services/api';
-
 import { useAuth } from '@hooks/auth';
 
 import { IPlayerDTO } from '@dtos/player-dto';
@@ -54,13 +45,12 @@ type IEditProfileFormSubmitData = zod.infer<typeof editProfileValidationSchema>;
 
 export function EditProfileInformationScreen() {
   const [openDatePicker, setIsOpenDatePicker] = useState(false);
-  const [selectedBirthday, setSelectedBirthday] = useState<Date>(new Date());
-  // const [dateBirthday, setDateBirthday] = useState('');
+  const [selectedBirthday, setSelectedBirthday] = useState(new Date());
   const [loadingEditSubmit, setIsLoadingEditSubmit] = useState(false);
   const [playerId, setPlayerId] = useState('');
 
   const { updatePlayerProfile } = useAuth();
-  const theme = useTheme();
+
   const navigation = useNavigation();
 
   const nameRef = useRef<TextInput>(null);
@@ -76,45 +66,42 @@ export function EditProfileInformationScreen() {
     resolver: zodResolver(editProfileValidationSchema),
   });
 
-  // FUNCTIONS
+  // ✅ DATA PICKER
   const handleSelectedBirthday = useCallback(
     (date: Date) => {
       setIsOpenDatePicker(false);
-
       setSelectedBirthday(date);
 
-      const dateFormat = format(date, 'dd/MM/yyyy');
-      // setDateBirthday(dateFormat);
-      setValue('birthday', dateFormat);
+      const formatted = format(date, 'dd/MM/yyyy');
+      setValue('birthday', formatted);
     },
     [setValue],
   );
 
+  // ✅ SUBMIT
   const handleEditProfile = useCallback(
     async ({ name, email, birthday, phone }: IEditProfileFormSubmitData) => {
       try {
         setIsLoadingEditSubmit(true);
 
-        // Pega a data no formato dd/MM/yyyy, porém sendo uma string
-        const formattedDateBirthday = birthday.split('/');
+        const [day, month, year] = birthday.split('/');
 
-        // Transforma a data no formato string em formato Date yyyy/MM/dd
-        const dateBirthdayTypeDate = new Date(
-          `${formattedDateBirthday[2]}-${formattedDateBirthday[1]}-${formattedDateBirthday[0]}`,
+        const parsedDate = new Date(
+          Number(year),
+          Number(month) - 1,
+          Number(day),
         );
 
-        const editData = {
+        const response = await api.put('/players', {
           id: playerId,
           name,
           email,
           phone,
-          birthday: dateBirthdayTypeDate,
-        };
+          birthday: parsedDate,
+        });
 
-        const responsePlayerUpdate = await api.put('/players', editData);
-
-        if (responsePlayerUpdate.status === 200) {
-          await updatePlayerProfile(responsePlayerUpdate.data);
+        if (response.status === 200) {
+          await updatePlayerProfile(response.data);
 
           Toast.show({
             type: 'success',
@@ -123,78 +110,74 @@ export function EditProfileInformationScreen() {
             text2: 'Informações atualizadas com sucesso!',
           });
 
-          // navigation.navigate('TabNews', { screen: 'NewsScreen' });
-          navigation.navigate('appBottomTabs', { screen: 'newsScreen' });
+          navigation.navigate('appBottomTabs', {
+            screen: 'newsScreen',
+          });
         }
       } catch (error) {
         if (error instanceof AxiosError) {
-          if (error.response) {
-            if (error.response.status === 404) {
-              Toast.show({
-                type: 'error',
-                position: 'bottom',
-                text1: 'Equipe AMIP',
-                text2: 'Ops! Não foi possível atualizar suas informações.',
-              });
-            } else if (error.response.status === 400) {
-              Toast.show({
-                type: 'error',
-                position: 'bottom',
-                text1: 'Equipe AMIP',
-                text2: 'Ops! Credenciais incorretas.',
-              });
-            }
-
+          if (error.response?.status === 404) {
+            Toast.show({
+              type: 'error',
+              position: 'bottom',
+              text1: 'Equipe AMIP',
+              text2: 'Erro ao atualizar informações.',
+            });
             return;
           }
 
-          Toast.show({
-            type: 'error',
-            position: 'bottom',
-            text1: 'Equipe AMIP',
-            text2: 'Ops! Não foi possível atualizar suas informações.',
-          });
+          if (error.response?.status === 400) {
+            Toast.show({
+              type: 'error',
+              position: 'bottom',
+              text1: 'Equipe AMIP',
+              text2: 'Credenciais inválidas.',
+            });
+            return;
+          }
         }
+
+        Toast.show({
+          type: 'error',
+          position: 'bottom',
+          text1: 'Equipe AMIP',
+          text2: 'Erro inesperado ao atualizar.',
+        });
       } finally {
         setIsLoadingEditSubmit(false);
       }
     },
     [playerId, navigation, updatePlayerProfile],
   );
-  // END FUNCTIONS
 
-  const { isLoading: isLoadingEditProfile } = useQuery<IPlayerDTO | undefined>({
+  // ✅ QUERY (CORRIGIDO)
+  const { data: player, isLoading } = useQuery<IPlayerDTO>({
     queryKey: ['editProfile'],
     queryFn: async () => {
       const response = await api.get('/players/me');
-
-      if (response.status === 200) {
-        const responsePlayer = response.data as IPlayerDTO;
-
-        setPlayerId(responsePlayer.id);
-
-        setValue('name', responsePlayer.name);
-        setValue('email', responsePlayer.email);
-        setValue('phone', responsePlayer.phone);
-
-        const dateFormatted = format(
-          new Date(responsePlayer.birthday),
-          'dd/MM/yyyy',
-        );
-
-        setValue('birthday', dateFormatted);
-        // setDateBirthday(dateFormatted);
-
-        return responsePlayer;
-      }
+      return response.data;
     },
   });
+
+  useEffect(() => {
+    if (player) {
+      setPlayerId(player.id);
+
+      setValue('name', player.name);
+      setValue('email', player.email);
+      setValue('phone', player.phone);
+
+      const formattedDate = format(new Date(player.birthday), 'dd/MM/yyyy');
+
+      setValue('birthday', formattedDate);
+    }
+  }, [player, setValue]);
 
   return (
     <EditProfileContainer>
       <Header title="Atualizar perfil" />
 
-      {isLoadingEditProfile ? (
+      {isLoading ? (
         <Loading />
       ) : (
         <KeyboardAwareScrollView>
@@ -206,18 +189,12 @@ export function EditProfileInformationScreen() {
                 render={({ field: { value, onChange } }) => (
                   <Input
                     ref={nameRef}
-                    placeholder="Informe o nome"
-                    placeholderTextColor={theme.COLORS['gray-color-400']}
-                    autoCorrect={false}
-                    returnKeyType="next"
-                    error={errors.name?.message}
+                    placeholder="Nome"
                     value={value}
-                    onChangeText={(text) => {
-                      onChange(text);
-                    }}
-                    onSubmitEditing={() => {
-                      emailRef.current?.focus();
-                    }}
+                    error={errors.name?.message}
+                    onChangeText={onChange}
+                    returnKeyType="next"
+                    onSubmitEditing={() => emailRef.current?.focus()}
                   />
                 )}
               />
@@ -228,46 +205,32 @@ export function EditProfileInformationScreen() {
                 render={({ field: { value, onChange } }) => (
                   <Input
                     ref={emailRef}
-                    placeholder="Informe o e-mail"
-                    placeholderTextColor={theme.COLORS['gray-color-400']}
-                    keyboardType="email-address"
-                    autoCorrect={false}
-                    autoCapitalize="none"
-                    returnKeyType="next"
-                    error={errors.email?.message}
+                    placeholder="E-mail"
                     value={value}
-                    onChangeText={(text) => {
-                      onChange(text);
-                    }}
+                    error={errors.email?.message}
+                    onChangeText={onChange}
+                    keyboardType="email-address"
+                    autoCapitalize="none"
                   />
                 )}
               />
 
-              <Pressable
-                onPress={() => {
-                  setIsOpenDatePicker(true);
-                }}
-              >
-                <Controller
-                  control={control}
-                  name="birthday"
-                  render={({ field: { value, onChange } }) => (
-                    <Input
-                      ref={birthdayRef}
-                      style={{ color: '#000' }}
-                      placeholder="Informe a data de nascimento"
-                      placeholderTextColor={theme.COLORS['gray-color-400']}
-                      editable={false}
-                      returnKeyType="next"
-                      error={errors.birthday?.message}
-                      value={value}
-                      onChangeText={(value) => {
-                        onChange(value);
-                        // setDateBirthday(value);
-                      }}
-                    />
-                  )}
-                />
+              <Pressable onPress={() => setIsOpenDatePicker(true)}>
+                <View pointerEvents="none">
+                  <Controller
+                    control={control}
+                    name="birthday"
+                    render={({ field: { value } }) => (
+                      <Input
+                        ref={birthdayRef}
+                        placeholder="Data de nascimento"
+                        value={value}
+                        error={errors.birthday?.message}
+                        editable={false}
+                      />
+                    )}
+                  />
+                </View>
               </Pressable>
 
               <Controller
@@ -275,16 +238,10 @@ export function EditProfileInformationScreen() {
                 name="phone"
                 render={({ field: { value, onChange } }) => (
                   <InputMask
-                    placeholder="Ex.: DDD + Nº de telefone"
-                    placeholderTextColor={theme.COLORS['gray-color-400']}
-                    autoCorrect={false}
-                    autoCapitalize="none"
-                    returnKeyType="next"
-                    error={errors.phone?.message}
+                    placeholder="Telefone"
                     value={value}
-                    onChangeText={(text) => {
-                      onChange(text);
-                    }}
+                    error={errors.phone?.message}
+                    onChangeText={onChange}
                   />
                 )}
               />
@@ -302,20 +259,15 @@ export function EditProfileInformationScreen() {
         </KeyboardAwareScrollView>
       )}
 
-      {/* MODALS */}
+      {/* DATE PICKER */}
       <DatePicker
         modal
         open={openDatePicker}
-        title="Data de nascimento"
         mode="date"
-        locale="pt"
+        locale="pt-BR"
         date={selectedBirthday}
-        onConfirm={(date) => {
-          handleSelectedBirthday(date);
-        }}
-        onCancel={() => {
-          setIsOpenDatePicker(false);
-        }}
+        onConfirm={handleSelectedBirthday}
+        onCancel={() => setIsOpenDatePicker(false)}
       />
     </EditProfileContainer>
   );

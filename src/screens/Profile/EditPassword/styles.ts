@@ -1,18 +1,17 @@
 import styled from 'styled-components/native';
-import { RFValue } from 'react-native-responsive-fontsize';
+import { scale, verticalScale } from 'react-native-size-matters';
 
 export const EditPasswordContainer = styled.View`
   flex: 1;
-
   background-color: ${({ theme }) => theme.COLORS['gray-color-100']};
 `;
 
 export const EditPasswordContent = styled.View`
   flex: 1;
 
-  padding: ${RFValue(30)}px ${RFValue(16)}px;
+  padding: ${verticalScale(30)}px ${scale(16)}px;
 `;
 
 export const EditPasswordFooterContainer = styled.View`
-  padding: ${RFValue(20)}px 0;
+  padding: ${verticalScale(20)}px 0;
 `;

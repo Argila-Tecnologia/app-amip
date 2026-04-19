@@ -1,12 +1,12 @@
-import styled, { css } from 'styled-components/native';
-
 import { View } from 'react-native';
+
+import { Feather } from '@expo/vector-icons';
+
+import styled, { css } from 'styled-components/native';
 
 import { MaskedTextInput } from 'react-native-mask-text';
 
-import { RFValue } from 'react-native-responsive-fontsize';
-
-import { Feather } from '@expo/vector-icons';
+import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
 
 interface IContentProps {
   isError: boolean;
@@ -19,27 +19,27 @@ export const InputContainer = styled.View`
 export const InputLabel = styled.Text`
   ${({ theme }) => css`
     font-family: ${theme.FONT_FAMILY.REGULAR};
-    font-size: ${RFValue(theme.FONT_SIZE.MD)}px;
+    font-size: ${moderateScale(theme.FONT_SIZE.MD)}px;
     color: ${theme.COLORS['black-color']};
   `};
 `;
 
 export const InputContent = styled(View)<IContentProps>`
   width: 100%;
-  height: ${RFValue(50)}px;
+  height: ${verticalScale(50)}px;
 
   flex-direction: row;
   align-items: center;
 
-  padding: 0 ${RFValue(16)}px;
+  padding: 0 ${scale(16)}px;
 
   background: ${({ theme }) => theme.COLORS['gray-color-100']};
 
-  border-radius: ${RFValue(10)}px;
-  border-width: ${RFValue(2)}px;
+  border-radius: ${moderateScale(10)}px;
+  border-width: ${moderateScale(1.5)}px;
   border-color: ${({ theme }) => theme.COLORS['blue-dark-color']};
 
-  margin-bottom: ${RFValue(8)}px;
+  margin-bottom: ${verticalScale(8)}px;
 
   ${({ isError, theme }) =>
     isError &&
@@ -48,13 +48,13 @@ export const InputContent = styled(View)<IContentProps>`
     `}
 `;
 
-export const Icon = styled(Feather)``;
+export const Icon = styled(Feather)`
+  margin-right: ${scale(10)}px;
+`;
 
 export const TextInputField = styled(MaskedTextInput)`
-  height: ${RFValue(50)}px;
-
   flex: 1;
 
-  font-size: ${RFValue(16)}px;
+  font-size: ${moderateScale(16)}px;
   font-family: ${({ theme }) => theme.FONT_FAMILY.REGULAR};
 `;

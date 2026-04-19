@@ -1,8 +1,8 @@
-import styled, { css } from 'styled-components/native';
-
 import { Feather } from '@expo/vector-icons';
 
-import { RFValue } from 'react-native-responsive-fontsize';
+import styled, { css } from 'styled-components/native';
+
+import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
 
 interface IContainerProps {
   loading: boolean;
@@ -10,16 +10,16 @@ interface IContainerProps {
 
 export const ButtonContainer = styled.TouchableOpacity<IContainerProps>`
   width: 100%;
-  height: ${RFValue(50)}px;
+  height: ${verticalScale(50)}px;
 
   align-items: center;
   justify-content: center;
 
   background: ${({ theme }) => theme.COLORS['green-color']};
 
-  border-radius: ${RFValue(10)}px;
+  border-radius: ${moderateScale(10)}px;
 
-  margin-top: ${RFValue(8)}px;
+  margin-top: ${verticalScale(8)}px;
 
   ${({ loading }) =>
     loading &&
@@ -31,7 +31,7 @@ export const ButtonContainer = styled.TouchableOpacity<IContainerProps>`
 export const ButtonText = styled.Text`
   ${({ theme }) => css`
     font-family: ${theme.FONT_FAMILY.BOLD};
-    font-size: ${RFValue(theme.FONT_SIZE.LG)}px;
+    font-size: ${moderateScale(theme.FONT_SIZE.LG)}px;
     color: ${theme.COLORS['white-color']};
   `};
 
@@ -39,5 +39,5 @@ export const ButtonText = styled.Text`
 `;
 
 export const Icon = styled(Feather)`
-  margin-right: ${RFValue(16)}px;
+  margin-right: ${scale(16)}px;
 `;

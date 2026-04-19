@@ -1,12 +1,17 @@
 import { useCallback, useRef, useState } from 'react';
 
-import { Pressable, TextInput } from 'react-native';
+import {
+  KeyboardAvoidingView,
+  Platform,
+  Pressable,
+  TextInput,
+} from 'react-native';
 
 import { z as zod } from 'zod';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-controller';
 
 import { Controller, useForm } from 'react-hook-form';
 
@@ -187,320 +192,329 @@ export function SignUpScreen() {
   // END FUNCTIONS
 
   return (
-    <KeyboardAwareScrollView>
-      <SignUpContainer>
-        <Header title="Crie sua conta" />
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+    >
+      <KeyboardAwareScrollView
+        bottomOffset={20}
+        keyboardShouldPersistTaps="handled"
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{ flexGrow: 1 }}
+      >
+        <SignUpContainer>
+          <Header title="Crie sua conta" />
 
-        <SignUpContent>
-          <FormContainer>
-            <Controller
-              control={control}
-              name="name"
-              render={({ field: { value, onChange } }) => (
-                <Input
-                  ref={nameRef}
-                  autoCapitalize="none"
-                  placeholder="Informe o nome"
-                  placeholderTextColor={theme.COLORS['gray-color-400']}
-                  editable={!loadingCreateAccount}
-                  value={value}
-                  returnKeyType="next"
-                  error={errors.name?.message}
-                  onChangeText={(text) => {
-                    onChange(text);
-                  }}
-                  onSubmitEditing={() => {
-                    emailRef.current?.focus();
-                  }}
-                />
-              )}
-            />
-
-            <Controller
-              control={control}
-              name="email"
-              render={({ field: { value, onChange } }) => (
-                <Input
-                  ref={emailRef}
-                  autoCapitalize="none"
-                  placeholder="Informe o e-mail"
-                  placeholderTextColor={theme.COLORS['gray-color-400']}
-                  editable={!loadingCreateAccount}
-                  keyboardType="email-address"
-                  value={value}
-                  returnKeyType="next"
-                  error={errors.email?.message}
-                  onChangeText={(text) => {
-                    onChange(text);
-                  }}
-                  onSubmitEditing={() => {
-                    passwordRef.current?.focus();
-                  }}
-                />
-              )}
-            />
-
-            <Controller
-              control={control}
-              name="password"
-              render={({ field: { value, onChange } }) => (
-                <Input
-                  ref={passwordRef}
-                  autoCapitalize="none"
-                  placeholder="Informe a senha"
-                  placeholderTextColor={theme.COLORS['gray-color-400']}
-                  editable={!loadingCreateAccount}
-                  secureTextFieldEntry
-                  value={value}
-                  returnKeyType="next"
-                  error={errors.password?.message}
-                  onChangeText={(text) => {
-                    onChange(text);
-                  }}
-                />
-              )}
-            />
-
-            <Pressable
-              onPress={() => {
-                setIsOpenDatePicker(true);
-              }}
-            >
+          <SignUpContent>
+            <FormContainer>
               <Controller
                 control={control}
-                name="birthday"
-                render={() => (
+                name="name"
+                render={({ field: { value, onChange } }) => (
                   <Input
-                    ref={birthdayRef}
-                    style={{ color: theme.COLORS['black-color'] }}
-                    placeholder="Informe a data de nascimento"
+                    ref={nameRef}
+                    autoCapitalize="none"
+                    placeholder="Informe o nome"
                     placeholderTextColor={theme.COLORS['gray-color-400']}
-                    editable={false}
-                    value={dateBirthday}
+                    editable={!loadingCreateAccount}
+                    value={value}
                     returnKeyType="next"
-                    error={errors.birthday?.message}
-                    onChangeText={(value) => {
-                      setDateBirthday(value);
+                    error={errors.name?.message}
+                    onChangeText={(text) => {
+                      onChange(text);
                     }}
                     onSubmitEditing={() => {
-                      phoneRef.current?.focus();
+                      emailRef.current?.focus();
                     }}
                   />
                 )}
               />
-            </Pressable>
 
-            <Controller
-              control={control}
-              name="phone"
-              render={({ field: { value, onChange } }) => (
-                <InputMask
-                  mask="(99)99999-9999"
-                  autoCapitalize="none"
-                  placeholder="Ex.: DDD + Nº de telefone"
-                  placeholderTextColor={theme.COLORS['gray-color-400']}
-                  editable={!loadingCreateAccount}
-                  keyboardType="numeric"
-                  value={value}
-                  returnKeyType="next"
-                  error={errors.phone?.message}
-                  onChangeText={(_, rawText) => {
-                    onChange(rawText);
-                  }}
-                  onSubmitEditing={() => {
-                    genderRef.current?.focus();
-                  }}
-                />
-              )}
-            />
-
-            <SignUpSelectPickerContainer>
               <Controller
                 control={control}
-                name="gender"
+                name="email"
                 render={({ field: { value, onChange } }) => (
-                  <SelectPicker
-                    items={genderData()}
-                    placeholder="Informe o gênero"
-                    error={errors.gender?.message}
+                  <Input
+                    ref={emailRef}
+                    autoCapitalize="none"
+                    placeholder="Informe o e-mail"
+                    placeholderTextColor={theme.COLORS['gray-color-400']}
+                    editable={!loadingCreateAccount}
+                    keyboardType="email-address"
                     value={value}
-                    onValueChange={(text) => {
+                    returnKeyType="next"
+                    error={errors.email?.message}
+                    onChangeText={(text) => {
+                      onChange(text);
+                    }}
+                    onSubmitEditing={() => {
+                      passwordRef.current?.focus();
+                    }}
+                  />
+                )}
+              />
+
+              <Controller
+                control={control}
+                name="password"
+                render={({ field: { value, onChange } }) => (
+                  <Input
+                    ref={passwordRef}
+                    autoCapitalize="none"
+                    placeholder="Informe a senha"
+                    placeholderTextColor={theme.COLORS['gray-color-400']}
+                    editable={!loadingCreateAccount}
+                    secureTextFieldEntry
+                    value={value}
+                    returnKeyType="next"
+                    error={errors.password?.message}
+                    onChangeText={(text) => {
                       onChange(text);
                     }}
                   />
                 )}
               />
-            </SignUpSelectPickerContainer>
 
-            <SignUpSelectPickerContainer>
+              <Pressable
+                onPress={() => {
+                  setIsOpenDatePicker(true);
+                }}
+              >
+                <Controller
+                  control={control}
+                  name="birthday"
+                  render={() => (
+                    <Input
+                      ref={birthdayRef}
+                      style={{ color: theme.COLORS['black-color'] }}
+                      placeholder="Informe a data de nascimento"
+                      placeholderTextColor={theme.COLORS['gray-color-400']}
+                      editable={false}
+                      value={dateBirthday}
+                      returnKeyType="next"
+                      error={errors.birthday?.message}
+                      onChangeText={(value) => {
+                        setDateBirthday(value);
+                      }}
+                      onSubmitEditing={() => {
+                        phoneRef.current?.focus();
+                      }}
+                    />
+                  )}
+                />
+              </Pressable>
+
               <Controller
                 control={control}
-                name="grip"
+                name="phone"
                 render={({ field: { value, onChange } }) => (
-                  <SelectPicker
-                    items={gripData()}
-                    placeholder="Empunhadura"
-                    error={errors.grip?.message}
+                  <InputMask
+                    mask="(99)99999-9999"
+                    autoCapitalize="none"
+                    placeholder="Ex.: DDD + Nº de telefone"
+                    placeholderTextColor={theme.COLORS['gray-color-400']}
+                    editable={!loadingCreateAccount}
+                    keyboardType="numeric"
                     value={value}
-                    onValueChange={(text) => {
+                    returnKeyType="next"
+                    error={errors.phone?.message}
+                    onChangeText={(_, rawText) => {
+                      onChange(rawText);
+                    }}
+                    onSubmitEditing={() => {
+                      genderRef.current?.focus();
+                    }}
+                  />
+                )}
+              />
+
+              <SignUpSelectPickerContainer>
+                <Controller
+                  control={control}
+                  name="gender"
+                  render={({ field: { value, onChange } }) => (
+                    <SelectPicker
+                      items={genderData()}
+                      placeholder="Informe o gênero"
+                      error={errors.gender?.message}
+                      value={value}
+                      onValueChange={(text) => {
+                        onChange(text);
+                      }}
+                    />
+                  )}
+                />
+              </SignUpSelectPickerContainer>
+
+              <SignUpSelectPickerContainer>
+                <Controller
+                  control={control}
+                  name="grip"
+                  render={({ field: { value, onChange } }) => (
+                    <SelectPicker
+                      items={gripData()}
+                      placeholder="Empunhadura"
+                      error={errors.grip?.message}
+                      value={value}
+                      onValueChange={(text) => {
+                        onChange(text);
+                      }}
+                    />
+                  )}
+                />
+              </SignUpSelectPickerContainer>
+
+              <SignUpSelectPickerContainer>
+                <Controller
+                  control={control}
+                  name="dominant_hand"
+                  render={({ field: { value, onChange } }) => (
+                    <SelectPicker
+                      items={handData()}
+                      placeholder="Informe a mão dominante"
+                      error={errors.dominant_hand?.message}
+                      value={value}
+                      onValueChange={(text) => {
+                        onChange(text);
+                      }}
+                    />
+                  )}
+                />
+              </SignUpSelectPickerContainer>
+
+              <Controller
+                control={control}
+                name="rubber"
+                render={({ field: { value, onChange } }) => (
+                  <Input
+                    ref={rubberRef}
+                    autoCapitalize="none"
+                    placeholder="Informe a borracha"
+                    placeholderTextColor={theme.COLORS['gray-color-400']}
+                    editable={!loadingCreateAccount}
+                    value={value}
+                    returnKeyType="next"
+                    error={errors.rubber?.message}
+                    onChangeText={(text) => {
+                      onChange(text);
+                    }}
+                    onSubmitEditing={() => {
+                      woodRef.current?.focus();
+                    }}
+                  />
+                )}
+              />
+
+              <Controller
+                control={control}
+                name="wood"
+                render={({ field: { value, onChange } }) => (
+                  <Input
+                    ref={woodRef}
+                    autoCapitalize="none"
+                    placeholder="Informe o principal título da carreira"
+                    placeholderTextColor={theme.COLORS['gray-color-400']}
+                    editable={!loadingCreateAccount}
+                    value={value}
+                    returnKeyType="next"
+                    error={errors.wood?.message}
+                    onChangeText={(text) => {
+                      onChange(text);
+                    }}
+                    onSubmitEditing={() => {
+                      mainTitleOfCareerRef.current?.focus();
+                    }}
+                  />
+                )}
+              />
+
+              <Controller
+                control={control}
+                name="ranking"
+                render={({ field: { value, onChange } }) => (
+                  <Input
+                    ref={rankingRef}
+                    autoCapitalize="none"
+                    placeholder="Informe o ranking"
+                    placeholderTextColor={theme.COLORS['gray-color-400']}
+                    editable={!loadingCreateAccount}
+                    value={value}
+                    returnKeyType="next"
+                    error={errors.ranking?.message}
+                    onChangeText={(text) => {
+                      onChange(text);
+                    }}
+                    onSubmitEditing={() => {
+                      ratingRef.current?.focus();
+                    }}
+                  />
+                )}
+              />
+
+              <Controller
+                control={control}
+                name="rating"
+                render={({ field: { value, onChange } }) => (
+                  <Input
+                    ref={ratingRef}
+                    autoCapitalize="none"
+                    placeholder="Informe o nome"
+                    placeholderTextColor={theme.COLORS['gray-color-400']}
+                    editable={!loadingCreateAccount}
+                    value={value}
+                    returnKeyType="next"
+                    error={errors.rating?.message}
+                    onChangeText={(text) => {
                       onChange(text);
                     }}
                   />
                 )}
               />
-            </SignUpSelectPickerContainer>
 
-            <SignUpSelectPickerContainer>
-              <Controller
-                control={control}
-                name="dominant_hand"
-                render={({ field: { value, onChange } }) => (
-                  <SelectPicker
-                    items={handData()}
-                    placeholder="Informe a mão dominante"
-                    error={errors.dominant_hand?.message}
-                    value={value}
-                    onValueChange={(text) => {
-                      onChange(text);
-                    }}
-                  />
-                )}
-              />
-            </SignUpSelectPickerContainer>
-
-            <Controller
-              control={control}
-              name="rubber"
-              render={({ field: { value, onChange } }) => (
-                <Input
-                  ref={rubberRef}
-                  autoCapitalize="none"
-                  placeholder="Informe a borracha"
-                  placeholderTextColor={theme.COLORS['gray-color-400']}
-                  editable={!loadingCreateAccount}
-                  value={value}
-                  returnKeyType="next"
-                  error={errors.rubber?.message}
-                  onChangeText={(text) => {
-                    onChange(text);
-                  }}
-                  onSubmitEditing={() => {
-                    woodRef.current?.focus();
-                  }}
+              <MemberActionButton onPress={() => handleSelectedIsMember()}>
+                <Feather
+                  name={memberClub ? 'check-square' : 'square'}
+                  size={25}
+                  color={
+                    memberClub
+                      ? theme.COLORS['green-color']
+                      : theme.COLORS['gray-color']
+                  }
                 />
-              )}
-            />
 
-            <Controller
-              control={control}
-              name="wood"
-              render={({ field: { value, onChange } }) => (
-                <Input
-                  ref={woodRef}
-                  autoCapitalize="none"
-                  placeholder="Informe o principal título da carreira"
-                  placeholderTextColor={theme.COLORS['gray-color-400']}
-                  editable={!loadingCreateAccount}
-                  value={value}
-                  returnKeyType="next"
-                  error={errors.wood?.message}
-                  onChangeText={(text) => {
-                    onChange(text);
-                  }}
-                  onSubmitEditing={() => {
-                    mainTitleOfCareerRef.current?.focus();
-                  }}
-                />
-              )}
-            />
+                <SubscriptionCategoryActionButtonText>
+                  Você é sócio da AMIP?
+                </SubscriptionCategoryActionButtonText>
+              </MemberActionButton>
+            </FormContainer>
 
-            <Controller
-              control={control}
-              name="ranking"
-              render={({ field: { value, onChange } }) => (
-                <Input
-                  ref={rankingRef}
-                  autoCapitalize="none"
-                  placeholder="Informe o ranking"
-                  placeholderTextColor={theme.COLORS['gray-color-400']}
-                  editable={!loadingCreateAccount}
-                  value={value}
-                  returnKeyType="next"
-                  error={errors.ranking?.message}
-                  onChangeText={(text) => {
-                    onChange(text);
-                  }}
-                  onSubmitEditing={() => {
-                    ratingRef.current?.focus();
-                  }}
-                />
-              )}
-            />
+            <FooterContainer>
+              <Button
+                activeOpacity={0.7}
+                loading={loadingCreateAccount}
+                onPress={handleSubmit(handleFormSubmit)}
+              >
+                Criar conta
+              </Button>
+            </FooterContainer>
+          </SignUpContent>
 
-            <Controller
-              control={control}
-              name="rating"
-              render={({ field: { value, onChange } }) => (
-                <Input
-                  ref={ratingRef}
-                  autoCapitalize="none"
-                  placeholder="Informe o nome"
-                  placeholderTextColor={theme.COLORS['gray-color-400']}
-                  editable={!loadingCreateAccount}
-                  value={value}
-                  returnKeyType="next"
-                  error={errors.rating?.message}
-                  onChangeText={(text) => {
-                    onChange(text);
-                  }}
-                />
-              )}
-            />
-
-            <MemberActionButton onPress={() => handleSelectedIsMember()}>
-              <Feather
-                name={memberClub ? 'check-square' : 'square'}
-                size={25}
-                color={
-                  memberClub
-                    ? theme.COLORS['green-color']
-                    : theme.COLORS['gray-color']
-                }
-              />
-
-              <SubscriptionCategoryActionButtonText>
-                Você é sócio da AMIP?
-              </SubscriptionCategoryActionButtonText>
-            </MemberActionButton>
-          </FormContainer>
-
-          <FooterContainer>
-            <Button
-              activeOpacity={0.7}
-              loading={loadingCreateAccount}
-              onPress={handleSubmit(handleFormSubmit)}
-            >
-              Criar conta
-            </Button>
-          </FooterContainer>
-        </SignUpContent>
-
-        {/* MODALS */}
-        <DatePicker
-          modal
-          open={openDatePicker}
-          title="Data de nascimento"
-          mode="date"
-          locale="pt"
-          date={selectedBirthday}
-          onConfirm={(date) => {
-            handleSelectedBirthday(date);
-          }}
-          onCancel={() => {
-            setIsOpenDatePicker(false);
-          }}
-        />
-      </SignUpContainer>
-    </KeyboardAwareScrollView>
+          {/* MODALS */}
+          <DatePicker
+            modal
+            open={openDatePicker}
+            title="Data de nascimento"
+            mode="date"
+            locale="pt"
+            date={selectedBirthday}
+            onConfirm={(date) => {
+              handleSelectedBirthday(date);
+            }}
+            onCancel={() => {
+              setIsOpenDatePicker(false);
+            }}
+          />
+        </SignUpContainer>
+      </KeyboardAwareScrollView>
+    </KeyboardAvoidingView>
   );
 }

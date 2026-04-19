@@ -1,11 +1,11 @@
 import styled from 'styled-components/native';
 
-import { RFValue } from 'react-native-responsive-fontsize';
+import { scale, verticalScale } from 'react-native-size-matters';
 
 import { BottomSheetView } from '@gorhom/bottom-sheet';
 
 export const ChooseTakePhotoModalContent = styled(BottomSheetView)`
-  height: ${RFValue(100)}px;
+  height: ${verticalScale(100)}px;
 
   flex: 1;
   justify-content: center;
@@ -23,8 +23,8 @@ export const TakePhotoButton = styled.TouchableOpacity.attrs({
 })``;
 
 export const Divisor = styled.View`
-  width: ${RFValue(2)}px;
-  height: ${RFValue(50)}px;
+  width: ${scale(2)}px;
+  height: ${verticalScale(50)}px;
 
   background-color: ${({ theme }) => theme.COLORS['gray-color-400']};
 `;

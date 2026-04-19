@@ -1,13 +1,13 @@
 import styled from 'styled-components/native';
 
-import { RFValue } from 'react-native-responsive-fontsize';
+import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
 
 export const HeaderImageGalleryContainer = styled.View`
   flex: 1;
 `;
 
 export const HeaderImageGalleryContent = styled.View`
-  height: ${RFValue(50)}px;
+  height: ${verticalScale(50)}px;
 
   flex-direction: row;
   align-items: center;
@@ -15,18 +15,19 @@ export const HeaderImageGalleryContent = styled.View`
 
   background-color: ${({ theme }) => theme.COLORS['black-color']};
 
-  margin-top: 10px;
+  margin-top: ${verticalScale(10)}px;
 
-  padding-left: 5px;
-  padding-right: 5px;
+  padding-left: ${scale(5)}px;
+  padding-right: ${scale(5)}px;
 `;
 
 export const Title = styled.Text`
-  color: ${({ theme }) => theme.COLORS['black-color']};
+  color: ${({ theme }) => theme.COLORS['white-color']};
+  font-size: ${moderateScale(14)}px;
 `;
 
 export const CloseButton = styled.TouchableOpacity.attrs({
   activeOpacity: 0.7,
 })`
-  padding: ${RFValue(10)}px;
+  padding: ${scale(10)}px;
 `;

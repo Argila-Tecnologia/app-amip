@@ -1,17 +1,15 @@
 import styled, { css } from 'styled-components/native';
-
-import { RFValue } from 'react-native-responsive-fontsize';
+import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
 
 export const ContactContainer = styled.View`
   flex: 1;
-
   background-color: ${({ theme }) => theme.COLORS['gray-color-100']};
 `;
 
 export const ContactContent = styled.View`
   flex: 1;
 
-  padding: ${RFValue(50)}px ${RFValue(30)}px;
+  padding: ${verticalScale(50)}px ${scale(30)}px;
 `;
 
 interface IContactButtonProps {
@@ -23,8 +21,6 @@ export const ContactButton = styled.TouchableOpacity.attrs<IContactButtonProps>(
     activeOpacity: 0.7,
   },
 )`
-  /* height: 60px; */
-
   flex-direction: row;
   align-items: center;
 
@@ -33,21 +29,21 @@ export const ContactButton = styled.TouchableOpacity.attrs<IContactButtonProps>(
       ? theme.COLORS['blue-dark-color']
       : theme.COLORS['green-dark-color']};
 
-  border-radius: 10px;
+  border-radius: ${moderateScale(10)}px;
 
-  margin-bottom: ${RFValue(30)}px;
+  margin-bottom: ${verticalScale(30)}px;
 
-  padding: ${RFValue(15)}px;
+  padding: ${verticalScale(15)}px ${scale(15)}px;
 `;
 
 export const ContactIcon = styled.View`
-  margin-right: ${RFValue(20)}px;
+  margin-right: ${scale(20)}px;
 `;
 
 export const ContactText = styled.Text`
   ${({ theme }) => css`
     font-family: ${theme.FONT_FAMILY.REGULAR};
-    font-size: ${RFValue(theme.FONT_SIZE.MD)}px;
+    font-size: ${moderateScale(theme.FONT_SIZE.MD)}px;
     color: ${theme.COLORS['white-color']};
   `}
 `;

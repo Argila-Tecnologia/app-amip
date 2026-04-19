@@ -1,6 +1,6 @@
 import { useCallback, useRef, useState } from 'react';
 
-import { TextInput } from 'react-native';
+import { KeyboardAvoidingView, Platform, TextInput } from 'react-native';
 
 import { useNavigation } from '@react-navigation/native';
 
@@ -14,7 +14,7 @@ import { Controller, useForm } from 'react-hook-form';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-controller';
 
 import { useAuth } from '@hooks/auth';
 
@@ -85,83 +85,91 @@ export function SignInScreen() {
   // END FUNCTION
 
   return (
-    <KeyboardAwareScrollView
-      style={{ backgroundColor: theme.COLORS['blue-dark-color'] }}
+    <KeyboardAvoidingView
+      style={{ flex: 1, backgroundColor: theme.COLORS['blue-dark-color'] }}
+      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
-      <SignInContainer>
-        <LogoImage source={logoImage} contentFit="contain" />
+      <KeyboardAwareScrollView
+        bottomOffset={20}
+        keyboardShouldPersistTaps="handled"
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{ flexGrow: 1 }}
+      >
+        <SignInContainer>
+          <LogoImage source={logoImage} contentFit="contain" />
 
-        {/* <Title>Acesse sua conta.</Title> */}
+          {/* <Title>Acesse sua conta.</Title> */}
 
-        <FormContainer>
-          <Controller
-            control={control}
-            name="email"
-            render={({ field: { value, onChange } }) => (
-              <Input
-                ref={emailRef}
-                autoCapitalize="none"
-                keyboardType="email-address"
-                placeholder="E-mail"
-                value={value}
-                error={errors.email?.message}
-                returnKeyType="next"
-                onChangeText={(text) => {
-                  onChange(text);
-                }}
-                onSubmitEditing={() => {
-                  passwordRef.current?.focus();
-                }}
-              />
-            )}
-          />
+          <FormContainer>
+            <Controller
+              control={control}
+              name="email"
+              render={({ field: { value, onChange } }) => (
+                <Input
+                  ref={emailRef}
+                  autoCapitalize="none"
+                  keyboardType="email-address"
+                  placeholder="E-mail"
+                  value={value}
+                  error={errors.email?.message}
+                  returnKeyType="next"
+                  onChangeText={(text) => {
+                    onChange(text);
+                  }}
+                  onSubmitEditing={() => {
+                    passwordRef.current?.focus();
+                  }}
+                />
+              )}
+            />
 
-          <Controller
-            control={control}
-            name="password"
-            render={({ field: { value, onChange } }) => (
-              <Input
-                ref={passwordRef}
-                secureTextFieldEntry
-                placeholder="Senha"
-                value={value}
-                error={errors.password?.message}
-                returnKeyType="done"
-                onChangeText={(text) => {
-                  onChange(text);
-                }}
-                onSubmitEditing={handleSubmit(handleFormSubmit)}
-              />
-            )}
-          />
+            <Controller
+              control={control}
+              name="password"
+              render={({ field: { value, onChange } }) => (
+                <Input
+                  ref={passwordRef}
+                  secureTextFieldEntry
+                  placeholder="Senha"
+                  value={value}
+                  error={errors.password?.message}
+                  returnKeyType="done"
+                  onChangeText={(text) => {
+                    onChange(text);
+                  }}
+                  onSubmitEditing={handleSubmit(handleFormSubmit)}
+                />
+              )}
+            />
 
-          <Button
-            activeOpacity={0.7}
-            loading={loadingSignIn}
-            onPress={handleSubmit(handleFormSubmit)}
-          >
-            Entrar
-          </Button>
-        </FormContainer>
+            <Button
+              activeOpacity={0.7}
+              loading={loadingSignIn}
+              onPress={handleSubmit(handleFormSubmit)}
+            >
+              Entrar
+            </Button>
+          </FormContainer>
 
-        <ForgotPasswordContent>
-          <ForgotPasswordButton>
-            <ForgotPasswordText>Esqueceu a senha?</ForgotPasswordText>
-          </ForgotPasswordButton>
-        </ForgotPasswordContent>
+          <ForgotPasswordContent>
+            <ForgotPasswordButton>
+              <ForgotPasswordText>Esqueceu a senha?</ForgotPasswordText>
+            </ForgotPasswordButton>
+          </ForgotPasswordContent>
 
-        <Footer>
-          <FooterCreateAccountButton
-            onPress={() => {
-              navigation.navigate('signUpScreen');
-            }}
-          >
-            <FooterCreateAccountButtonText>
-              Criar conta!
-            </FooterCreateAccountButtonText>
-          </FooterCreateAccountButton>
-        </Footer>
-      </SignInContainer>
-    </KeyboardAwareScrollView>
+          <Footer>
+            <FooterCreateAccountButton
+              onPress={() => {
+                navigation.navigate('signUpScreen');
+              }}
+            >
+              <FooterCreateAccountButtonText>
+                Criar conta!
+              </FooterCreateAccountButtonText>
+            </FooterCreateAccountButton>
+          </Footer>
+        </SignInContainer>
+      </KeyboardAwareScrollView>
+    </KeyboardAvoidingView>
   );
 }

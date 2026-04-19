@@ -1,17 +1,16 @@
 import styled, { css } from 'styled-components/native';
 
-import { RFValue } from 'react-native-responsive-fontsize';
+import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
 
 export const HeaderContainer = styled.View`
   width: 100%;
-  /* height: ${RFValue(70)}px; */
 
   flex-direction: row;
   align-items: center;
 
   background-color: ${({ theme }) => theme.COLORS['blue-dark-color']};
 
-  padding: ${RFValue(0)}px ${RFValue(8)}px ${RFValue(15)}px;
+  padding: ${verticalScale(0)}px ${scale(8)}px ${verticalScale(15)}px;
 `;
 
 export const HeaderBackButton = styled.TouchableOpacity.attrs({
@@ -20,15 +19,15 @@ export const HeaderBackButton = styled.TouchableOpacity.attrs({
   flex-direction: row;
   align-items: center;
 
-  margin-right: ${RFValue(10)}px;
+  margin-right: ${scale(10)}px;
 `;
 
 export const HeaderTitle = styled.Text`
   ${({ theme }) => css`
     font-family: ${theme.FONT_FAMILY.BOLD};
-    font-size: ${RFValue(theme.FONT_SIZE.LG)}px;
+    font-size: ${moderateScale(theme.FONT_SIZE.LG)}px;
     color: ${theme.COLORS['white-color']};
   `};
 
-  margin-left: ${RFValue(5)}px;
+  margin-left: ${scale(5)}px;
 `;
