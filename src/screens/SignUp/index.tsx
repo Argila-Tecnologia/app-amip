@@ -2,6 +2,8 @@ import { useCallback, useRef, useState } from 'react';
 
 import { Pressable, TextInput } from 'react-native';
 
+import { useNavigation } from '@react-navigation/native';
+
 import { z as zod } from 'zod';
 
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -46,20 +48,26 @@ import {
   SubscriptionCategoryActionButtonText,
 } from './styles';
 
+// Só name/email/password/phone/birthday são obrigatórios de verdade no
+// POST /players do backend (ver players.routes.ts) - os campos de perfil
+// esportivo abaixo são opcionais lá, então precisam ser opcionais aqui
+// também. Antes, marcá-los como obrigatórios bloqueava o cadastro por
+// completo pra qualquer atleta que não preenchesse TODOS eles (ex: quem
+// ainda não tem madeira/borracha definida), sem nenhum aviso visível.
 const signUpValidationSchema = zod.object({
   name: zod.string(),
   email: zod.string(),
   password: zod.string(),
   birthday: zod.string(),
   phone: zod.string(),
-  gender: zod.string(),
-  grip: zod.string(),
-  dominant_hand: zod.string(),
-  rubber: zod.string(),
-  wood: zod.string(),
-  main_title_of_career: zod.string(),
-  ranking: zod.string(),
-  rating: zod.string(),
+  gender: zod.string().optional(),
+  grip: zod.string().optional(),
+  dominant_hand: zod.string().optional(),
+  rubber: zod.string().optional(),
+  wood: zod.string().optional(),
+  main_title_of_career: zod.string().optional(),
+  ranking: zod.string().optional(),
+  rating: zod.string().optional(),
   is_player_club: zod.boolean(),
 });
 
@@ -71,10 +79,9 @@ export function SignUpScreen() {
   const [selectedBirthday, setSelectedBirthday] = useState<Date>(new Date());
   const [dateBirthday, setDateBirthday] = useState('');
 
-  const [memberClub, setMemberClub] = useState(false);
-
   const { signIn } = useAuth();
   const theme = useTheme();
+  const navigation = useNavigation();
 
   const nameRef = useRef<TextInput>(null);
   const emailRef = useRef<TextInput>(null);
@@ -96,6 +103,12 @@ export function SignUpScreen() {
     setValue,
   } = useForm<IFormDataSubmit>({
     resolver: zodResolver(signUpValidationSchema),
+    // is_player_club é boolean obrigatório no schema - sem esse default,
+    // ele começa como "undefined" e a validação falha nele sempre, mesmo
+    // que o usuário nunca precise mexer no checkbox (não é sócio).
+    defaultValues: {
+      is_player_club: false,
+    },
   });
   // END FORM
 
@@ -153,8 +166,34 @@ export function SignUpScreen() {
 
         if (response.status === 201) {
           await signIn({ email, password });
+
+          // Antes o cadastro terminava aqui, sem toast nem navegação - o
+          // atleta ficava na própria tela de SignUp sem nenhum sinal de
+          // que tinha dado certo (só percebia olhando o banco/API
+          // diretamente). Decisão confirmada com o usuário: mostrar
+          // sucesso e levar pra tela principal (abas públicas), já
+          // autenticado - reset() em vez de navigate() porque, diferente
+          // de um simples "voltar", não faz sentido deixar o botão
+          // "voltar" do device retornar pra tela de cadastro depois de
+          // já ter criado a conta.
+          Toast.show({
+            type: 'success',
+            position: 'bottom',
+            text1: 'Equipe AMIP',
+            text2: 'Cadastro realizado com sucesso! Bem-vindo(a).',
+          });
+
+          navigation.reset({
+            index: 0,
+            routes: [{ name: 'appBottomTabs' }],
+          });
         }
       } catch (error) {
+        // Antes não existia nenhum log aqui - qualquer erro (rede, 400,
+        // 500 etc.) só virava um toast genérico, sem deixar rastro nenhum
+        // pra investigar depois. Ajuda a diagnosticar via Metro/logcat.
+        console.error('[SignUp] Falha ao cadastrar atleta:', error);
+
         if (error instanceof AxiosError) {
           if (error.response) {
             if (error.response.status === 400) {
@@ -176,14 +215,17 @@ export function SignUpScreen() {
           text1: 'Equipe AMIP',
           text2: 'Ops! Não foi possível realizar seu cadastro!',
         });
+      } finally {
+        // Antes isso nunca era chamado - depois de qualquer tentativa
+        // (sucesso ou erro), o botão "Criar conta" e todos os campos
+        // ficavam desabilitados pra sempre (editable={!loadingCreateAccount}
+        // em cada Input), já que loadingCreateAccount nunca voltava a false.
+        setIsLoadingCreateAccount(false);
       }
     },
-    [selectedBirthday, signIn],
+    [selectedBirthday, signIn, navigation],
   );
 
-  const handleSelectedIsMember = useCallback(() => {
-    setMemberClub((oldState) => !oldState);
-  }, []);
   // END FUNCTIONS
 
   return (
@@ -457,21 +499,35 @@ export function SignUpScreen() {
               )}
             />
 
-            <MemberActionButton onPress={() => handleSelectedIsMember()}>
-              <Feather
-                name={memberClub ? 'check-square' : 'square'}
-                size={25}
-                color={
-                  memberClub
-                    ? theme.COLORS['green-color']
-                    : theme.COLORS['gray-color']
-                }
-              />
+            {/*
+              Antes esse checkbox só mexia num useState local ("memberClub"),
+              sem nenhuma ligação com o react-hook-form - como o schema exige
+              "is_player_club" como boolean obrigatório, o valor ficava
+              sempre "undefined" pro zodResolver, a validação nunca passava,
+              e o cadastro nunca era enviado (silenciosamente, sem nenhum
+              erro visível). Agora o valor mora no próprio formulário.
+            */}
+            <Controller
+              control={control}
+              name="is_player_club"
+              render={({ field: { value, onChange } }) => (
+                <MemberActionButton onPress={() => onChange(!value)}>
+                  <Feather
+                    name={value ? 'check-square' : 'square'}
+                    size={25}
+                    color={
+                      value
+                        ? theme.COLORS['green-color']
+                        : theme.COLORS['gray-color']
+                    }
+                  />
 
-              <SubscriptionCategoryActionButtonText>
-                Você é sócio da AMIP?
-              </SubscriptionCategoryActionButtonText>
-            </MemberActionButton>
+                  <SubscriptionCategoryActionButtonText>
+                    Você é sócio da AMIP?
+                  </SubscriptionCategoryActionButtonText>
+                </MemberActionButton>
+              )}
+            />
           </FormContainer>
 
           <FooterContainer>

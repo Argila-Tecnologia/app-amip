@@ -7,6 +7,7 @@ import {
   InputLabel,
   InputContent,
   TextInputField,
+  ErrorText,
 } from './styles';
 
 interface IInputMaskProps extends MaskedTextInputProps {
@@ -34,6 +35,8 @@ export function InputMask({
           {...rest}
         />
       </InputContent>
+
+      {!!error && <ErrorText>{error}</ErrorText>}
     </InputContainer>
   );
 }

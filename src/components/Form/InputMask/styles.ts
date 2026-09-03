@@ -50,6 +50,15 @@ export const InputContent = styled(View)<IContentProps>`
 
 export const Icon = styled(Feather)``;
 
+// Antes só a borda ficava vermelha em erro, sem nenhum texto explicando o
+// motivo - o usuário não tinha como saber por que o formulário não enviava.
+export const ErrorText = styled.Text`
+  color: ${({ theme }) => theme.COLORS['red-color']};
+  font-family: ${({ theme }) => theme.FONT_FAMILY.REGULAR};
+  font-size: ${RFValue(12)}px;
+  margin-top: ${RFValue(-4)}px;
+`;
+
 export const TextInputField = styled(MaskedTextInput)`
   height: ${RFValue(50)}px;
 

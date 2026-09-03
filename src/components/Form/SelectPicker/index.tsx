@@ -6,6 +6,8 @@ import { Feather } from '@expo/vector-icons';
 
 import { useTheme } from 'styled-components/native';
 
+import { Wrapper, ErrorText } from './styles';
+
 interface IItems {
   label: string;
   value: string;
@@ -40,68 +42,72 @@ export function SelectPicker({
   }, [theme.COLORS]);
 
   return (
-    <RNPickerSelect
-      items={items}
-      placeholder={{
-        label: placeholder,
-        value: '',
-      }}
-      useNativeAndroidPickerStyle={false}
-      value={value}
-      Icon={() => chevronIconSelectPicker}
-      darkTheme
-      style={{
-        placeholder: {
-          color: theme.COLORS['gray-color-400'],
-        },
-        iconContainer: {
-          top: 17,
-          right: 10,
-        },
-        inputIOS: {
-          width: '100%',
-          height: 60,
+    <Wrapper>
+      <RNPickerSelect
+        items={items}
+        placeholder={{
+          label: placeholder,
+          value: '',
+        }}
+        useNativeAndroidPickerStyle={false}
+        value={value}
+        Icon={() => chevronIconSelectPicker}
+        darkTheme
+        style={{
+          placeholder: {
+            color: theme.COLORS['gray-color-400'],
+          },
+          iconContainer: {
+            top: 17,
+            right: 10,
+          },
+          inputIOS: {
+            width: '100%',
+            height: 60,
 
-          fontFamily: theme.FONT_FAMILY.REGULAR,
-          fontSize: theme.FONT_SIZE.LG,
-          color: theme.COLORS['black-color'],
+            fontFamily: theme.FONT_FAMILY.REGULAR,
+            fontSize: theme.FONT_SIZE.LG,
+            color: theme.COLORS['black-color'],
 
-          paddingVertical: 10,
-          paddingHorizontal: 23,
+            paddingVertical: 10,
+            paddingHorizontal: 23,
 
-          borderWidth: 2,
-          borderColor: error
-            ? theme.COLORS['red-color']
-            : theme.COLORS['black-color'],
-          borderRadius: 8,
+            borderWidth: 2,
+            borderColor: error
+              ? theme.COLORS['red-color']
+              : theme.COLORS['black-color'],
+            borderRadius: 8,
 
-          paddingRight: 30, // to ensure the text is never behind the icon
+            paddingRight: 30, // to ensure the text is never behind the icon
 
-          backgroundColor: selectPickerTypeColor,
-        },
-        inputAndroid: {
-          width: '100%',
-          height: 60,
+            backgroundColor: selectPickerTypeColor,
+          },
+          inputAndroid: {
+            width: '100%',
+            height: 60,
 
-          fontFamily: theme.FONT_FAMILY.REGULAR,
-          fontSize: theme.FONT_SIZE.LG,
-          color: theme.COLORS['black-color'],
+            fontFamily: theme.FONT_FAMILY.REGULAR,
+            fontSize: theme.FONT_SIZE.LG,
+            color: theme.COLORS['black-color'],
 
-          paddingVertical: 10,
-          paddingHorizontal: 23,
+            paddingVertical: 10,
+            paddingHorizontal: 23,
 
-          borderWidth: 2,
-          borderColor: error
-            ? theme.COLORS['red-color']
-            : theme.COLORS['black-color'],
-          borderRadius: 8,
+            borderWidth: 2,
+            borderColor: error
+              ? theme.COLORS['red-color']
+              : theme.COLORS['black-color'],
+            borderRadius: 8,
 
-          paddingRight: 30, // to ensure the text is never behind the icon
+            paddingRight: 30, // to ensure the text is never behind the icon
 
-          backgroundColor: selectPickerTypeColor,
-        },
-      }}
-      {...rest}
-    />
+            backgroundColor: selectPickerTypeColor,
+          },
+        }}
+        {...rest}
+      />
+
+      {!!error && <ErrorText>{error}</ErrorText>}
+    </Wrapper>
   );
 }

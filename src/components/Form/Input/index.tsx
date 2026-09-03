@@ -6,7 +6,14 @@ import { useTheme } from 'styled-components/native';
 
 import { Feather } from '@expo/vector-icons';
 
-import { Container, TextInputField, SecureButton, Icon } from './styles';
+import {
+  Wrapper,
+  Container,
+  TextInputField,
+  SecureButton,
+  Icon,
+  ErrorText,
+} from './styles';
 
 interface IInputProps extends TextInputProps {
   icon?: keyof typeof Feather.glyphMap;
@@ -27,23 +34,27 @@ export const Input = forwardRef<TextInput, IInputProps>(
     // END FUNCTIONS
 
     return (
-      <Container isErrored={!!error}>
-        {icon && <Icon name={icon} size={24} />}
+      <Wrapper>
+        <Container isErrored={!!error}>
+          {icon && <Icon name={icon} size={24} />}
 
-        <TextInputField
-          ref={ref}
-          keyboardAppearance="dark"
-          placeholderTextColor={theme.COLORS['black-color-100']}
-          secureTextEntry={isSecureText}
-          {...rest}
-        />
+          <TextInputField
+            ref={ref}
+            keyboardAppearance="dark"
+            placeholderTextColor={theme.COLORS['black-color-100']}
+            secureTextEntry={isSecureText}
+            {...rest}
+          />
 
-        {secureTextFieldEntry && (
-          <SecureButton onPress={toggleSecureText}>
-            <Icon name={isSecureText ? 'eye' : 'eye-off'} size={20} />
-          </SecureButton>
-        )}
-      </Container>
+          {secureTextFieldEntry && (
+            <SecureButton onPress={toggleSecureText}>
+              <Icon name={isSecureText ? 'eye' : 'eye-off'} size={20} />
+            </SecureButton>
+          )}
+        </Container>
+
+        {!!error && <ErrorText>{error}</ErrorText>}
+      </Wrapper>
     );
   },
 );
