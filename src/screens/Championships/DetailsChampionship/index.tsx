@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 
-import { Alert, ScrollView, Linking } from 'react-native';
+import { ScrollView, Linking } from 'react-native';
 
 import { useNavigation, useRoute } from '@react-navigation/native';
 
@@ -16,8 +16,6 @@ import Toast from 'react-native-toast-message';
 
 import { api } from '@services/api';
 
-import { useAuth } from '@hooks/auth';
-
 import { IChampionshipsDTO } from '@dtos/championship-dto';
 
 import { Loading } from '@components/Loading';
@@ -32,9 +30,9 @@ import {
   DetailChampionshipImageContainer,
   DetailChampionshipInfoContainer,
   DetailChampionshipInfoDescription,
+  DetailChampionshipInfoRow,
   DetailChampionshipLinkVideoButton,
   DetailChampionshipLinkVideoButtonText,
-  DetailChampionshipPlaceDateContainer,
   DetailChampionshipPlaceDateContent,
   DetailChampionshipPlaceDateText,
   DetailChampionshipTitle,
@@ -48,7 +46,6 @@ export function DetailsChampionshipScreen() {
   const theme = useTheme();
   const route = useRoute();
   const navigation = useNavigation();
-  const { player } = useAuth();
   const insets = useSafeAreaInsets();
 
   const { championshipId } = route.params as IDetailChampionshipRouteParams;
@@ -72,30 +69,22 @@ export function DetailsChampionshipScreen() {
     }
   }, []);
 
+  // Antes tinha um if/else aqui checando "if (player)" - "player" nunca é
+  // null/undefined (começa como {} quando deslogado, e {} é truthy em
+  // JS), então essa condição sempre foi verdadeira e o alerta "faça
+  // login" (com um botão que, por sinal, tinha a mesma checagem invertida
+  // e ia parar na própria tela de inscrição) nunca rodava de verdade -
+  // sempre navegava direto. Como a inscrição é aberta a todos por
+  // decisão de produto (o backend e a tela Subscription já suportam
+  // inscrição sem login, player_id opcional), não tem motivo pra manter
+  // esse branch morto: simplificado pra sempre navegar direto.
   const handleSubscriptionChampionship = useCallback(
-    async (championshipId: string) => {
-      if (player) {
-        navigation.navigate('subscriptionScreen', {
-          championshipId,
-        });
-      } else {
-        const message = 'Painel informativo';
-        Alert.alert('Equipe AMIP', message, [
-          {
-            text: 'REALIZAR LOGIN',
-            style: 'default',
-            onPress: () => {
-              if (player) {
-                navigation.navigate('subscriptionScreen');
-              } else {
-                navigation.navigate('signInScreen');
-              }
-            },
-          },
-        ]);
-      }
+    (championshipId: string) => {
+      navigation.navigate('subscriptionScreen', {
+        championshipId,
+      });
     },
-    [navigation, player],
+    [navigation],
   );
   // END FUNCTIONS
 
@@ -136,20 +125,24 @@ export function DetailsChampionshipScreen() {
               </DetailChampionshipTitle>
 
               <DetailChampionshipInfoContainer>
-                {championship.avatar_url && (
-                  <DetailChampionshipImageContainer>
-                    <DetailChampionshipImage
-                      source={{ uri: championship.avatar_url }}
-                      contentFit="cover"
-                    />
-                  </DetailChampionshipImageContainer>
-                )}
+                {/*
+                  Antes só aparecia se "avatar_url" existisse - sem
+                  imagem, o espaço simplesmente sumia. FallbackImage já
+                  mostra a logo da AMIP tanto pra esse caso quanto se a
+                  imagem existir mas falhar ao carregar.
+                */}
+                <DetailChampionshipImageContainer>
+                  <DetailChampionshipImage
+                    source={{ uri: championship.avatar_url }}
+                    contentFit="cover"
+                  />
+                </DetailChampionshipImageContainer>
 
                 <DetailChampionshipInfoDescription>
                   {championship.description}
                 </DetailChampionshipInfoDescription>
 
-                <DetailChampionshipPlaceDateContainer>
+                <DetailChampionshipInfoRow>
                   <DetailChampionshipIconContainer>
                     <Feather
                       name="home"
@@ -163,7 +156,9 @@ export function DetailsChampionshipScreen() {
                       Local: {championship.place}
                     </DetailChampionshipPlaceDateText>
                   </DetailChampionshipPlaceDateContent>
+                </DetailChampionshipInfoRow>
 
+                <DetailChampionshipInfoRow>
                   <DetailChampionshipIconContainer>
                     <Feather
                       name="calendar"
@@ -177,24 +172,24 @@ export function DetailsChampionshipScreen() {
                       Data: {championship.date}
                     </DetailChampionshipPlaceDateText>
                   </DetailChampionshipPlaceDateContent>
-                </DetailChampionshipPlaceDateContainer>
+                </DetailChampionshipInfoRow>
 
                 {championship.value > 0 && (
-                  <DetailChampionshipPlaceDateContainer>
+                  <DetailChampionshipInfoRow>
                     <DetailChampionshipIconContainer>
                       <Feather
                         name="dollar-sign"
                         size={15}
                         color={theme.COLORS['black-color']}
                       />
-
-                      <DetailChampionshipPlaceDateContent>
-                        <DetailChampionshipPlaceDateText>
-                          Valor: {championship.value / 100}
-                        </DetailChampionshipPlaceDateText>
-                      </DetailChampionshipPlaceDateContent>
                     </DetailChampionshipIconContainer>
-                  </DetailChampionshipPlaceDateContainer>
+
+                    <DetailChampionshipPlaceDateContent>
+                      <DetailChampionshipPlaceDateText>
+                        Valor: {championship.value / 100}
+                      </DetailChampionshipPlaceDateText>
+                    </DetailChampionshipPlaceDateContent>
+                  </DetailChampionshipInfoRow>
                 )}
 
                 {championship.video_url && (

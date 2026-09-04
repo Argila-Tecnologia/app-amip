@@ -1,8 +1,8 @@
 import styled, { css } from 'styled-components/native';
 
-import { Image } from 'expo-image';
-
 import { RFValue } from 'react-native-responsive-fontsize';
+
+import { FallbackImage } from '@components/FallbackImage';
 
 export const DetailChampionshipContainer = styled.View`
   flex: 1;
@@ -52,10 +52,10 @@ export const DetailChampionshipImageContainer = styled.View`
   margin-bottom: ${RFValue(20)}px;
 `;
 
-export const DetailChampionshipImage = styled(Image)`
+export const DetailChampionshipImage = styled(FallbackImage)`
   width: 100%;
   height: 100%;
-` as unknown as typeof Image;
+` as unknown as typeof FallbackImage;
 
 export const DetailChampionshipInfoDescription = styled.Text`
   width: 100%;
@@ -68,19 +68,25 @@ export const DetailChampionshipInfoDescription = styled.Text`
   margin-bottom: ${RFValue(10)}px;
 `;
 
-export const DetailChampionshipPlaceDateContainer = styled.View`
-  height: ${RFValue(30)}px;
+// Antes "Local" e "Data" ficavam lado a lado numa linha só, com altura
+// fixa (30px) - um texto mais longo (ex: "Ginásio Municipal de Caruaru")
+// quebra em 2 linhas, e a altura fixa cortava a segunda (o Android, ao
+// contrário do padrão do RN, corta por padrão o que ultrapassa os limites
+// de uma View com altura definida). Cada informação agora ocupa a própria
+// linha, largura cheia, sem altura fixa - o container cresce conforme o
+// texto precisar, nunca corta.
+export const DetailChampionshipInfoRow = styled.View`
+  width: 100%;
 
-  flex: 1;
   flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
+  align-items: flex-start;
 
-  margin-top: ${RFValue(20)}px;
   margin-bottom: ${RFValue(8)}px;
 `;
 
-export const DetailChampionshipIconContainer = styled.View``;
+export const DetailChampionshipIconContainer = styled.View`
+  margin-top: ${RFValue(2)}px;
+`;
 
 export const DetailChampionshipPlaceDateContent = styled.View`
   flex: 1;
