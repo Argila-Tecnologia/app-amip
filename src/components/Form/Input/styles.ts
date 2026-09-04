@@ -4,7 +4,7 @@ import { TextInput, TouchableOpacity } from 'react-native';
 
 import { Feather } from '@expo/vector-icons';
 
-import { RFValue } from 'react-native-responsive-fontsize';
+import { RFValue } from '@utils/rf-value';
 
 interface ContainerProps {
   isErrored: boolean;

@@ -2,7 +2,7 @@ import styled, { css } from 'styled-components/native';
 
 import { Image } from 'expo-image';
 
-import { RFValue } from 'react-native-responsive-fontsize';
+import { RFValue } from '@utils/rf-value';
 
 import { FallbackImage } from '@components/FallbackImage';
 

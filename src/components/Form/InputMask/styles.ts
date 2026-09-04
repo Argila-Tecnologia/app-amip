@@ -4,7 +4,7 @@ import { View } from 'react-native';
 
 import { MaskedTextInput } from 'react-native-mask-text';
 
-import { RFValue } from 'react-native-responsive-fontsize';
+import { RFValue } from '@utils/rf-value';
 
 import { Feather } from '@expo/vector-icons';
 

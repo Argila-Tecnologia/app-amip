@@ -1,5 +1,5 @@
 import styled, { css } from 'styled-components/native';
-import { RFValue } from 'react-native-responsive-fontsize';
+import { RFValue } from '@utils/rf-value';
 
 export const ForgotPasswordContainer = styled.View`
   flex: 1;

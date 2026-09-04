@@ -2,7 +2,7 @@ import styled, { css } from 'styled-components/native';
 
 import { Switch, TouchableOpacity } from 'react-native';
 
-import { RFValue } from 'react-native-responsive-fontsize';
+import { RFValue } from '@utils/rf-value';
 
 export const EditProfileContainer = styled.View`
   flex: 1;

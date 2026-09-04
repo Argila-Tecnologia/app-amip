@@ -4,7 +4,7 @@ import { Platform } from 'react-native';
 
 import { Image } from 'expo-image';
 
-import { RFValue } from 'react-native-responsive-fontsize';
+import { RFValue } from '@utils/rf-value';
 
 export const SignInContainer = styled.View`
   flex: 1;

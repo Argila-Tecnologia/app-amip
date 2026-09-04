@@ -1,6 +1,6 @@
 import styled from 'styled-components/native';
 
-import { RFValue } from 'react-native-responsive-fontsize';
+import { RFValue } from '@utils/rf-value';
 
 // Envolve o RNPickerSelect + ErrorText - o picker sozinho não pode ter um
 // irmão, já que quem usa o SelectPicker só espera um elemento de volta.

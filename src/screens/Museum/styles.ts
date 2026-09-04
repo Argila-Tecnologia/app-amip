@@ -2,7 +2,7 @@ import styled, { css } from 'styled-components/native';
 
 import { FlatList } from 'react-native';
 
-import { RFValue } from 'react-native-responsive-fontsize';
+import { RFValue } from '@utils/rf-value';
 
 import { IMuseumDTO } from '@dtos/museum-dto';
 

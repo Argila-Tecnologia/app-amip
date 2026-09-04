@@ -1,6 +1,6 @@
 import styled, { css } from 'styled-components/native';
 
-import { RFValue } from 'react-native-responsive-fontsize';
+import { RFValue } from '@utils/rf-value';
 
 import { TouchableOpacity } from 'react-native';
 

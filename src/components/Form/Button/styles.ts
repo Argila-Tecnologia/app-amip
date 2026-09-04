@@ -2,7 +2,7 @@ import styled, { css } from 'styled-components/native';
 
 import { Feather } from '@expo/vector-icons';
 
-import { RFValue } from 'react-native-responsive-fontsize';
+import { RFValue } from '@utils/rf-value';
 
 interface IContainerProps {
   loading: boolean;

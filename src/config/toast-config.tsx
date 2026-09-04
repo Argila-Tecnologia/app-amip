@@ -4,7 +4,7 @@ import {
   ErrorToast,
 } from 'react-native-toast-message';
 
-import { RFValue } from 'react-native-responsive-fontsize';
+import { RFValue } from '@utils/rf-value';
 
 import theme from '@theme/index';
 
