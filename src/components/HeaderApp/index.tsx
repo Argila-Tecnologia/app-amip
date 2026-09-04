@@ -12,8 +12,6 @@ import { useTheme } from 'styled-components/native';
 
 import { useAuth } from '@hooks/auth';
 
-import { noImage } from '@utils/no-image';
-
 import logoImage from '../../assets/AMIP_LOGO.png';
 
 import {
@@ -60,12 +58,14 @@ export function HeaderApp() {
               {player.name}
             </HeaderAppPersonText> */}
 
+            {/*
+              Mesma troca do Profile: FallbackImage cobre "sem avatar" e
+              "avatar falhou ao carregar" com a logo da AMIP, em vez do
+              placeholder de iniciais (noImage) que só cobria o primeiro
+              caso.
+            */}
             <HeaderAppPersonPhotoImage
-              source={{
-                uri: player.avatar_url
-                  ? player.avatar_url
-                  : noImage(player.name),
-              }}
+              source={{ uri: player.avatar_url }}
               contentFit="cover"
             />
           </HeaderAppBoxProfile>

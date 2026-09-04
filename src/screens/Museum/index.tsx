@@ -86,12 +86,15 @@ export function MuseumsScreen() {
                 </MuseumHeader>
 
                 <MuseumItemContent>
-                  {museumItem.image_url && (
-                    <MuseumImage
-                      source={{ uri: museumItem.image_url }}
-                      contentFit="cover"
-                    />
-                  )}
+                  {/*
+                    Antes só aparecia se "image_url" existisse. Agora
+                    sempre mostra algo (placeholder da AMIP se não houver
+                    imagem, ou se ela falhar ao carregar).
+                  */}
+                  <MuseumImage
+                    source={{ uri: museumItem.image_url }}
+                    contentFit="cover"
+                  />
 
                   <MuseumDescription numberOfLines={3} ellipsizeMode="tail">
                     {museumItem.description}

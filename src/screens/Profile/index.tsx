@@ -22,8 +22,6 @@ import { api } from '@services/api';
 
 import { useAuth } from '@hooks/auth';
 
-import { noImage } from '@utils/no-image';
-
 import { Loading } from '@components/Loading';
 import { ChooseTakePhotoModal } from '@components/ChooseTakePhotoModal';
 
@@ -339,12 +337,16 @@ export function ProfileScreen() {
                 <Loading />
               ) : (
                 <>
+                  {/*
+                    Antes caía num placeholder gerado por iniciais
+                    (noImage) quando não tinha avatar - agora usa o mesmo
+                    FallbackImage do resto do app (logo da AMIP), que
+                    também cobre o caso de o avatar_url existir mas falhar
+                    ao carregar (antes não tinha nenhum tratamento pra
+                    isso).
+                  */}
                   <ProfileAvatarImage
-                    source={{
-                      uri: player.avatar_url
-                        ? player.avatar_url
-                        : noImage(player.name),
-                    }}
+                    source={{ uri: player.avatar_url }}
                     contentFit="cover"
                   />
 

@@ -2,11 +2,11 @@ import styled, { css } from 'styled-components/native';
 
 import { FlatList } from 'react-native';
 
-import { Image } from 'expo-image';
-
 import { RFValue } from 'react-native-responsive-fontsize';
 
 import { INewsDTO } from '@dtos/news-dto';
+
+import { FallbackImage } from '@components/FallbackImage';
 
 export const NewsContainer = styled.View`
   flex: 1;
@@ -66,14 +66,14 @@ export const NewsItem = styled.View`
   margin-top: ${RFValue(10)}px;
 `;
 
-export const NewsImage = styled(Image)`
+export const NewsImage = styled(FallbackImage)`
   width: ${RFValue(50)}px;
   height: ${RFValue(50)}px;
 
   margin-right: ${RFValue(15)}px;
 
   border-radius: ${RFValue(7)}px;
-` as unknown as typeof Image;
+` as unknown as typeof FallbackImage;
 
 export const NewsDescription = styled.Text`
   height: 100%;

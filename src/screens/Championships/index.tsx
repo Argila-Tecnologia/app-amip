@@ -94,12 +94,15 @@ export function ChampionshipsScreen() {
                 </ChampionshipsHeaderContainer>
 
                 <ChampionshipsItemContent>
-                  {championshipItem.avatar_url && (
-                    <ChampionshipsImage
-                      source={{ uri: championshipItem.avatar_url }}
-                      contentFit="cover"
-                    />
-                  )}
+                  {/*
+                    Antes só aparecia se "avatar_url" existisse. Agora
+                    sempre mostra algo (a logo da AMIP como placeholder
+                    quando não há imagem, ou se ela falhar ao carregar).
+                  */}
+                  <ChampionshipsImage
+                    source={{ uri: championshipItem.avatar_url }}
+                    contentFit="cover"
+                  />
 
                   <ChampionshipsDescription
                     numberOfLines={3}

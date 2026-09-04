@@ -91,14 +91,19 @@ export function DetailsMuseumScreen() {
               <DetailMuseumTitle>{museum.title}</DetailMuseumTitle>
 
               <DetailMuseumItemMuseum>
-                {museum.image_url && (
-                  <DetailMuseumImageContainer>
-                    <DetailMuseumImage
-                      source={{ uri: museum.image_url }}
-                      contentFit="cover"
-                    />
-                  </DetailMuseumImageContainer>
-                )}
+                {/*
+                  Antes só aparecia se "image_url" existisse. Agora
+                  sempre mostra algo (placeholder da AMIP se não houver
+                  imagem, ou se ela falhar ao carregar) - não mexe na
+                  galeria de fotos abaixo, que é outro componente
+                  (ImageGallery) e só aparece quando há fotos de verdade.
+                */}
+                <DetailMuseumImageContainer>
+                  <DetailMuseumImage
+                    source={{ uri: museum.image_url }}
+                    contentFit="cover"
+                  />
+                </DetailMuseumImageContainer>
 
                 <DetailMuseumMuseumDescription>
                   {museum.description}

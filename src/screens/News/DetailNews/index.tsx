@@ -88,14 +88,17 @@ export function DetailsNewsScreen() {
               <DetailsNewsTitle>{news.title}</DetailsNewsTitle>
 
               <BoxNews>
-                {news.image_url && (
-                  <DetailNewsImageContainer>
-                    <DetailNewsImage
-                      source={{ uri: news.image_url }}
-                      contentFit="cover"
-                    />
-                  </DetailNewsImageContainer>
-                )}
+                {/*
+                  Antes só aparecia se "image_url" existisse. Agora
+                  sempre mostra algo (placeholder da AMIP se não houver
+                  imagem, ou se ela falhar ao carregar).
+                */}
+                <DetailNewsImageContainer>
+                  <DetailNewsImage
+                    source={{ uri: news.image_url }}
+                    contentFit="cover"
+                  />
+                </DetailNewsImageContainer>
 
                 <DetailNewsDescription>{news.content}</DetailNewsDescription>
 

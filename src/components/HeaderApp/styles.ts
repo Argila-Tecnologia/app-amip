@@ -4,6 +4,8 @@ import { Image } from 'expo-image';
 
 import { RFValue } from 'react-native-responsive-fontsize';
 
+import { FallbackImage } from '@components/FallbackImage';
+
 export const HeaderAppContainer = styled.View`
   width: 100%;
   /* height: ${RFValue(90)}px; */
@@ -64,12 +66,12 @@ export const HeaderAppPersonText = styled.Text`
   `};
 `;
 
-export const HeaderAppPersonPhotoImage = styled(Image)`
+export const HeaderAppPersonPhotoImage = styled(FallbackImage)`
   width: ${RFValue(50)}px;
   height: ${RFValue(50)}px;
 
   border-radius: ${RFValue(25)}px;
-` as unknown as typeof Image;
+` as unknown as typeof FallbackImage;
 
 export const HeaderAppPersonPhotoIcon = styled.View`
   width: ${RFValue(50)}px;

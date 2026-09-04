@@ -1,8 +1,8 @@
 import styled, { css } from 'styled-components/native';
 
-import { Image } from 'expo-image';
-
 import { RFValue } from 'react-native-responsive-fontsize';
+
+import { FallbackImage } from '@components/FallbackImage';
 
 export const ProfileContainer = styled.View`
   flex: 1;
@@ -86,14 +86,14 @@ export const ProfileAvatarButton = styled.TouchableOpacity.attrs({
   position: relative;
 `;
 
-export const ProfileAvatarImage = styled(Image)`
+export const ProfileAvatarImage = styled(FallbackImage)`
   width: ${RFValue(166)}px;
   height: ${RFValue(166)}px;
 
   border-radius: ${RFValue(98)}px;
 
   align-self: center;
-` as unknown as typeof Image;
+` as unknown as typeof FallbackImage;
 
 export const ProfileAvatarCamera = styled.View`
   width: ${RFValue(50)}px;

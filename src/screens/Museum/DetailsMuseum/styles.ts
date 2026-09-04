@@ -1,8 +1,8 @@
 import styled, { css } from 'styled-components/native';
 
-import { Image } from 'expo-image';
-
 import { RFValue } from 'react-native-responsive-fontsize';
+
+import { FallbackImage } from '@components/FallbackImage';
 
 export const DetailMuseumContainer = styled.View`
   flex: 1;
@@ -50,10 +50,10 @@ export const DetailMuseumImageContainer = styled.View`
   margin: ${RFValue(20)}px 0;
 `;
 
-export const DetailMuseumImage = styled(Image)`
+export const DetailMuseumImage = styled(FallbackImage)`
   width: 100%;
   height: 100%;
-` as unknown as typeof Image;
+` as unknown as typeof FallbackImage;
 
 export const DetailMuseumMuseumDescription = styled.Text`
   width: 100%;

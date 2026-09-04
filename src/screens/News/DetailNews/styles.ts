@@ -1,8 +1,8 @@
 import styled, { css } from 'styled-components/native';
 
-import { Image } from 'expo-image';
-
 import { RFValue } from 'react-native-responsive-fontsize';
+
+import { FallbackImage } from '@components/FallbackImage';
 
 export const DetailsNewsContainer = styled.View`
   flex: 1;
@@ -54,10 +54,10 @@ export const DetailNewsImageContainer = styled.View`
   margin-bottom: ${RFValue(10)}px;
 `;
 
-export const DetailNewsImage = styled(Image)`
+export const DetailNewsImage = styled(FallbackImage)`
   width: 100%;
   height: 100%;
-` as unknown as typeof Image;
+` as unknown as typeof FallbackImage;
 
 export const DetailNewsDescription = styled.Text`
   width: 100%;

@@ -96,9 +96,12 @@ export function NewsScreen() {
                 </NewsHeader>
 
                 <NewsItem>
-                  {newsItem.image_url && (
-                    <NewsImage source={{ uri: newsItem.image_url }} />
-                  )}
+                  {/*
+                    Antes só aparecia se "image_url" existisse. Agora
+                    sempre mostra algo (placeholder da AMIP se não houver
+                    imagem, ou se ela falhar ao carregar).
+                  */}
+                  <NewsImage source={{ uri: newsItem.image_url }} />
 
                   <NewsDescription numberOfLines={3} ellipsizeMode="tail">
                     {newsItem.content}

@@ -2,11 +2,11 @@ import styled, { css } from 'styled-components/native';
 
 import { FlatList } from 'react-native';
 
-import { Image } from 'expo-image';
-
 import { RFValue } from 'react-native-responsive-fontsize';
 
 import { IChampionshipsDTO } from '@dtos/championship-dto';
+
+import { FallbackImage } from '@components/FallbackImage';
 
 export const ChampionshipsContainer = styled.View`
   flex: 1;
@@ -66,14 +66,14 @@ export const ChampionshipsItemContent = styled.View`
   margin-top: ${RFValue(10)}px;
 `;
 
-export const ChampionshipsImage = styled(Image)`
+export const ChampionshipsImage = styled(FallbackImage)`
   width: ${RFValue(50)}px;
   height: ${RFValue(50)}px;
 
   margin-right: ${RFValue(15)}px;
 
   border-radius: ${RFValue(7)}px;
-` as unknown as typeof Image;
+` as unknown as typeof FallbackImage;
 
 export const ChampionshipsDescription = styled.Text`
   height: 100%;
