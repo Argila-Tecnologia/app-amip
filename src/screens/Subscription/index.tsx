@@ -140,8 +140,6 @@ export function SubscriptionScreen() {
             text2: 'Informe a(s) categoria(s) que vai participar.',
           });
 
-          setIsLoadingSendSubscription(false);
-
           return;
         }
 
@@ -173,8 +171,6 @@ export function SubscriptionScreen() {
           });
         }
       } catch (error) {
-        setIsLoadingSendSubscription(false);
-
         if (error instanceof AxiosError) {
           // console.log('Erro axios', error.response);
           if (error.response) {
@@ -199,6 +195,15 @@ export function SubscriptionScreen() {
           text1: 'Equipe AMIP',
           text2: 'Ops! Não foi possível realizar sua inscrição!',
         });
+      } finally {
+        // Antes o loading só era resetado no caminho de "sem categoria
+        // selecionada" e no catch - faltava resetar depois de um envio
+        // bem-sucedido. Como a tela navega pra outro lugar logo em
+        // seguida, o efeito não aparecia na hora, mas o botão ficava
+        // travado em "carregando" se o usuário voltasse pra essa tela
+        // pela navegação (o React Navigation mantém a tela viva na
+        // pilha). Centralizado num único finally, como nas outras telas.
+        setIsLoadingSendSubscription(false);
       }
     },
     [selectedCategories, championshipId, player.id, navigation],

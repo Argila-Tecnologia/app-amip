@@ -70,6 +70,24 @@ export function SignInScreen() {
         setIsLoadingSignIn(true);
 
         await signIn({ email, password });
+
+        // Antes o login terminava aqui, sem toast nem navegação - o
+        // atleta ficava na própria tela de SignIn sem nenhum sinal de que
+        // tinha entrado (mesmo bug do SignUp, corrigido antes). Mesmo
+        // padrão de lá: toast de sucesso + reset() pra appBottomTabs (não
+        // navigate(), pra não deixar o botão "voltar" retornar pra tela
+        // de login depois de já estar autenticado).
+        Toast.show({
+          type: 'success',
+          position: 'bottom',
+          text1: 'Equipe AMIP',
+          text2: 'Login realizado com sucesso!',
+        });
+
+        navigation.reset({
+          index: 0,
+          routes: [{ name: 'appBottomTabs' }],
+        });
       } catch (error) {
         console.log('🚀 ~ error:', error);
         Toast.show({
@@ -78,9 +96,14 @@ export function SignInScreen() {
           text1: 'Credencial inválida',
           text2: 'Verifique as informações e tente novamente.',
         });
+      } finally {
+        // Antes isso nunca era chamado - depois de qualquer tentativa
+        // (sucesso ou erro), o botão "Entrar" e os campos ficavam
+        // desabilitados pra sempre (mesmo bug do SignUp, mesma correção).
+        setIsLoadingSignIn(false);
       }
     },
-    [signIn],
+    [signIn, navigation],
   );
   // END FUNCTION
 
@@ -145,7 +168,16 @@ export function SignInScreen() {
         </FormContainer>
 
         <ForgotPasswordContent>
-          <ForgotPasswordButton>
+          {/*
+            Esse botão não tinha nenhum onPress - a rota
+            "forgotPasswordScreen" já existe e funciona (chegava a ser
+            usada em outros lugares), só faltava ligar o botão a ela.
+          */}
+          <ForgotPasswordButton
+            onPress={() => {
+              navigation.navigate('forgotPasswordScreen');
+            }}
+          >
             <ForgotPasswordText>Esqueceu a senha?</ForgotPasswordText>
           </ForgotPasswordButton>
         </ForgotPasswordContent>
