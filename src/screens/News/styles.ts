@@ -11,7 +11,7 @@ import { FallbackImage } from '@components/FallbackImage';
 export const NewsContainer = styled.View`
   flex: 1;
 
-  background-color: ${({ theme }) => theme.COLORS['gray-color-100']};
+  background-color: ${({ theme }) => theme.COLORS.background};
 `;
 
 export const NewsContent = styled.View`
@@ -26,7 +26,7 @@ export const NewsList =
 export const Divider = styled.View`
   height: 0.3px;
 
-  background-color: ${({ theme }) => theme.COLORS['gray-color-400']};
+  background-color: ${({ theme }) => theme.COLORS['text-secondary']};
 
   margin-bottom: ${RFValue(15)}px;
 `;
@@ -51,7 +51,7 @@ export const NewsHeaderTitle = styled.Text`
   ${({ theme }) => css`
     font-family: ${theme.FONT_FAMILY.BOLD};
     font-size: ${RFValue(theme.FONT_SIZE.LG)}px;
-    color: ${theme.COLORS['black-color']};
+    color: ${theme.COLORS.text};
   `};
 
   font-weight: bold;
@@ -83,7 +83,7 @@ export const NewsDescription = styled.Text`
   ${({ theme }) => css`
     font-family: ${theme.FONT_FAMILY.REGULAR};
     font-size: ${RFValue(theme.FONT_SIZE.MD)}px;
-    color: ${theme.COLORS['black-color']};
+    color: ${theme.COLORS.text};
   `};
 
   text-align: justify;
@@ -101,7 +101,7 @@ export const NewsEmptyInfo = styled.Text`
   ${({ theme }) => css`
     font-family: ${theme.FONT_FAMILY.REGULAR};
     font-size: ${RFValue(theme.FONT_SIZE.MD)}px;
-    color: ${theme.COLORS['black-color']};
+    color: ${theme.COLORS.text};
   `};
 
   text-align: center;

@@ -7,7 +7,7 @@ import { FallbackImage } from '@components/FallbackImage';
 export const DetailsNewsContainer = styled.View`
   flex: 1;
 
-  background-color: ${({ theme }) => theme.COLORS['gray-color-100']};
+  background-color: ${({ theme }) => theme.COLORS.background};
 `;
 
 export const DetailsNewsContent = styled.View`
@@ -22,7 +22,7 @@ export const DetailsNewsTitle = styled.Text`
   ${({ theme }) => css`
     font-family: ${theme.FONT_FAMILY.BOLD};
     font-size: ${RFValue(theme.FONT_SIZE.LG)}px;
-    color: ${theme.COLORS['black-color']};
+    color: ${theme.COLORS.text};
   `};
 
   font-weight: bold;
@@ -64,6 +64,12 @@ export const DetailNewsDescription = styled.Text`
 
   font-family: ${({ theme }) => theme.FONT_FAMILY.REGULAR};
   font-size: ${({ theme }) => theme.FONT_SIZE.LG}px;
+  /*
+    Não tinha "color" nenhum antes - funcionava por acidente porque o
+    preto é a cor padrão de Text no React Native, mas isso não muda de tema
+    nenhum. Adicionado explicitamente pra acompanhar claro/escuro.
+  */
+  color: ${({ theme }) => theme.COLORS.text};
   text-align: justify;
 
   margin-top: ${RFValue(10)}px;
@@ -79,7 +85,7 @@ export const DetailNewsLinkVideoButtonText = styled.Text`
   ${({ theme }) => css`
     font-family: ${theme.FONT_FAMILY.REGULAR};
     font-size: ${RFValue(theme.FONT_SIZE.SM)}px;
-    color: ${theme.COLORS['black-color']};
+    color: ${theme.COLORS.text};
   `};
 
   text-align: justify;
