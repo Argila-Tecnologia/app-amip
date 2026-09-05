@@ -8,7 +8,7 @@ import { z as zod } from 'zod';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-controller';
 
 import { Controller, useForm } from 'react-hook-form';
 

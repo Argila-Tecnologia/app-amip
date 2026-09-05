@@ -10,6 +10,8 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
+import { KeyboardProvider } from 'react-native-keyboard-controller';
+
 import { QueryClientProvider } from '@tanstack/react-query';
 
 import Toast from 'react-native-toast-message';
@@ -44,11 +46,16 @@ export default function App() {
           />
 
           <GestureHandlerRootView style={{ flex: 1 }}>
-            <AppProvider>
-              {!fontsLoaded ? <Loading /> : <Routes />}
+            {/* KeyboardProvider é exigido pelo react-native-keyboard-controller
+                (usado pelo KeyboardAwareScrollView nas telas de formulário) -
+                precisa envolver a raiz do app pra funcionar em qualquer tela. */}
+            <KeyboardProvider>
+              <AppProvider>
+                {!fontsLoaded ? <Loading /> : <Routes />}
 
-              <Toast config={toastConfig} />
-            </AppProvider>
+                <Toast config={toastConfig} />
+              </AppProvider>
+            </KeyboardProvider>
           </GestureHandlerRootView>
         </SafeAreaProvider>
       </ThemeProvider>
