@@ -18,6 +18,8 @@ import {
   HeaderAppContainer,
   HeaderAppBox,
   HeaderAppLogoImage,
+  HeaderAppActions,
+  HeaderAppSettingsButton,
   HeaderAppProfileButton,
   HeaderAppBoxProfile,
   HeaderAppPersonPhotoImage,
@@ -40,6 +42,10 @@ export function HeaderApp() {
       navigation.navigate('signInScreen');
     }
   }, [navigation, player.id]);
+
+  const handleSettings = useCallback(() => {
+    navigation.navigate('settingsScreen');
+  }, [navigation]);
   // END FUNCTION
 
   return (
@@ -50,37 +56,53 @@ export function HeaderApp() {
         {/* <HeaderAppTitle>AMIP</HeaderAppTitle> */}
       </HeaderAppBox>
 
-      <HeaderAppProfileButton onPress={handleProfile}>
-        {player.id ? (
-          <HeaderAppBoxProfile>
-            {/* <HeaderAppPersonText numberOfLines={2} ellipsizeMode="tail">
-              Olá, {'\n'}
-              {player.name}
-            </HeaderAppPersonText> */}
+      <HeaderAppActions>
+        {/*
+          Acesso às Configurações (tema claro/escuro) - fica aqui, ao lado
+          do perfil, porque essa é a única área do header já visível em
+          toda tela pública (News/Campeonatos/Museu); colocado antes do
+          botão de perfil pra não competir com o avatar/ícone dele.
+        */}
+        <HeaderAppSettingsButton onPress={handleSettings}>
+          <Feather
+            name="settings"
+            size={22}
+            color={theme.COLORS['white-color']}
+          />
+        </HeaderAppSettingsButton>
 
-            {/*
-              Mesma troca do Profile: FallbackImage cobre "sem avatar" e
-              "avatar falhou ao carregar" com a logo da AMIP, em vez do
-              placeholder de iniciais (noImage) que só cobria o primeiro
-              caso.
-            */}
-            <HeaderAppPersonPhotoImage
-              source={{ uri: player.avatar_url }}
-              contentFit="cover"
-            />
-          </HeaderAppBoxProfile>
-        ) : (
-          <HeaderAppBoxProfile>
-            <HeaderAppPersonPhotoIcon>
-              <Feather
-                name="user"
-                size={25}
-                color={theme.COLORS['black-color']}
+        <HeaderAppProfileButton onPress={handleProfile}>
+          {player.id ? (
+            <HeaderAppBoxProfile>
+              {/* <HeaderAppPersonText numberOfLines={2} ellipsizeMode="tail">
+                Olá, {'\n'}
+                {player.name}
+              </HeaderAppPersonText> */}
+
+              {/*
+                Mesma troca do Profile: FallbackImage cobre "sem avatar" e
+                "avatar falhou ao carregar" com a logo da AMIP, em vez do
+                placeholder de iniciais (noImage) que só cobria o primeiro
+                caso.
+              */}
+              <HeaderAppPersonPhotoImage
+                source={{ uri: player.avatar_url }}
+                contentFit="cover"
               />
-            </HeaderAppPersonPhotoIcon>
-          </HeaderAppBoxProfile>
-        )}
-      </HeaderAppProfileButton>
+            </HeaderAppBoxProfile>
+          ) : (
+            <HeaderAppBoxProfile>
+              <HeaderAppPersonPhotoIcon>
+                <Feather
+                  name="user"
+                  size={25}
+                  color={theme.COLORS['black-color']}
+                />
+              </HeaderAppPersonPhotoIcon>
+            </HeaderAppBoxProfile>
+          )}
+        </HeaderAppProfileButton>
+      </HeaderAppActions>
     </HeaderAppContainer>
   );
 }

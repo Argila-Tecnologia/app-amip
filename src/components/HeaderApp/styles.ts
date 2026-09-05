@@ -41,15 +41,32 @@ export const HeaderAppTitle = styled.Text`
   font-weight: bold;
 `;
 
-export const HeaderAppProfileButton = styled.TouchableOpacity.attrs({
-  activeOpacity: 0.7,
-})`
+// Agrupa o botão de configurações (novo) e o de perfil (já existia) do lado
+// direito do header - antes só HeaderAppProfileButton tinha "flex: 1" pra se
+// alinhar à direita; agora quem faz isso é este wrapper, senão os dois
+// botões lado a lado dividiriam o espaço 50/50 com o logo (flex: 1 cada um).
+export const HeaderAppActions = styled.View`
   flex: 1;
   flex-direction: row;
   align-items: center;
   justify-content: flex-end;
 
   margin-top: 10px;
+`;
+
+export const HeaderAppSettingsButton = styled.TouchableOpacity.attrs({
+  activeOpacity: 0.7,
+})`
+  padding: ${RFValue(8)}px;
+
+  margin-right: ${RFValue(4)}px;
+`;
+
+export const HeaderAppProfileButton = styled.TouchableOpacity.attrs({
+  activeOpacity: 0.7,
+})`
+  flex-direction: row;
+  align-items: center;
 `;
 
 export const HeaderAppBoxProfile = styled.View`
