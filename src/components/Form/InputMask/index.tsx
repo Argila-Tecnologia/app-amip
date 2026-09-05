@@ -31,7 +31,16 @@ export function InputMask({
       <InputContent style={contentStyle} isError={!!error}>
         <TextInputField
           keyboardAppearance="dark"
-          placeholderTextColor={theme.COLORS['gray-color-200']}
+          /*
+            Era 'gray-color-200' (#ECECEC, quase branco) - já ficava com
+            contraste bem baixo no tema claro (esse é um dos poucos casos
+            em que a migração muda um pouco a aparência no claro, de
+            propósito: no escuro, um cinza quase-branco fixo apareceria
+            MUITO mais forte que o pretendido pra um texto de placeholder,
+            então troquei pelo token certo semanticamente em vez de manter
+            o valor antigo igual nos dois temas).
+          */
+          placeholderTextColor={theme.COLORS['text-secondary']}
           {...rest}
         />
       </InputContent>

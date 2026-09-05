@@ -36,19 +36,34 @@ export const Input = forwardRef<TextInput, IInputProps>(
     return (
       <Wrapper>
         <Container isErrored={!!error}>
-          {icon && <Icon name={icon} size={24} />}
+          {/*
+            Nenhum dos dois usos de Icon (prefixo, olho de senha) tinha
+            "color" definido antes - ficavam pretos só pelo padrão do
+            próprio Feather, sem acompanhar tema nenhum.
+          */}
+          {icon && (
+            <Icon
+              name={icon}
+              size={24}
+              color={theme.COLORS['text-secondary']}
+            />
+          )}
 
           <TextInputField
             ref={ref}
             keyboardAppearance="dark"
-            placeholderTextColor={theme.COLORS['black-color-100']}
+            placeholderTextColor={theme.COLORS['text-secondary']}
             secureTextEntry={isSecureText}
             {...rest}
           />
 
           {secureTextFieldEntry && (
             <SecureButton onPress={toggleSecureText}>
-              <Icon name={isSecureText ? 'eye' : 'eye-off'} size={20} />
+              <Icon
+                name={isSecureText ? 'eye' : 'eye-off'}
+                size={20}
+                color={theme.COLORS['text-secondary']}
+              />
             </SecureButton>
           )}
         </Container>

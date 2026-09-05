@@ -26,5 +26,5 @@ export const Divisor = styled.View`
   width: ${RFValue(2)}px;
   height: ${RFValue(50)}px;
 
-  background-color: ${({ theme }) => theme.COLORS['gray-color-400']};
+  background-color: ${({ theme }) => theme.COLORS['text-secondary']};
 `;

@@ -23,7 +23,15 @@ export const Container = styled.View<ContainerProps>`
   flex-direction: row;
   align-items: center;
 
-  background: ${({ theme }) => theme.COLORS['gray-color-100']};
+  /*
+    surface (não background) de propósito: se o fundo do input fosse igual
+    ao fundo da própria tela, ele ficaria "invisível" quando as duas telas
+    (tela e input) usassem o mesmo token - surface cria uma camada visual
+    diferente da tela por trás, sem depender só da borda pra separar os
+    dois. No tema claro o valor é quase idêntico ao antigo (#FFFFFF vs
+    #F5F5F5), diferença imperceptível.
+  */
+  background: ${({ theme }) => theme.COLORS.surface};
 
   border-width: ${RFValue(2)}px;
   border-color: ${({ theme }) => theme.COLORS['blue-dark-color']};
@@ -45,7 +53,7 @@ export const TextInputField = styled(TextInput)`
 
   font-family: ${({ theme }) => theme.FONT_FAMILY.REGULAR};
   font-size: ${RFValue(16)}px;
-  color: ${({ theme }) => theme.COLORS['black-color-100']};
+  color: ${({ theme }) => theme.COLORS.text};
 `;
 
 export const SecureButton = styled(TouchableOpacity).attrs({

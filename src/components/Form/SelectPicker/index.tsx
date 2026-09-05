@@ -29,14 +29,16 @@ export function SelectPicker({
 }: ISelectPickerProps) {
   const theme = useTheme();
 
-  const selectPickerTypeColor = theme.COLORS['gray-color-100'];
+  // surface (não background): mesmo raciocínio do Form/Input - a caixa do
+  // picker precisa de uma camada visual diferente da tela por trás dela.
+  const selectPickerTypeColor = theme.COLORS.surface;
 
   const chevronIconSelectPicker = useMemo(() => {
     return (
       <Feather
         name="chevron-down"
         size={25}
-        color={theme.COLORS['gray-color-400']}
+        color={theme.COLORS['text-secondary']}
       />
     );
   }, [theme.COLORS]);
@@ -55,7 +57,7 @@ export function SelectPicker({
         darkTheme
         style={{
           placeholder: {
-            color: theme.COLORS['gray-color-400'],
+            color: theme.COLORS['text-secondary'],
           },
           iconContainer: {
             top: 17,
@@ -67,12 +69,17 @@ export function SelectPicker({
 
             fontFamily: theme.FONT_FAMILY.REGULAR,
             fontSize: theme.FONT_SIZE.LG,
-            color: theme.COLORS['black-color'],
+            color: theme.COLORS.text,
 
             paddingVertical: 10,
             paddingHorizontal: 23,
 
             borderWidth: 2,
+            // Mantido 'black-color' fixo de propósito (decisão do usuário,
+            // 2026-09-05): usar o token 'border' deixava essa borda visível
+            // demais no tema escuro, mas mudava a aparência no claro (preto
+            // -> cinza claro) - preferiu manter fidelidade visual no claro
+            // e aceitar que a borda fica com contraste baixo no escuro.
             borderColor: error
               ? theme.COLORS['red-color']
               : theme.COLORS['black-color'],
@@ -88,7 +95,7 @@ export function SelectPicker({
 
             fontFamily: theme.FONT_FAMILY.REGULAR,
             fontSize: theme.FONT_SIZE.LG,
-            color: theme.COLORS['black-color'],
+            color: theme.COLORS.text,
 
             paddingVertical: 10,
             paddingHorizontal: 23,
@@ -96,7 +103,7 @@ export function SelectPicker({
             borderWidth: 2,
             borderColor: error
               ? theme.COLORS['red-color']
-              : theme.COLORS['black-color'],
+              : theme.COLORS.border,
             borderRadius: 8,
 
             paddingRight: 30, // to ensure the text is never behind the icon

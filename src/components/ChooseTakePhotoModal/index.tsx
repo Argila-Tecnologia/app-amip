@@ -58,6 +58,11 @@ export function ChooseTakePhotoModal({
       ref={bottomSheetRef}
       index={INITIAL_POSITION_BOTTOM_SHEET} // NOTE bottom sheet initial hidden
       snapPoints={snapPoints}
+      // Sem isso o fundo da folha fica sempre branco (padrão da própria
+      // lib @gorhom/bottom-sheet) - precisa ser explícito pra acompanhar
+      // tema, senão os ícones abaixo (agora com cor de tema) ficariam
+      // invisíveis no escuro sobre um fundo que nunca escurece.
+      backgroundStyle={{ backgroundColor: theme.COLORS.surface }}
       onChange={(index) => {
         if (index === 0) {
           onCloseModal();
@@ -71,7 +76,7 @@ export function ChooseTakePhotoModal({
             <MaterialIcons
               name="photo-camera"
               size={50}
-              color={theme.COLORS['black-color']}
+              color={theme.COLORS.text}
             />
           </TakePhotoButton>
 
@@ -81,7 +86,7 @@ export function ChooseTakePhotoModal({
             <MaterialIcons
               name="collections"
               size={50}
-              color={theme.COLORS['black-color']}
+              color={theme.COLORS.text}
             />
           </TakePhotoButton>
         </BoxOptionsTakePhoto>

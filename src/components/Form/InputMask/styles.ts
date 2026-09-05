@@ -20,7 +20,7 @@ export const InputLabel = styled.Text`
   ${({ theme }) => css`
     font-family: ${theme.FONT_FAMILY.REGULAR};
     font-size: ${RFValue(theme.FONT_SIZE.MD)}px;
-    color: ${theme.COLORS['black-color']};
+    color: ${theme.COLORS.text};
   `};
 `;
 
@@ -33,7 +33,9 @@ export const InputContent = styled(View)<IContentProps>`
 
   padding: 0 ${RFValue(16)}px;
 
-  background: ${({ theme }) => theme.COLORS['gray-color-100']};
+  /* surface (não background): mesmo raciocínio do Form/Input - ver
+     comentário lá. */
+  background: ${({ theme }) => theme.COLORS.surface};
 
   border-radius: ${RFValue(10)}px;
   border-width: ${RFValue(2)}px;
@@ -66,4 +68,7 @@ export const TextInputField = styled(MaskedTextInput)`
 
   font-size: ${RFValue(16)}px;
   font-family: ${({ theme }) => theme.FONT_FAMILY.REGULAR};
+  /* Não tinha "color" nenhum antes - ficava preto só por ser o padrão do
+     RN, e não mudava de tema. */
+  color: ${({ theme }) => theme.COLORS.text};
 `;
