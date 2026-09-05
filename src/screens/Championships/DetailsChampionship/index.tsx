@@ -147,7 +147,7 @@ export function DetailsChampionshipScreen() {
                     <Feather
                       name="home"
                       size={15}
-                      color={theme.COLORS['black-color']}
+                      color={theme.COLORS.text}
                     />
                   </DetailChampionshipIconContainer>
 
@@ -163,7 +163,7 @@ export function DetailsChampionshipScreen() {
                     <Feather
                       name="calendar"
                       size={15}
-                      color={theme.COLORS['black-color']}
+                      color={theme.COLORS.text}
                     />
                   </DetailChampionshipIconContainer>
 
@@ -180,7 +180,7 @@ export function DetailsChampionshipScreen() {
                       <Feather
                         name="dollar-sign"
                         size={15}
-                        color={theme.COLORS['black-color']}
+                        color={theme.COLORS.text}
                       />
                     </DetailChampionshipIconContainer>
 

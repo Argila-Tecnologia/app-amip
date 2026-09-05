@@ -7,7 +7,7 @@ import { FallbackImage } from '@components/FallbackImage';
 export const DetailChampionshipContainer = styled.View`
   flex: 1;
 
-  background-color: ${({ theme }) => theme.COLORS['gray-color-100']};
+  background-color: ${({ theme }) => theme.COLORS.background};
 `;
 
 export const DetailChampionshipContent = styled.View`
@@ -22,7 +22,7 @@ export const DetailChampionshipTitle = styled.Text`
   ${({ theme }) => css`
     font-family: ${theme.FONT_FAMILY.BOLD};
     font-size: ${RFValue(theme.FONT_SIZE.LG)}px;
-    color: ${theme.COLORS['black-color']};
+    color: ${theme.COLORS.text};
   `};
 
   font-weight: bold;
@@ -62,6 +62,12 @@ export const DetailChampionshipInfoDescription = styled.Text`
 
   font-family: ${({ theme }) => theme.FONT_FAMILY.REGULAR};
   font-size: ${({ theme }) => theme.FONT_SIZE.MD}px;
+  /*
+    Não tinha "color" nenhum antes - funcionava por acidente porque preto é
+    a cor padrão de Text no React Native, mas isso não muda de tema nenhum.
+    Adicionado explicitamente pra acompanhar claro/escuro.
+  */
+  color: ${({ theme }) => theme.COLORS.text};
   text-align: justify;
 
   margin-top: ${RFValue(10)}px;
@@ -97,6 +103,9 @@ export const DetailChampionshipPlaceDateContent = styled.View`
 export const DetailChampionshipPlaceDateText = styled.Text`
   font-family: ${({ theme }) => theme.FONT_FAMILY.REGULAR};
   font-size: ${({ theme }) => RFValue(theme.FONT_SIZE.SM)}px;
+  /* Mesmo caso do DetailChampionshipInfoDescription acima - sem "color"
+     nenhum, ficava preto só por ser o padrão do RN. */
+  color: ${({ theme }) => theme.COLORS.text};
 `;
 
 export const DetailChampionshipLinkVideoButton = styled.TouchableOpacity.attrs({

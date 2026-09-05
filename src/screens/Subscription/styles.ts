@@ -7,7 +7,7 @@ import { TouchableOpacity } from 'react-native';
 export const SubscriptionContainer = styled.View`
   flex: 1;
 
-  background-color: ${({ theme }) => theme.COLORS['gray-color-100']};
+  background-color: ${({ theme }) => theme.COLORS.background};
 `;
 
 export const SubscriptionContent = styled.View`
@@ -79,6 +79,9 @@ export const SubscriptionPlaceDateChampionshipContent = styled.View`
 export const SubscriptionPlaceDateChampionshipText = styled.Text`
   font-family: ${({ theme }) => theme.FONT_FAMILY.REGULAR};
   font-size: ${({ theme }) => RFValue(theme.FONT_SIZE.MD)}px;
+  /* Mesmo caso já visto em outras telas - sem "color" nenhum, ficava preto
+     só por ser o padrão do RN, e não mudava de tema. */
+  color: ${({ theme }) => theme.COLORS.text};
 `;
 
 export const SubscriptionCategoriesContainer = styled.View`
@@ -92,7 +95,7 @@ export const SubscriptionCategoriesTitle = styled.Text`
   ${({ theme }) => css`
     font-family: ${theme.FONT_FAMILY.BOLD};
     font-size: ${RFValue(theme.FONT_SIZE.LG)}px;
-    color: ${theme.COLORS['black-color']};
+    color: ${theme.COLORS.text};
   `};
 
   text-transform: uppercase;
@@ -122,7 +125,7 @@ export const SubscriptionCategoryActionButtonText = styled.Text`
   ${({ theme }) => css`
     font-family: ${theme.FONT_FAMILY.BOLD};
     font-size: ${RFValue(theme.FONT_SIZE.LG)}px;
-    color: ${theme.COLORS['black-color']};
+    color: ${theme.COLORS.text};
   `};
 
   text-transform: uppercase;

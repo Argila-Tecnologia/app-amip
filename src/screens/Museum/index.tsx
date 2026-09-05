@@ -103,7 +103,7 @@ export function MuseumsScreen() {
                   <Feather
                     name="chevron-right"
                     size={25}
-                    color={theme.COLORS['gray-color-400']}
+                    color={theme.COLORS['text-secondary']}
                   />
                 </MuseumItemContent>
               </MuseumButton>

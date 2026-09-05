@@ -7,7 +7,7 @@ import { FallbackImage } from '@components/FallbackImage';
 export const DetailMuseumContainer = styled.View`
   flex: 1;
 
-  background-color: ${({ theme }) => theme.COLORS['gray-color-100']};
+  background-color: ${({ theme }) => theme.COLORS.background};
 `;
 
 export const DetailMuseumContent = styled.View`
@@ -22,7 +22,7 @@ export const DetailMuseumTitle = styled.Text`
   ${({ theme }) => css`
     font-family: ${theme.FONT_FAMILY.BOLD};
     font-size: ${RFValue(theme.FONT_SIZE.LG)}px;
-    color: ${theme.COLORS['black-color']};
+    color: ${theme.COLORS.text};
   `};
 
   font-weight: bold;
@@ -60,6 +60,9 @@ export const DetailMuseumMuseumDescription = styled.Text`
 
   font-family: ${({ theme }) => theme.FONT_FAMILY.REGULAR};
   font-size: ${({ theme }) => theme.FONT_SIZE.LG}px;
+  /* Mesmo caso já visto em outras telas de detalhe - sem "color" nenhum,
+     ficava preto só por ser o padrão do RN, e não mudava de tema. */
+  color: ${({ theme }) => theme.COLORS.text};
   text-align: justify;
   margin-top: ${RFValue(10)}px;
   margin-bottom: ${RFValue(30)}px;

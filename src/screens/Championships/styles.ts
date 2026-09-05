@@ -11,7 +11,7 @@ import { FallbackImage } from '@components/FallbackImage';
 export const ChampionshipsContainer = styled.View`
   flex: 1;
 
-  background-color: ${({ theme }) => theme.COLORS['gray-color-100']};
+  background-color: ${({ theme }) => theme.COLORS.background};
 `;
 
 export const ChampionshipsContent = styled.View`
@@ -26,7 +26,7 @@ export const ChampionshipsList =
 export const Divider = styled.View`
   height: 0.3px;
 
-  background-color: ${({ theme }) => theme.COLORS['gray-color-400']};
+  background-color: ${({ theme }) => theme.COLORS['text-secondary']};
 
   margin-bottom: ${RFValue(15)}px;
 `;
@@ -51,7 +51,7 @@ export const ChampionshipsHeaderTitleText = styled.Text`
   ${({ theme }) => css`
     font-family: ${theme.FONT_FAMILY.BOLD};
     font-size: ${RFValue(theme.FONT_SIZE.LG)}px;
-    color: ${theme.COLORS['black-color']};
+    color: ${theme.COLORS.text};
   `};
 
   font-weight: bold;
@@ -83,7 +83,7 @@ export const ChampionshipsDescription = styled.Text`
   ${({ theme }) => css`
     font-family: ${theme.FONT_FAMILY.REGULAR};
     font-size: ${RFValue(theme.FONT_SIZE.MD)}px;
-    color: ${theme.COLORS['black-color']};
+    color: ${theme.COLORS.text};
   `};
 
   text-align: justify;
@@ -101,7 +101,7 @@ export const ChampionshipsEmptyInfo = styled.Text`
   ${({ theme }) => css`
     font-family: ${theme.FONT_FAMILY.REGULAR};
     font-size: ${RFValue(theme.FONT_SIZE.MD)}px;
-    color: ${theme.COLORS['black-color']};
+    color: ${theme.COLORS.text};
   `};
 
   text-align: center;

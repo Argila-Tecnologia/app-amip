@@ -278,7 +278,7 @@ export function SubscriptionScreen() {
                       autoCorrect={false}
                       value={value}
                       placeholder="Informe o nome"
-                      placeholderTextColor={theme.COLORS['gray-color-400']}
+                      placeholderTextColor={theme.COLORS['text-secondary']}
                       error={errors.name?.message}
                       returnKeyType="next"
                       onChangeText={(text) => {
@@ -301,7 +301,7 @@ export function SubscriptionScreen() {
                       autoCapitalize="none"
                       value={value}
                       placeholder="Ex.: DDD + Nº de telefone"
-                      placeholderTextColor={theme.COLORS['gray-color-400']}
+                      placeholderTextColor={theme.COLORS['text-secondary']}
                       keyboardType="numeric"
                       error={errors.whatsapp?.message}
                       returnKeyType="next"
@@ -337,7 +337,7 @@ export function SubscriptionScreen() {
                       <Feather
                         name="dollar-sign"
                         size={15}
-                        color={theme.COLORS['black-color']}
+                        color={theme.COLORS.text}
                       />
                     </SubscriptionIconContainer>
 
@@ -376,7 +376,7 @@ export function SubscriptionScreen() {
                               color={
                                 active
                                   ? theme.COLORS['green-color']
-                                  : theme.COLORS['gray-color']
+                                  : theme.COLORS['text-secondary']
                               }
                             />
 

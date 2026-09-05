@@ -5,7 +5,7 @@ import { RFValue } from '@utils/rf-value';
 export const ContactContainer = styled.View`
   flex: 1;
 
-  background-color: ${({ theme }) => theme.COLORS['gray-color-100']};
+  background-color: ${({ theme }) => theme.COLORS.background};
 `;
 
 export const ContactContent = styled.View`
