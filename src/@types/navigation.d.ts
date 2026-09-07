@@ -28,7 +28,6 @@ export declare global {
       deleteProfileScreen: undefined;
 
       contactScreen: undefined;
-      settingsScreen: undefined;
 
       // AUTH ROUTES
       signInScreen: undefined;

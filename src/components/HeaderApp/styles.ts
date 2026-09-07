@@ -54,7 +54,7 @@ export const HeaderAppActions = styled.View`
   margin-top: 10px;
 `;
 
-export const HeaderAppSettingsButton = styled.TouchableOpacity.attrs({
+export const HeaderAppThemeButton = styled.TouchableOpacity.attrs({
   activeOpacity: 0.7,
 })`
   padding: ${RFValue(8)}px;

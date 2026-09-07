@@ -4,6 +4,10 @@ import { TextInput } from 'react-native';
 
 import { useNavigation } from '@react-navigation/native';
 
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+
+import { Feather } from '@expo/vector-icons';
+
 import { useTheme } from 'styled-components/native';
 
 import { z as zod } from 'zod';
@@ -32,6 +36,7 @@ import {
   ForgotPasswordText,
   FormContainer,
   LogoImage,
+  SignInBackButton,
   SignInContainer,
 } from './styles';
 
@@ -48,6 +53,7 @@ export function SignInScreen() {
   const navigation = useNavigation();
   const { signIn } = useAuth();
   const theme = useTheme();
+  const insets = useSafeAreaInsets();
 
   const {
     control,
@@ -105,6 +111,10 @@ export function SignInScreen() {
     },
     [signIn, navigation],
   );
+
+  const handleGoBack = useCallback(() => {
+    navigation.goBack();
+  }, [navigation]);
   // END FUNCTION
 
   return (
@@ -112,6 +122,24 @@ export function SignInScreen() {
       style={{ backgroundColor: theme.COLORS['blue-dark-color'] }}
     >
       <SignInContainer>
+        {/*
+          SignIn é a única tela empilhada sem navegação pra voltar - as
+          outras usam <Header title="..."/>, mas aqui o título já estava
+          comentado (decisão visual anterior: só a logo, sem barra de
+          título). Por isso só a seta, posicionada sobre o próprio fundo
+          navy, sem repetir a barra completa do Header.
+        */}
+        <SignInBackButton
+          onPress={handleGoBack}
+          style={{ top: insets.top + 8 }}
+        >
+          <Feather
+            name="chevron-left"
+            size={28}
+            color={theme.COLORS['white-color']}
+          />
+        </SignInBackButton>
+
         <LogoImage source={logoImage} contentFit="contain" />
 
         {/* <Title>Acesse sua conta.</Title> */}

@@ -8,8 +8,6 @@ import { SignUpScreen } from '@screens/SignUp';
 
 import { ContactScreen } from '@screens/Contact';
 
-import { SettingsScreen } from '@screens/Settings';
-
 import { ForgotPasswordScreen } from '@screens/ForgotPassword';
 
 import { DetailsNewsScreen } from '@screens/News/DetailNews';
@@ -66,14 +64,6 @@ export function AppRoutes() {
       <Screen name="forgotPasswordScreen" component={ForgotPasswordScreen} />
 
       <Screen name="contactScreen" component={ContactScreen} />
-
-      {/*
-        Pública de propósito, junto das outras rotas públicas acima -
-        trocar de tema não deve exigir login, já que News/Campeonatos/Museu
-        (que também são públicas) usam o tema também. Ver
-        src/components/HeaderApp/index.tsx pra onde fica o acesso.
-      */}
-      <Screen name="settingsScreen" component={SettingsScreen} />
 
       {/*
         Inscrição em campeonato continua pública de propósito (backend e

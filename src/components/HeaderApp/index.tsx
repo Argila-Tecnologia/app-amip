@@ -11,6 +11,7 @@ import { Feather } from '@expo/vector-icons';
 import { useTheme } from 'styled-components/native';
 
 import { useAuth } from '@hooks/auth';
+import { useThemeMode } from '@hooks/theme';
 
 import logoImage from '../../assets/AMIP_LOGO.png';
 
@@ -19,7 +20,7 @@ import {
   HeaderAppBox,
   HeaderAppLogoImage,
   HeaderAppActions,
-  HeaderAppSettingsButton,
+  HeaderAppThemeButton,
   HeaderAppProfileButton,
   HeaderAppBoxProfile,
   HeaderAppPersonPhotoImage,
@@ -31,6 +32,7 @@ export function HeaderApp() {
   const navigation = useNavigation();
   const theme = useTheme();
   const insets = useSafeAreaInsets();
+  const { themeName, toggleTheme } = useThemeMode();
 
   const paddingTop = Platform.OS === 'android' ? insets.top + 15 : insets.top;
 
@@ -42,10 +44,6 @@ export function HeaderApp() {
       navigation.navigate('signInScreen');
     }
   }, [navigation, player.id]);
-
-  const handleSettings = useCallback(() => {
-    navigation.navigate('settingsScreen');
-  }, [navigation]);
   // END FUNCTION
 
   return (
@@ -58,18 +56,20 @@ export function HeaderApp() {
 
       <HeaderAppActions>
         {/*
-          Acesso às Configurações (tema claro/escuro) - fica aqui, ao lado
-          do perfil, porque essa é a única área do header já visível em
-          toda tela pública (News/Campeonatos/Museu); colocado antes do
-          botão de perfil pra não competir com o avatar/ícone dele.
+          Troca de tema direta (sem navegar pra lugar nenhum) - antes era
+          uma engrenagem que abria uma tela de Configurações só com esse
+          toggle dentro; trocado por um ícone que já mostra o tema ATIVO
+          (lua = escuro ativo, sol = claro ativo) e alterna com 1 toque.
+          Fica aqui, ao lado do perfil, porque essa é a única área do
+          header já visível em toda tela pública (News/Campeonatos/Museu).
         */}
-        <HeaderAppSettingsButton onPress={handleSettings}>
+        <HeaderAppThemeButton onPress={toggleTheme}>
           <Feather
-            name="settings"
+            name={themeName === 'dark' ? 'moon' : 'sun'}
             size={22}
             color={theme.COLORS['white-color']}
           />
-        </HeaderAppSettingsButton>
+        </HeaderAppThemeButton>
 
         <HeaderAppProfileButton onPress={handleProfile}>
           {player.id ? (

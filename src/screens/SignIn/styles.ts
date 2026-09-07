@@ -17,6 +17,20 @@ export const SignInContainer = styled.View`
     ${Platform.OS === 'android' ? 10 : 40}px;
 `;
 
+// Só a seta, sem barra de título completa (como o <Header> padrão usa nas
+// outras telas) - o <Title> desta tela já estava comentado antes de eu
+// mexer, indicando que a logo grande e centralizada era a intenção visual;
+// uma barra de título competiria com ela. "position: absolute" tira do
+// fluxo do SignInContainer (que centraliza o conteúdo), então o botão fica
+// fixo no canto superior esquerdo independente do resto.
+export const SignInBackButton = styled.TouchableOpacity.attrs({
+  activeOpacity: 0.7,
+})`
+  position: absolute;
+  left: ${RFValue(16)}px;
+  z-index: 10;
+`;
+
 export const LogoImage = styled(Image)`
   width: 70%;
   height: ${RFValue(331)}px;
