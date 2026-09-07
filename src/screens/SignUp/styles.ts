@@ -7,7 +7,7 @@ import { RFValue } from '@utils/rf-value';
 export const SignUpContainer = styled.View`
   flex: 1;
 
-  background-color: ${({ theme }) => theme.COLORS['gray-color-100']};
+  background-color: ${({ theme }) => theme.COLORS.background};
 
   padding: ${RFValue(0)}px ${RFValue(0)}px
     ${Platform.OS === 'android' ? 20 : 40}px;
@@ -83,6 +83,6 @@ export const SubscriptionCategoryActionButtonText = styled.Text`
   ${({ theme }) => css`
     font-family: ${theme.FONT_FAMILY.REGULAR};
     font-size: ${RFValue(theme.FONT_SIZE.MD)}px;
-    color: ${theme.COLORS['black-color']};
+    color: ${theme.COLORS.text};
   `};
 `;

@@ -3,6 +3,14 @@ import { RFValue } from '@utils/rf-value';
 
 export const ForgotPasswordContainer = styled.View`
   flex: 1;
+
+  /*
+    Não tinha "background-color" nenhum antes - a cor cinza-claro que
+    sempre apareceu era só o fundo padrão da janela nativa por trás
+    (nunca controlado pelo app), então nunca ia acompanhar troca de tema.
+    Adicionado explicitamente, igual às outras telas já migradas.
+  */
+  background-color: ${({ theme }) => theme.COLORS.background};
 `;
 
 export const ForgotPasswordContent = styled.View`
@@ -25,7 +33,7 @@ export const ForgotPasswordInfoTitle = styled.Text`
   ${({ theme }) => css`
     font-family: ${theme.FONT_FAMILY.BOLD};
     font-size: ${RFValue(theme.FONT_SIZE.LG)}px;
-    color: ${theme.COLORS['black-color']};
+    color: ${theme.COLORS.text};
   `};
 
   text-align: left;
@@ -33,7 +41,7 @@ export const ForgotPasswordInfoTitle = styled.Text`
 
 export const ForgotPasswordInfoText = styled.Text`
   font-size: ${({ theme }) => RFValue(theme.FONT_SIZE.LG)}px;
-  color: ${({ theme }) => theme.COLORS['black-color']};
+  color: ${({ theme }) => theme.COLORS.text};
 
   margin-top: ${RFValue(10)}px;
 `;

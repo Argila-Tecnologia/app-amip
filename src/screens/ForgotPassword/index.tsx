@@ -96,7 +96,14 @@ export function ForgotPasswordScreen() {
   // END FUNCTION
 
   return (
-    <KeyboardAwareScrollView>
+    // O ForgotPasswordContainer (flex: 1) só estica até onde o conteúdo
+    // termina, porque é filho de um ScrollView - sobra um espaço embaixo
+    // dele que mostra o fundo do próprio KeyboardAwareScrollView. Sem essa
+    // cor aqui, esse espaço ficava sempre claro (fundo nativo por trás),
+    // mesmo no tema escuro.
+    <KeyboardAwareScrollView
+      style={{ backgroundColor: theme.COLORS.background }}
+    >
       <ForgotPasswordContainer>
         <Header title="Esqueci minha senha" />
 
@@ -119,7 +126,7 @@ export function ForgotPasswordScreen() {
                   autoCapitalize="none"
                   autoCorrect={false}
                   placeholder="E-mail"
-                  placeholderTextColor={theme.COLORS['gray-color-400']}
+                  placeholderTextColor={theme.COLORS['text-secondary']}
                   editable={!loading}
                   keyboardType="email-address"
                   returnKeyType="done"

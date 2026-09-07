@@ -229,7 +229,13 @@ export function SignUpScreen() {
   // END FUNCTIONS
 
   return (
-    <KeyboardAwareScrollView>
+    // Mesmo motivo do ForgotPassword: sem isso, rolar até o fim do
+    // formulário revela o fundo do KeyboardAwareScrollView (que não tem
+    // cor própria) embaixo do SignUpContainer, sempre claro mesmo no
+    // tema escuro.
+    <KeyboardAwareScrollView
+      style={{ backgroundColor: theme.COLORS.background }}
+    >
       <SignUpContainer>
         <Header title="Crie sua conta" />
 
@@ -243,7 +249,7 @@ export function SignUpScreen() {
                   ref={nameRef}
                   autoCapitalize="none"
                   placeholder="Informe o nome"
-                  placeholderTextColor={theme.COLORS['gray-color-400']}
+                  placeholderTextColor={theme.COLORS['text-secondary']}
                   editable={!loadingCreateAccount}
                   value={value}
                   returnKeyType="next"
@@ -266,7 +272,7 @@ export function SignUpScreen() {
                   ref={emailRef}
                   autoCapitalize="none"
                   placeholder="Informe o e-mail"
-                  placeholderTextColor={theme.COLORS['gray-color-400']}
+                  placeholderTextColor={theme.COLORS['text-secondary']}
                   editable={!loadingCreateAccount}
                   keyboardType="email-address"
                   value={value}
@@ -290,7 +296,7 @@ export function SignUpScreen() {
                   ref={passwordRef}
                   autoCapitalize="none"
                   placeholder="Informe a senha"
-                  placeholderTextColor={theme.COLORS['gray-color-400']}
+                  placeholderTextColor={theme.COLORS['text-secondary']}
                   editable={!loadingCreateAccount}
                   secureTextFieldEntry
                   value={value}
@@ -314,9 +320,9 @@ export function SignUpScreen() {
                 render={() => (
                   <Input
                     ref={birthdayRef}
-                    style={{ color: theme.COLORS['black-color'] }}
+                    style={{ color: theme.COLORS.text }}
                     placeholder="Informe a data de nascimento"
-                    placeholderTextColor={theme.COLORS['gray-color-400']}
+                    placeholderTextColor={theme.COLORS['text-secondary']}
                     editable={false}
                     value={dateBirthday}
                     returnKeyType="next"
@@ -340,7 +346,7 @@ export function SignUpScreen() {
                   mask="(99)99999-9999"
                   autoCapitalize="none"
                   placeholder="Ex.: DDD + Nº de telefone"
-                  placeholderTextColor={theme.COLORS['gray-color-400']}
+                  placeholderTextColor={theme.COLORS['text-secondary']}
                   editable={!loadingCreateAccount}
                   keyboardType="numeric"
                   value={value}
@@ -418,7 +424,7 @@ export function SignUpScreen() {
                   ref={rubberRef}
                   autoCapitalize="none"
                   placeholder="Informe a borracha"
-                  placeholderTextColor={theme.COLORS['gray-color-400']}
+                  placeholderTextColor={theme.COLORS['text-secondary']}
                   editable={!loadingCreateAccount}
                   value={value}
                   returnKeyType="next"
@@ -441,7 +447,7 @@ export function SignUpScreen() {
                   ref={woodRef}
                   autoCapitalize="none"
                   placeholder="Informe o principal título da carreira"
-                  placeholderTextColor={theme.COLORS['gray-color-400']}
+                  placeholderTextColor={theme.COLORS['text-secondary']}
                   editable={!loadingCreateAccount}
                   value={value}
                   returnKeyType="next"
@@ -464,7 +470,7 @@ export function SignUpScreen() {
                   ref={rankingRef}
                   autoCapitalize="none"
                   placeholder="Informe o ranking"
-                  placeholderTextColor={theme.COLORS['gray-color-400']}
+                  placeholderTextColor={theme.COLORS['text-secondary']}
                   editable={!loadingCreateAccount}
                   value={value}
                   returnKeyType="next"
@@ -487,7 +493,7 @@ export function SignUpScreen() {
                   ref={ratingRef}
                   autoCapitalize="none"
                   placeholder="Informe o nome"
-                  placeholderTextColor={theme.COLORS['gray-color-400']}
+                  placeholderTextColor={theme.COLORS['text-secondary']}
                   editable={!loadingCreateAccount}
                   value={value}
                   returnKeyType="next"
@@ -518,7 +524,7 @@ export function SignUpScreen() {
                     color={
                       value
                         ? theme.COLORS['green-color']
-                        : theme.COLORS['gray-color']
+                        : theme.COLORS['text-secondary']
                     }
                   />
 
