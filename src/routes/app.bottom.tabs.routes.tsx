@@ -32,9 +32,9 @@ export function AppBottomTabs() {
           // tabs, mas isso não muda de tema nenhum. Adicionado
           // explicitamente pra acompanhar claro/escuro.
           backgroundColor: theme.COLORS.surface,
-          height: Platform.OS === 'android' ? 86 : 96,
+          height: Platform.OS === 'android' ? 64 : 96,
           borderTopWidth: 0,
-          paddingTop: Platform.OS === 'android' ? 20 : 15,
+          paddingTop: Platform.OS === 'android' ? 14 : 15,
         },
       }}
     >
