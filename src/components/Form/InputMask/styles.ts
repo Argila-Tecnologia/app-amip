@@ -10,6 +10,7 @@ import { Feather } from '@expo/vector-icons';
 
 interface IContentProps {
   isError: boolean;
+  isFocused: boolean;
 }
 
 export const InputContainer = styled.View`
@@ -39,9 +40,22 @@ export const InputContent = styled(View)<IContentProps>`
 
   border-radius: ${RFValue(10)}px;
   border-width: ${RFValue(2)}px;
-  border-color: ${({ theme }) => theme.COLORS['blue-dark-color']};
+  /*
+    Mesmo caso do Form/Input (ver comentário lá): a borda ficava
+    transparente por padrão e só virava dourada (primary-color, o mesmo
+    tom que este componente já usava antes de existir tema claro/escuro)
+    quando o campo tinha foco de verdade - esse rastreamento se perdeu na
+    migração. 'border' é o token neutro pro estado parado.
+  */
+  border-color: ${({ theme }) => theme.COLORS.border};
 
   margin-bottom: ${RFValue(8)}px;
+
+  ${({ isFocused, theme }) =>
+    isFocused &&
+    css`
+      border-color: ${theme.COLORS['primary-color']};
+    `}
 
   ${({ isError, theme }) =>
     isError &&

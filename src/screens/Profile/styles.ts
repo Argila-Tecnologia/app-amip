@@ -7,7 +7,7 @@ import { FallbackImage } from '@components/FallbackImage';
 export const ProfileContainer = styled.View`
   flex: 1;
 
-  background-color: ${({ theme }) => theme.COLORS['gray-color-100']};
+  background-color: ${({ theme }) => theme.COLORS.background};
 `;
 
 export const ProfileHeader = styled.View`
@@ -77,7 +77,12 @@ export const ProfileAvatarButton = styled.TouchableOpacity.attrs({
   width: ${RFValue(166)}px;
   height: ${RFValue(166)}px;
 
-  background-color: ${({ theme }) => theme.COLORS['gray-color-200']};
+  /*
+    Era 'gray-color-200' fixo - esse fundo é uma superfície de verdade (fica
+    atrás da foto/FallbackImage), não texto, então precisa inverter com o
+    tema igual os campos de formulário. 'surface' é o mesmo token usado lá.
+  */
+  background-color: ${({ theme }) => theme.COLORS.surface};
 
   border-radius: ${RFValue(98)}px;
 
@@ -117,7 +122,7 @@ export const ProfileName = styled.Text`
   margin-top: ${RFValue(30)}px;
 
   font-size: ${RFValue(30)}px;
-  color: ${({ theme }) => theme.COLORS['black-color']};
+  color: ${({ theme }) => theme.COLORS.text};
 `;
 
 export const ProfilePlayerLogoutAvatarImage = styled.View`
@@ -131,7 +136,9 @@ export const ProfilePlayerLogoutAvatarImage = styled.View`
 
   /* margin-top: ${RFValue(10)}px; */
 
-  background-color: ${({ theme }) => theme.COLORS['gray-color-300']};
+  /* Sem uso hoje (dead style) - mesma decisão de 'surface' aplicada acima
+     em ProfileAvatarButton, por consistência caso volte a ser usado. */
+  background-color: ${({ theme }) => theme.COLORS.surface};
 `;
 
 export const ProfileOptionsContent = styled.View`
@@ -155,7 +162,7 @@ export const ProfileOptionButtonIcon = styled.View`
 
 export const ProfileOptionButtonTitle = styled.Text`
   font-size: ${({ theme }) => RFValue(theme.FONT_SIZE.LG)}px;
-  color: ${({ theme }) => theme.COLORS['black-color']};
+  color: ${({ theme }) => theme.COLORS.text};
 `;
 
 export const ProfileRemoveAccountButton = styled.TouchableOpacity`

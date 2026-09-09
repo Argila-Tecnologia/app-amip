@@ -142,7 +142,7 @@ export function EditPasswordScreen() {
               autoCorrect={false}
               icon="lock"
               placeholder="Senha atual"
-              placeholderTextColor={theme.COLORS['gray-color-400']}
+              placeholderTextColor={theme.COLORS['text-secondary']}
               secureTextFieldEntry
               returnKeyType="next"
               error={errors.old_password?.message}
@@ -167,7 +167,7 @@ export function EditPasswordScreen() {
               autoCorrect={false}
               icon="lock"
               placeholder="Nova senha"
-              placeholderTextColor={theme.COLORS['gray-color-400']}
+              placeholderTextColor={theme.COLORS['text-secondary']}
               secureTextFieldEntry
               returnKeyType="next"
               error={errors.password?.message}
@@ -192,7 +192,7 @@ export function EditPasswordScreen() {
               autoCorrect={false}
               icon="lock"
               placeholder="Confirme a nova senha"
-              placeholderTextColor={theme.COLORS['gray-color-400']}
+              placeholderTextColor={theme.COLORS['text-secondary']}
               secureTextFieldEntry
               returnKeyType="send"
               error={errors.password_confirmation?.message}

@@ -5,7 +5,7 @@ import { RFValue } from '@utils/rf-value';
 export const DeleteProfileContainer = styled.View`
   flex: 1;
 
-  background-color: ${({ theme }) => theme.COLORS['gray-color-100']};
+  background-color: ${({ theme }) => theme.COLORS.background};
 `;
 
 export const DeleteProfileContent = styled.View`
@@ -22,7 +22,7 @@ export const Label = styled.Text`
   ${({ theme }) => css`
     font-family: ${theme.FONT_FAMILY.REGULAR};
     font-size: ${RFValue(theme.FONT_SIZE.MD)}px;
-    color: ${theme.COLORS['gray-color-400']};
+    color: ${theme.COLORS['text-secondary']};
   `};
 `;
 

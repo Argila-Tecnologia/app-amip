@@ -123,7 +123,7 @@ export function DeleteProfileScreen() {
                 <Input
                   ref={emailRef}
                   placeholder="Informe o e-mail"
-                  placeholderTextColor={theme.COLORS['gray-color-400']}
+                  placeholderTextColor={theme.COLORS['text-secondary']}
                   keyboardType="email-address"
                   autoCorrect={false}
                   autoCapitalize="none"
@@ -144,7 +144,7 @@ export function DeleteProfileScreen() {
                 <Input
                   ref={passwordRef}
                   placeholder="Informe a senha"
-                  placeholderTextColor={theme.COLORS['gray-color-400']}
+                  placeholderTextColor={theme.COLORS['text-secondary']}
                   autoCorrect={false}
                   returnKeyType="next"
                   error={errors.password?.message}

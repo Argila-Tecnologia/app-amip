@@ -93,11 +93,7 @@ export function HeaderApp() {
           ) : (
             <HeaderAppBoxProfile>
               <HeaderAppPersonPhotoIcon>
-                <Feather
-                  name="user"
-                  size={25}
-                  color={theme.COLORS['black-color']}
-                />
+                <Feather name="user" size={25} color={theme.COLORS.text} />
               </HeaderAppPersonPhotoIcon>
             </HeaderAppBoxProfile>
           )}

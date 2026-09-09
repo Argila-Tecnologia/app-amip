@@ -97,7 +97,13 @@ export const HeaderAppPersonPhotoIcon = styled.View`
   align-items: center;
   justify-content: center;
 
-  background-color: ${({ theme }) => theme.COLORS['white-color']};
+  /*
+    Era 'white-color' fixo - esse círculo é o placeholder "sem login/sem
+    avatar", uma superfície de verdade (mesmo caso do ProfileAvatarButton em
+    Profile/styles.ts), não texto sobre o header navy fixo. 'surface' inverte
+    com o tema; o ícone dentro (HeaderApp/index.tsx) segue pro token 'text'.
+  */
+  background-color: ${({ theme }) => theme.COLORS.surface};
 
   border-radius: ${RFValue(25)}px;
 

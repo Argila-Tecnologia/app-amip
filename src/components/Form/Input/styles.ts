@@ -8,6 +8,7 @@ import { RFValue } from '@utils/rf-value';
 
 interface ContainerProps {
   isErrored: boolean;
+  isFocused: boolean;
 }
 
 // Envolve Container + ErrorText - Container sozinho não pode ter um irmão,
@@ -34,12 +35,33 @@ export const Container = styled.View<ContainerProps>`
   background: ${({ theme }) => theme.COLORS.surface};
 
   border-width: ${RFValue(2)}px;
-  border-color: ${({ theme }) => theme.COLORS['blue-dark-color']};
+  /*
+    Antes da migração pro tema, a borda ficava transparente (mesma cor do
+    fundo) e só virava azul quando o campo estava com foco de verdade
+    (isFocused) - esse rastreamento de foco se perdeu na migração pra
+    'surface', deixando a borda azul ligada o tempo todo, sem diferenciar
+    campo focado de não-focado. Restaurado abaixo: 'border' é o token
+    neutro (mesmo usado no SelectPicker) pro estado parado.
+  */
+  border-color: ${({ theme }) => theme.COLORS.border};
   border-radius: ${RFValue(10)}px;
 
   margin-bottom: ${RFValue(8)}px;
 
   padding: ${RFValue(0)}px ${RFValue(8)}px;
+
+  ${(props) =>
+    props.isFocused &&
+    css`
+      /*
+        Era 'blue-dark-color' (#0c0c5b) - contra o fundo 'surface' escuro
+        (#1B1E28) isso dá razão de contraste ~1:1 (WCAG pede 3:1 mínimo pra
+        elementos de UI), praticamente invisível no tema dark. 'primary-color'
+        (dourado) dá ~7.7:1 no escuro e ~2.2:1 no claro - bem mais visível
+        nos dois, e alinha com o InputMask, que já usava essa cor pro foco.
+      */
+      border-color: ${({ theme }) => theme.COLORS['primary-color']};
+    `}
 
   ${(props) =>
     props.isErrored &&

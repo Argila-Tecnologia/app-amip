@@ -1,6 +1,11 @@
 import { forwardRef, useCallback, useState } from 'react';
 
-import { TextInputProps, TextInput } from 'react-native';
+import {
+  NativeSyntheticEvent,
+  TextInputFocusEventData,
+  TextInputProps,
+  TextInput,
+} from 'react-native';
 
 import { useTheme } from 'styled-components/native';
 
@@ -22,8 +27,19 @@ interface IInputProps extends TextInputProps {
 }
 
 export const Input = forwardRef<TextInput, IInputProps>(
-  ({ icon, secureTextFieldEntry = false, error = null, ...rest }, ref) => {
+  (
+    {
+      icon,
+      secureTextFieldEntry = false,
+      error = null,
+      onFocus,
+      onBlur,
+      ...rest
+    },
+    ref,
+  ) => {
     const [isSecureText, setIsSecureText] = useState(secureTextFieldEntry);
+    const [isFocused, setIsFocused] = useState(false);
 
     const theme = useTheme();
 
@@ -31,11 +47,30 @@ export const Input = forwardRef<TextInput, IInputProps>(
     const toggleSecureText = useCallback(() => {
       setIsSecureText((oldState) => !oldState);
     }, []);
+
+    // Restaura o destaque visual de foco (perdido na migração pro tema - ver
+    // comentário em styles.ts) chamando também o onFocus/onBlur que o
+    // chamador eventualmente passe, em vez de simplesmente sobrescrever.
+    const handleFocus = useCallback(
+      (event: NativeSyntheticEvent<TextInputFocusEventData>) => {
+        setIsFocused(true);
+        onFocus?.(event);
+      },
+      [onFocus],
+    );
+
+    const handleBlur = useCallback(
+      (event: NativeSyntheticEvent<TextInputFocusEventData>) => {
+        setIsFocused(false);
+        onBlur?.(event);
+      },
+      [onBlur],
+    );
     // END FUNCTIONS
 
     return (
       <Wrapper>
-        <Container isErrored={!!error}>
+        <Container isErrored={!!error} isFocused={isFocused}>
           {/*
             Nenhum dos dois usos de Icon (prefixo, olho de senha) tinha
             "color" definido antes - ficavam pretos só pelo padrão do
@@ -54,6 +89,8 @@ export const Input = forwardRef<TextInput, IInputProps>(
             keyboardAppearance="dark"
             placeholderTextColor={theme.COLORS['text-secondary']}
             secureTextEntry={isSecureText}
+            onFocus={handleFocus}
+            onBlur={handleBlur}
             {...rest}
           />
 

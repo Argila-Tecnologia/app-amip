@@ -28,7 +28,15 @@ const FallbackContainer = styled.View`
   align-items: center;
   justify-content: center;
 
-  background-color: ${({ theme }) => theme.COLORS['gray-color-200']};
+  /*
+    Era 'gray-color-200' fixo - criado antes de existir tema claro/escuro,
+    então ficava sempre branco/quase-branco, inclusive no tema dark (esse
+    componente é usado em News, Championships, Museum, Profile e no avatar
+    do HeaderApp - o mesmo bug aparecia em todos eles). 'surface' inverte
+    com o tema, mesmo token já usado nos campos de formulário e nos
+    círculos de avatar (ver Profile/styles.ts).
+  */
+  background-color: ${({ theme }) => theme.COLORS.surface};
 `;
 
 // Substitui o uso direto de <Image> do expo-image nas telas que mostram
