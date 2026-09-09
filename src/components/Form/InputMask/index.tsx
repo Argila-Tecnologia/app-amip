@@ -1,9 +1,6 @@
 import { useCallback, useState } from 'react';
 
-import {
-  NativeSyntheticEvent,
-  TextInputFocusEventData,
-} from 'react-native';
+import { BlurEvent, FocusEvent } from 'react-native';
 
 import { MaskedTextInputProps } from 'react-native-mask-text';
 
@@ -38,7 +35,7 @@ export function InputMask({
   // comentário em styles.ts) chamando também o onFocus/onBlur que o
   // chamador eventualmente passe, em vez de simplesmente sobrescrever.
   const handleFocus = useCallback(
-    (event: NativeSyntheticEvent<TextInputFocusEventData>) => {
+    (event: FocusEvent) => {
       setIsFocused(true);
       onFocus?.(event);
     },
@@ -46,7 +43,7 @@ export function InputMask({
   );
 
   const handleBlur = useCallback(
-    (event: NativeSyntheticEvent<TextInputFocusEventData>) => {
+    (event: BlurEvent) => {
       setIsFocused(false);
       onBlur?.(event);
     },

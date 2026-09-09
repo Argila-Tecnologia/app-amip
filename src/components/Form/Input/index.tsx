@@ -1,11 +1,6 @@
 import { forwardRef, useCallback, useState } from 'react';
 
-import {
-  NativeSyntheticEvent,
-  TextInputFocusEventData,
-  TextInputProps,
-  TextInput,
-} from 'react-native';
+import { BlurEvent, FocusEvent, TextInputProps, TextInput } from 'react-native';
 
 import { useTheme } from 'styled-components/native';
 
@@ -52,7 +47,7 @@ export const Input = forwardRef<TextInput, IInputProps>(
     // comentário em styles.ts) chamando também o onFocus/onBlur que o
     // chamador eventualmente passe, em vez de simplesmente sobrescrever.
     const handleFocus = useCallback(
-      (event: NativeSyntheticEvent<TextInputFocusEventData>) => {
+      (event: FocusEvent) => {
         setIsFocused(true);
         onFocus?.(event);
       },
@@ -60,7 +55,7 @@ export const Input = forwardRef<TextInput, IInputProps>(
     );
 
     const handleBlur = useCallback(
-      (event: NativeSyntheticEvent<TextInputFocusEventData>) => {
+      (event: BlurEvent) => {
         setIsFocused(false);
         onBlur?.(event);
       },

@@ -81,13 +81,18 @@ const ThemeModeProvider = ({ children }: IThemeModeProviderProps) => {
       value={{ themeName, theme, setThemeName, toggleTheme }}
     >
       {/*
-        Ícones da status bar precisam inverter junto com o tema: claros
-        (light-content) sobre fundo escuro, escuros (dark-content) sobre
-        fundo claro - do contrário ficam ilegíveis contra o fundo quando o
-        usuário troca de tema.
+        Fixo em 'light-content', NÃO acompanha o tema - achado ao verificar
+        o tema claro de verdade no emulador: a área embaixo da status bar é
+        sempre o header navy fixo ('blue-dark-color', igual nos dois temas -
+        HeaderApp, Header e ProfileHeader, presentes no topo de toda tela do
+        app), nunca o 'background'/'surface' que varia com o tema. Ícones
+        escuros (a versão anterior, tema claro → 'dark-content') ficavam
+        quase ilegíveis contra esse navy. Bug pré-existente da própria
+        feature de tema (não introduzido pelo salto de SDK), só notado agora
+        por testar o tema claro num dispositivo de verdade.
       */}
       <StatusBar
-        barStyle={themeName === 'dark' ? 'light-content' : 'dark-content'}
+        barStyle="light-content"
         backgroundColor="transparent"
         translucent
       />
