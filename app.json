@@ -6,11 +6,6 @@
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "dark",
-    "splash": {
-      "image": "./assets/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#0F243F"
-    },
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "br.com.argilatecnologia.amiptm"
@@ -36,7 +31,16 @@
           "photosPermission": "A aplicação acessa sua galeria de fotos, nos conceda permissão."
         }
       ],
-      "expo-image"
+      "expo-image",
+      "expo-status-bar",
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/splash.png",
+          "resizeMode": "contain",
+          "backgroundColor": "#0F243F"
+        }
+      ]
     ],
     "extra": {
       "eas": {
