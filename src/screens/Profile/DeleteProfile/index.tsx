@@ -2,8 +2,6 @@ import { useCallback, useRef, useState } from 'react';
 
 import { TextInput } from 'react-native';
 
-import { useNavigation } from '@react-navigation/native';
-
 import { KeyboardAwareScrollView } from 'react-native-keyboard-controller';
 
 import { Controller, useForm } from 'react-hook-form';
@@ -19,6 +17,8 @@ import Toast from 'react-native-toast-message';
 import { useTheme } from 'styled-components/native';
 
 import { api } from '@services/api';
+
+import { useAuth } from '@hooks/auth';
 
 import { Header } from '@components/Header';
 import { Input } from '@components/Form/Input';
@@ -44,7 +44,7 @@ export function DeleteProfileScreen() {
   const [loadingDeleteSubmit, setIsLoadingDeleteSubmit] = useState(false);
 
   const theme = useTheme();
-  const navigation = useNavigation();
+  const { signOut } = useAuth();
 
   const emailRef = useRef<TextInput>(null);
   const passwordRef = useRef<TextInput>(null);
@@ -76,8 +76,13 @@ export function DeleteProfileScreen() {
             text2: 'Conta removida com sucesso!',
           });
 
-          // navigation.navigate('TabNews', { screen: 'NewsScreen' });
-          navigation.navigate('appBottomTabs', { screen: 'newsScreen' });
+          // Não navega manualmente daqui: signOut() zera "player.id", e o
+          // watcher em routes/index.tsx já reseta a navegação pra
+          // appBottomTabs sozinho sempre que a sessão cai enquanto o
+          // atleta está numa tela privada (mesmo mecanismo usado quando o
+          // token expira no meio do uso) - navegar aqui também correria
+          // com esse reset automático.
+          await signOut();
         }
       } catch (error) {
         if (error instanceof AxiosError) {
@@ -105,7 +110,7 @@ export function DeleteProfileScreen() {
         setIsLoadingDeleteSubmit(false);
       }
     },
-    [navigation],
+    [signOut],
   );
   // END FUNCTIONS
 
