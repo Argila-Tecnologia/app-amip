@@ -33,9 +33,9 @@ export const SignInBackButton = styled.TouchableOpacity.attrs({
 
 export const LogoImage = styled(Image)`
   width: 70%;
-  height: ${RFValue(331)}px;
+  height: ${RFValue(230)}px;
 
-  margin-top: ${RFValue(50)}px;
+  margin-top: ${RFValue(30)}px;
   margin-bottom: ${RFValue(20)}px;
 ` as unknown as typeof Image;
 
@@ -53,10 +53,42 @@ export const FormContainer = styled.View`
   margin-top: 10px;
 `;
 
+export const DividerContainer = styled.View`
+  width: 100%;
+  flex-direction: row;
+  align-items: center;
+
+  margin-top: ${RFValue(20)}px;
+`;
+
+export const DividerLine = styled.View`
+  flex: 1;
+  height: 1px;
+
+  background-color: ${({ theme }) => theme.COLORS['white-color']}33;
+`;
+
+export const DividerText = styled.Text`
+  ${({ theme }) => css`
+    font-family: ${theme.FONT_FAMILY.REGULAR};
+    font-size: ${RFValue(theme.FONT_SIZE.SM)}px;
+    color: ${theme.COLORS['white-color']};
+  `};
+
+  margin: 0 ${RFValue(10)}px;
+`;
+
+export const GoogleSignInContainer = styled.View`
+  width: 100%;
+  align-items: center;
+
+  margin-top: ${RFValue(16)}px;
+`;
+
 export const ForgotPasswordContent = styled.View`
   width: 100%;
 
-  margin-top: ${RFValue(5)}px;
+  margin-top: ${RFValue(20)}px;
 
   justify-content: center;
   align-items: flex-end;

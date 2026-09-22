@@ -32,8 +32,13 @@ import {
 } from './styles';
 
 const deleteProfileValidationSchema = zod.object({
-  email: zod.string().email(),
-  password: zod.string(),
+  email: zod
+    .string({ required_error: 'Campo obrigatório' })
+    .min(1, 'Campo obrigatório')
+    .email('E-mail inválido'),
+  password: zod
+    .string({ required_error: 'Campo obrigatório' })
+    .min(1, 'Campo obrigatório'),
 });
 
 type IDeleteProfileFormSubmitData = zod.infer<

@@ -41,13 +41,23 @@ import {
   EditProfileContainer,
   EditProfileContent,
   EditProfileForm,
+  Label,
 } from './styles';
 
 const editProfileValidationSchema = zod.object({
-  name: zod.string().min(1),
-  email: zod.string().email(),
-  birthday: zod.string().min(1),
-  phone: zod.string().min(1),
+  name: zod
+    .string({ required_error: 'Campo obrigatório' })
+    .min(1, 'Campo obrigatório'),
+  email: zod
+    .string({ required_error: 'Campo obrigatório' })
+    .min(1, 'Campo obrigatório')
+    .email('E-mail inválido'),
+  birthday: zod
+    .string({ required_error: 'Campo obrigatório' })
+    .min(1, 'Campo obrigatório'),
+  phone: zod
+    .string({ required_error: 'Campo obrigatório' })
+    .min(1, 'Campo obrigatório'),
 });
 
 type IEditProfileFormSubmitData = zod.infer<typeof editProfileValidationSchema>;
@@ -57,7 +67,10 @@ export function EditProfileInformationScreen() {
   const [selectedBirthday, setSelectedBirthday] = useState<Date>(new Date());
   // const [dateBirthday, setDateBirthday] = useState('');
   const [loadingEditSubmit, setIsLoadingEditSubmit] = useState(false);
-  const [playerId, setPlayerId] = useState('');
+  // Contas criadas/vinculadas via login com Google travam o e-mail (ver
+  // UpdatePlayerCompleteUseCase no backend, que rejeita a troca) - o campo
+  // fica só-leitura aqui pra já dar o feedback certo antes de tentar salvar.
+  const [isGoogleAccount, setIsGoogleAccount] = useState(false);
 
   const { updatePlayerProfile } = useAuth();
   const theme = useTheme();
@@ -104,14 +117,21 @@ export function EditProfileInformationScreen() {
         );
 
         const editData = {
-          id: playerId,
           name,
           email,
           phone,
           birthday: dateBirthdayTypeDate,
         };
 
-        const responsePlayerUpdate = await api.put('/players', editData);
+        // "/players/me" é a autoatualização do próprio atleta (o "id" vem
+        // do token, não é enviado aqui) - diferente de "/players/update/
+        // basic" e "/players/update/complete", que são staff-only
+        // (painel admin-web-amip). Essa tela chamava "PUT /players", uma
+        // rota que nunca existiu no backend - toda tentativa de salvar
+        // dava 404, e o interceptor global do axios (api.ts) deslogava o
+        // atleta em qualquer erro não-401, mascarando o problema real
+        // como se fosse a sessão que tivesse caído.
+        const responsePlayerUpdate = await api.put('/players/me', editData);
 
         if (responsePlayerUpdate.status === 200) {
           await updatePlayerProfile(responsePlayerUpdate.data);
@@ -141,7 +161,7 @@ export function EditProfileInformationScreen() {
                 type: 'error',
                 position: 'bottom',
                 text1: 'Equipe AMIP',
-                text2: 'Ops! Credenciais incorretas.',
+                text2: 'Ops! Verifique se o e-mail informado já não está em uso.',
               });
             }
 
@@ -159,7 +179,7 @@ export function EditProfileInformationScreen() {
         setIsLoadingEditSubmit(false);
       }
     },
-    [playerId, navigation, updatePlayerProfile],
+    [navigation, updatePlayerProfile],
   );
   // END FUNCTIONS
 
@@ -171,18 +191,27 @@ export function EditProfileInformationScreen() {
       if (response.status === 200) {
         const responsePlayer = response.data as IPlayerDTO;
 
-        setPlayerId(responsePlayer.id);
+        setIsGoogleAccount(!!responsePlayer.google_id);
 
         setValue('name', responsePlayer.name);
         setValue('email', responsePlayer.email);
-        setValue('phone', responsePlayer.phone);
+        setValue('phone', responsePlayer.phone ?? '');
 
-        const dateFormatted = format(
-          new Date(responsePlayer.birthday),
-          'dd/MM/yyyy',
-        );
+        // `birthday` pode não existir (conta criada via login com Google,
+        // que não fornece data de nascimento) - `format(new Date(undefined))`
+        // lança RangeError ("Invalid time value") e quebraria essa tela
+        // pra qualquer atleta nessa situação, exatamente quando ele tenta
+        // completar o perfil. Sem valor, o campo só fica vazio, pro
+        // atleta preencher (a validação do formulário já exige antes de
+        // salvar).
+        if (responsePlayer.birthday) {
+          const dateFormatted = format(
+            new Date(responsePlayer.birthday),
+            'dd/MM/yyyy',
+          );
 
-        setValue('birthday', dateFormatted);
+          setValue('birthday', dateFormatted);
+        }
         // setDateBirthday(dateFormatted);
 
         return responsePlayer;
@@ -234,6 +263,8 @@ export function EditProfileInformationScreen() {
                     autoCorrect={false}
                     autoCapitalize="none"
                     returnKeyType="next"
+                    editable={!isGoogleAccount}
+                    style={isGoogleAccount ? { opacity: 0.5 } : undefined}
                     error={errors.email?.message}
                     value={value}
                     onChangeText={(text) => {
@@ -242,6 +273,12 @@ export function EditProfileInformationScreen() {
                   />
                 )}
               />
+
+              {isGoogleAccount && (
+                <Label>
+                  E-mail vinculado à sua conta Google - não pode ser alterado.
+                </Label>
+              )}
 
               <Pressable
                 onPress={() => {
@@ -274,15 +311,17 @@ export function EditProfileInformationScreen() {
                 name="phone"
                 render={({ field: { value, onChange } }) => (
                   <InputMask
+                    mask="(99)99999-9999"
                     placeholder="Ex.: DDD + Nº de telefone"
                     placeholderTextColor={theme.COLORS['text-secondary']}
                     autoCorrect={false}
                     autoCapitalize="none"
+                    keyboardType="numeric"
                     returnKeyType="next"
                     error={errors.phone?.message}
                     value={value}
-                    onChangeText={(text) => {
-                      onChange(text);
+                    onChangeText={(_, rawText) => {
+                      onChange(rawText);
                     }}
                   />
                 )}

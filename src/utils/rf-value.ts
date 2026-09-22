@@ -35,10 +35,16 @@ export function RFValue(fontSize: number, standardScreenHeight = 680): number {
   const { height, width } = Dimensions.get('window');
   const standardLength = width > height ? width : height;
   const offset =
-    width > height ? 0 : Platform.OS === 'ios' ? 78 : (StatusBar.currentHeight as number);
+    width > height
+      ? 0
+      : Platform.OS === 'ios'
+        ? 78
+        : (StatusBar.currentHeight as number);
 
   const deviceHeight =
-    isIphoneXStyle() || Platform.OS === 'android' ? standardLength - offset : standardLength;
+    isIphoneXStyle() || Platform.OS === 'android'
+      ? standardLength - offset
+      : standardLength;
 
   const heightPercent = (fontSize * deviceHeight) / standardScreenHeight;
   return Math.round(heightPercent);

@@ -40,7 +40,8 @@
           "resizeMode": "contain",
           "backgroundColor": "#0F243F"
         }
-      ]
+      ],
+      "@react-native-google-signin/google-signin"
     ],
     "extra": {
       "eas": {

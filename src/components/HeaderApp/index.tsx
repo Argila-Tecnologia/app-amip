@@ -81,12 +81,12 @@ export function HeaderApp() {
 
               {/*
                 Mesma troca do Profile: FallbackImage cobre "sem avatar" e
-                "avatar falhou ao carregar" com a logo da AMIP, em vez do
-                placeholder de iniciais (noImage) que só cobria o primeiro
-                caso.
+                "avatar falhou ao carregar" mostrando as iniciais do
+                atleta (via "name"), em vez da logo da AMIP.
               */}
               <HeaderAppPersonPhotoImage
                 source={{ uri: player.avatar_url }}
+                name={player.name}
                 contentFit="cover"
               />
             </HeaderAppBoxProfile>

@@ -10,6 +10,73 @@ Em migração do Expo SDK 52 (5 versões major atrás na época, motivada por pr
 
 Bundle identifier (as duas plataformas): `br.com.argilatecnologia.amiptm`. Versão atual: `1.0.0` (build/versionCode `1`) — app em estágio inicial.
 
+## ⚠️ Trabalho em andamento: login via Google (2026-09-21, ler primeiro)
+
+Feature em implementação, **nada commitado ainda neste repo** (`git status`
+mostra tudo modificado). Contexto completo pra retomar sem perder nada:
+
+**O que já está pronto e funcionando**:
+- Backend (`api-ibra`) 100% pronto, **commitado localmente mas sem `git
+  push`** (commit `fcfd5b2` lá) - `POST /authenticate_player/google`,
+  vínculo automático por e-mail, criação de conta sem phone/birthday
+  (campos viraram opcionais), token verificado via `google-auth-library`.
+- `@react-native-google-signin/google-signin` instalado e configurado
+  (`App.tsx`: `GoogleSignin.configure({ webClientId })` no topo, fora do
+  componente). Plugin adicionado em `app.json` automaticamente pelo
+  `expo install` (Android só - iOS fica pra depois, decisão do usuário).
+- `src/hooks/auth.tsx`: novo método `signInWithGoogle(id_token)`, devolve
+  `{ is_new_player }` pra decidir se leva o atleta pro app normal ou pra
+  `editProfileInformationScreen` (conta nova sem telefone/nascimento).
+- `src/screens/SignIn/index.tsx` + `styles.ts`: botão oficial
+  `GoogleSigninButton` (cor `Light`, contrasta com o fundo navy) + lógica
+  completa de sign-in/cancelamento/erro. Layout revisado a pedido do
+  usuário (2026-09-21): logo reduzida (`RFValue(331)`→`RFValue(230)`),
+  ordem reorganizada pra ficar lógica - formulário+senha → "Esqueceu a
+  senha?" (fica junto do login por senha) → divisor "ou" → botão Google →
+  "Criar conta!" (call-to-action geral, por último).
+- `src/dtos/player-dto.ts`: `phone`/`birthday` opcionais, `google_id`
+  novo - e os 2 bugs reais que isso destampou e já foram corrigidos:
+  `EditProfileInformation` (`format(new Date(undefined))` quebrava a tela
+  de completar perfil) e `Subscription` (`setValue` com `undefined`).
+
+**Achado crítico, guardar pra qualquer troubleshooting futuro de login
+Google**: erro `DEVELOPER_ERROR` (code 10) do
+`@react-native-google-signin/google-signin` = o SHA-1 cadastrado no
+Google Cloud Console não bate com o certificado que assinou o APK
+rodando. **Builds debug local (`expo run:android`) usam um keystore
+diferente do de produção** (`android/app/debug.keystore`, senha
+`android`, alias `androiddebugkey` - gerado pelo `expo prebuild`, SHA-1
+pego via `keytool -list -v -keystore android/app/debug.keystore -alias
+androiddebugkey -storepass android -keypass android`). Por isso o Google
+Cloud Console precisa de **dois** Client IDs tipo "Android" com o mesmo
+`br.com.argilatecnologia.amiptm` - um com o SHA-1 de debug, outro com o
+de produção (esse vem de `eas credentials -p android` → profile
+`production`) - prática padrão documentada pelo próprio Google, os dois
+convivem no mesmo projeto.
+
+Client ID "Web application" (usado como `webClientId` no app E como
+`GOOGLE_WEB_CLIENT_ID` no backend - mesmo valor nos dois):
+`508099773895-chmvh13a1q6amk37cbg6k2tfhf8nmtho.apps.googleusercontent.com`
+(já preenchido no `.env` dos dois repos).
+
+**Status do teste end-to-end**: bloqueado até 2026-09-21 pelo
+`DEVELOPER_ERROR` acima (só o Client ID de produção existia). Usuário
+acabou de criar o segundo Client ID Android (debug) - **próximo passo é
+testar de novo** (não sei ainda se funcionou, sessão foi interrompida
+por limite de contexto antes de confirmar).
+
+**Pra retomar numa sessão nova**: perguntar se o login com conta Google
+real já funcionou depois do Client ID de debug. Se sim, seguir pra
+commitar (api-ibra já tem o commit pronto sem push; app-amip precisa de
+um commit novo) - confirmar com o usuário antes de qualquer `git push`,
+como sempre. Se ainda não, os logs úteis pra depurar ficam em
+`adb logcat -d --pid=$(adb shell pidof br.com.argilatecnologia.amiptm) |
+grep ReactNativeJS` (é onde o erro real aparece, não no terminal do
+Metro). Emulador/Metro/backend local podem ter caído entre sessões -
+checar antes de assumir que estão de pé (ver seção de setup local no
+`CLAUDE.md` do `api-ibra` sobre o Postgres, mesma fricção se aplica
+aqui).
+
 ## Comandos
 
 - `npm start` — `expo start --dev-client` (nota: `expo-dev-client` não está listado atualmente no `package.json`/`node_modules` apesar do script referenciá-lo — conferir isso antes de depender do fluxo de dev client localmente).

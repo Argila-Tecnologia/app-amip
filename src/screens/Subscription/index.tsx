@@ -68,10 +68,16 @@ type ISubscriptionRouteParams = {
 };
 
 const subscriptionValidationSchema = zod.object({
-  name: zod.string().min(1),
+  name: zod
+    .string({ required_error: 'Campo obrigatório' })
+    .min(1, 'Campo obrigatório'),
   // email: zod.string().email(),
-  whatsapp: zod.string().min(1),
-  club: zod.string().min(1),
+  whatsapp: zod
+    .string({ required_error: 'Campo obrigatório' })
+    .min(1, 'Campo obrigatório'),
+  club: zod
+    .string({ required_error: 'Campo obrigatório' })
+    .min(1, 'Campo obrigatório'),
 });
 
 type ISubscriptionFormSubmitData = zod.infer<
@@ -244,7 +250,11 @@ export function SubscriptionScreen() {
 
         if (player.id) {
           setValue('name', player.name);
-          setValue('whatsapp', player.phone);
+          // "?? ''" só por causa do tipo (phone virou opcional por causa
+          // do login via Google) - deixa o campo vazio pro atleta
+          // preencher, em vez de pré-preencher com um telefone que não
+          // existe ainda.
+          setValue('whatsapp', player.phone ?? '');
         }
 
         return {

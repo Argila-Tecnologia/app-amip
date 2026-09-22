@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { TextInput } from 'react-native';
 
@@ -20,6 +20,14 @@ import { zodResolver } from '@hookform/resolvers/zod';
 
 import { KeyboardAwareScrollView } from 'react-native-keyboard-controller';
 
+import {
+  GoogleSignin,
+  GoogleSigninButton,
+  isErrorWithCode,
+  isSuccessResponse,
+  statusCodes,
+} from '@react-native-google-signin/google-signin';
+
 import { useAuth } from '@hooks/auth';
 
 import logoImage from '../../assets/AMIP_LOGO.png';
@@ -28,6 +36,9 @@ import { Input } from '@components/Form/Input';
 import { Button } from '@components/Form/Button';
 
 import {
+  DividerContainer,
+  DividerLine,
+  DividerText,
   Footer,
   FooterCreateAccountButton,
   FooterCreateAccountButtonText,
@@ -35,23 +46,38 @@ import {
   ForgotPasswordContent,
   ForgotPasswordText,
   FormContainer,
+  GoogleSignInContainer,
   LogoImage,
   SignInBackButton,
   SignInContainer,
 } from './styles';
 
 const signInValidationSchema = zod.object({
-  email: zod.string().email().min(1),
-  password: zod.string().min(1),
+  email: zod
+    .string({ required_error: 'Campo obrigatório' })
+    .min(1, 'Campo obrigatório')
+    .email('E-mail inválido'),
+  password: zod
+    .string({ required_error: 'Campo obrigatório' })
+    .min(1, 'Campo obrigatório'),
 });
 
 type IFormDataSubmit = zod.infer<typeof signInValidationSchema>;
 
 export function SignInScreen() {
   const [loadingSignIn, setIsLoadingSignIn] = useState(false);
+  const [loadingGoogleSignIn, setIsLoadingGoogleSignIn] = useState(false);
+  // Sinaliza que, assim que "player" for atualizado no contexto (ver
+  // useEffect abaixo), deve navegar pra completar o perfil - não dá pra
+  // navegar direto na sequência do handleGoogleSignIn porque
+  // "editProfileInformationScreen" só é registrada no Navigator quando
+  // "player.id" existe (ver app.routes.tsx), e o setPlayer() do
+  // signInWithGoogle ainda não teve efeito no re-render nesse ponto.
+  const [redirectToCompleteProfile, setRedirectToCompleteProfile] =
+    useState(false);
 
   const navigation = useNavigation();
-  const { signIn } = useAuth();
+  const { signIn, signInWithGoogle, player } = useAuth();
   const theme = useTheme();
   const insets = useSafeAreaInsets();
 
@@ -111,6 +137,89 @@ export function SignInScreen() {
     },
     [signIn, navigation],
   );
+
+  useEffect(() => {
+    if (redirectToCompleteProfile && player.id) {
+      setRedirectToCompleteProfile(false);
+
+      navigation.reset({
+        index: 0,
+        routes: [{ name: 'editProfileInformationScreen' }],
+      });
+    }
+  }, [redirectToCompleteProfile, player.id, navigation]);
+
+  const handleGoogleSignIn = useCallback(async () => {
+    try {
+      setIsLoadingGoogleSignIn(true);
+
+      // Play Services é a base que o SDK do Google usa no Android - sem
+      // isso instalado/atualizado no aparelho, o signIn() falha.
+      await GoogleSignin.hasPlayServices();
+
+      const response = await GoogleSignin.signIn();
+
+      if (!isSuccessResponse(response)) {
+        // Atleta cancelou o seletor de conta do Google - não é erro,
+        // só não faz nada (sem toast, mesmo padrão de um "voltar" comum).
+        return;
+      }
+
+      const { idToken } = response.data;
+
+      if (!idToken) {
+        throw new Error('Google não devolveu um ID token.');
+      }
+
+      const { is_new_player } = await signInWithGoogle(idToken);
+
+      if (is_new_player) {
+        Toast.show({
+          type: 'success',
+          position: 'bottom',
+          text1: 'Bem-vindo(a) à AMIP!',
+          text2: 'Complete seu cadastro pra continuar.',
+        });
+
+        setRedirectToCompleteProfile(true);
+      } else {
+        Toast.show({
+          type: 'success',
+          position: 'bottom',
+          text1: 'Equipe AMIP',
+          text2: 'Login realizado com sucesso!',
+        });
+
+        navigation.reset({
+          index: 0,
+          routes: [{ name: 'appBottomTabs' }],
+        });
+      }
+    } catch (error) {
+      console.log('🚀 ~ error:', error);
+
+      // SIGN_IN_CANCELLED/IN_PROGRESS não são erros de verdade (o atleta
+      // desistiu, ou já tem um login em andamento) - só os outros casos
+      // (Play Services ausente, backend rejeitou o token etc.) mostram
+      // toast de erro.
+      if (
+        isErrorWithCode(error) &&
+        (error.code === statusCodes.SIGN_IN_CANCELLED ||
+          error.code === statusCodes.IN_PROGRESS)
+      ) {
+        return;
+      }
+
+      Toast.show({
+        type: 'error',
+        position: 'bottom',
+        text1: 'Não foi possível entrar com o Google',
+        text2: 'Verifique sua conexão e tente novamente.',
+      });
+    } finally {
+      setIsLoadingGoogleSignIn(false);
+    }
+  }, [signInWithGoogle, navigation]);
 
   const handleGoBack = useCallback(() => {
     navigation.goBack();
@@ -195,6 +304,13 @@ export function SignInScreen() {
           </Button>
         </FormContainer>
 
+        {/*
+          "Esqueceu a senha?" é uma ação do login por SENHA - fica logo
+          abaixo do formulário/botão Entrar, antes do divisor "ou", pra
+          não parecer que pertence ao login com Google (decisão do
+          usuário, 2026-09-21: reordenado pra cima, ficava confuso depois
+          do botão do Google).
+        */}
         <ForgotPasswordContent>
           {/*
             Esse botão não tinha nenhum onPress - a rota
@@ -210,6 +326,32 @@ export function SignInScreen() {
           </ForgotPasswordButton>
         </ForgotPasswordContent>
 
+        <DividerContainer>
+          <DividerLine />
+          <DividerText>ou</DividerText>
+          <DividerLine />
+        </DividerContainer>
+
+        <GoogleSignInContainer>
+          {/*
+            Componente nativo oficial do Google (não um botão nosso) - já
+            segue as diretrizes de marca do Google automaticamente. "Light"
+            (fundo branco) porque a tela é escura (navy) - precisa de
+            contraste, o "Dark" é pensado pra fundos claros.
+          */}
+          <GoogleSigninButton
+            size={GoogleSigninButton.Size.Wide}
+            color={GoogleSigninButton.Color.Light}
+            disabled={loadingGoogleSignIn}
+            onPress={handleGoogleSignIn}
+          />
+        </GoogleSignInContainer>
+
+        {/*
+          "Criar conta!" fica por último, como call-to-action geral -
+          faz sentido independente de qual método de login foi usado
+          acima.
+        */}
         <Footer>
           <FooterCreateAccountButton
             onPress={() => {

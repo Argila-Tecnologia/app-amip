@@ -31,7 +31,10 @@ import {
 } from './styles';
 
 const forgotPasswordValidationSchema = zod.object({
-  email: zod.string().email(),
+  email: zod
+    .string({ required_error: 'Campo obrigatório' })
+    .min(1, 'Campo obrigatório')
+    .email('E-mail inválido'),
 });
 
 type IFormSubmitData = zod.infer<typeof forgotPasswordValidationSchema>;
@@ -72,7 +75,8 @@ export function ForgotPasswordScreen() {
                 type: 'error',
                 position: 'bottom',
                 text1: 'Equipe AMIP',
-                text2: 'Ops! E-mail incorreto!',
+                text2:
+                  'Essa conta usa login com Google - não é possível recuperar senha para ela.',
               });
 
               return;

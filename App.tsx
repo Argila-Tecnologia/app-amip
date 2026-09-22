@@ -4,6 +4,10 @@ import {
   useFonts,
 } from '@expo-google-fonts/roboto-slab';
 
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
+
+import { GOOGLE_WEB_CLIENT_ID } from '@env';
+
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
@@ -23,6 +27,16 @@ import { Routes } from '@routes/index';
 import { Loading } from '@components/Loading';
 import { AppProvider } from '@hooks/index';
 import { ThemeModeProvider } from '@hooks/theme';
+
+// Configuração do SDK nativo do Google - precisa rodar uma vez antes de
+// qualquer chamada a GoogleSignin.signIn() (ver src/hooks/auth.tsx). Fora
+// do componente de propósito, pra não reconfigurar a cada re-render.
+// `webClientId` é o Client ID "Web application" do Google Cloud Console -
+// é ele que faz o ID token devolvido ter o "aud" que o backend espera
+// verificar (GOOGLE_WEB_CLIENT_ID em api-ibra, mesmo valor).
+GoogleSignin.configure({
+  webClientId: GOOGLE_WEB_CLIENT_ID,
+});
 
 export default function App() {
   const [fontsLoaded] = useFonts({

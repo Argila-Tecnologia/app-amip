@@ -10,7 +10,7 @@ import { Feather } from '@expo/vector-icons';
 
 import * as ImagePicker from 'expo-image-picker';
 
-import * as FileSystem from 'expo-file-system';
+import { File } from 'expo-file-system';
 
 import { useTheme } from 'styled-components/native';
 
@@ -115,21 +115,23 @@ export function ProfileScreen() {
       if (photoSelected.assets[0].uri) {
         handleToggleTakePhotoModal();
 
-        const photoInfo = await FileSystem.getInfoAsync(
-          photoSelected.assets[0].uri,
-        );
+        // `FileSystem.getInfoAsync` (import de 'expo-file-system') foi
+        // removido do pacote principal a partir da migração pro SDK 57 -
+        // virou um stub que sempre lança em runtime (o método real agora
+        // vive só em 'expo-file-system/legacy'). A classe `File` é a API
+        // nova recomendada pelo Expo: "exists"/"size" são propriedades
+        // síncronas, não precisam de await.
+        const photoFileInfo = new File(photoSelected.assets[0].uri);
 
-        if (photoInfo.exists) {
-          if (photoInfo.size) {
-            const photoSizeMegabyte = photoInfo.size / 1024 / 1024;
+        if (photoFileInfo.exists) {
+          const photoSizeMegabyte = photoFileInfo.size / 1024 / 1024;
 
-            if (photoSizeMegabyte > 5) {
-              return Toast.show({
-                type: 'error',
-                text2: 'Essa imagem é muito grande. Escolha uma de até 5MB',
-                position: 'bottom',
-              });
-            }
+          if (photoSizeMegabyte > 5) {
+            return Toast.show({
+              type: 'error',
+              text2: 'Essa imagem é muito grande. Escolha uma de até 5MB',
+              position: 'bottom',
+            });
           }
         }
 
@@ -211,21 +213,19 @@ export function ProfileScreen() {
       if (photoSelected.assets[0].uri) {
         handleToggleTakePhotoModal();
 
-        const photoInfo = await FileSystem.getInfoAsync(
-          photoSelected.assets[0].uri,
-        );
+        // Ver handleTakePhotoCamera acima pro porquê de "File" em vez de
+        // "FileSystem.getInfoAsync".
+        const photoFileInfo = new File(photoSelected.assets[0].uri);
 
-        if (photoInfo.exists) {
-          if (photoInfo.size) {
-            const photoSizeMegabyte = photoInfo.size / 1024 / 1024;
+        if (photoFileInfo.exists) {
+          const photoSizeMegabyte = photoFileInfo.size / 1024 / 1024;
 
-            if (photoSizeMegabyte > 5) {
-              return Toast.show({
-                type: 'error',
-                text2: 'Essa imagem é muito grande. Escolha uma de até 5MB',
-                position: 'bottom',
-              });
-            }
+          if (photoSizeMegabyte > 5) {
+            return Toast.show({
+              type: 'error',
+              text2: 'Essa imagem é muito grande. Escolha uma de até 5MB',
+              position: 'bottom',
+            });
           }
         }
 
@@ -338,15 +338,16 @@ export function ProfileScreen() {
               ) : (
                 <>
                   {/*
-                    Antes caía num placeholder gerado por iniciais
-                    (noImage) quando não tinha avatar - agora usa o mesmo
-                    FallbackImage do resto do app (logo da AMIP), que
-                    também cobre o caso de o avatar_url existir mas falhar
-                    ao carregar (antes não tinha nenhum tratamento pra
-                    isso).
+                    FallbackImage cobre tanto "sem avatar" quanto "avatar
+                    falhou ao carregar" - passando "name", o fallback
+                    mostra as iniciais do atleta (ex: "João Paulo" -> "JP")
+                    em vez da logo da AMIP, já que aqui tem um nome pra
+                    derivar delas (diferente de News/Championships/Museum,
+                    que são imagem de conteúdo, não de pessoa).
                   */}
                   <ProfileAvatarImage
                     source={{ uri: player.avatar_url }}
+                    name={player.name}
                     contentFit="cover"
                   />
 
@@ -383,23 +384,32 @@ export function ProfileScreen() {
               </ProfileOptionButtonTitle>
             </ProfileOptionButton>
 
-            <ProfileOptionButton
-              onPress={() => {
-                navigation.navigate('editPasswordScreen');
-              }}
-            >
-              <ProfileOptionButtonIcon>
-                <Feather
-                  name="lock"
-                  size={27}
-                  color={theme.COLORS.text}
-                />
-              </ProfileOptionButtonIcon>
+            {/*
+              Conta vinculada a login via Google não tem senha de verdade
+              pra trocar (o backend já rejeita a troca em
+              UpdatePlayerPasswordUseCase/ResetPlayerPasswordUseCase/
+              SendForgotPasswordEmailUseCase) - escondida aqui pra não
+              oferecer uma opção que sempre daria erro.
+            */}
+            {!player.google_id && (
+              <ProfileOptionButton
+                onPress={() => {
+                  navigation.navigate('editPasswordScreen');
+                }}
+              >
+                <ProfileOptionButtonIcon>
+                  <Feather
+                    name="lock"
+                    size={27}
+                    color={theme.COLORS.text}
+                  />
+                </ProfileOptionButtonIcon>
 
-              <ProfileOptionButtonTitle>
-                Atualizar senha
-              </ProfileOptionButtonTitle>
-            </ProfileOptionButton>
+                <ProfileOptionButtonTitle>
+                  Atualizar senha
+                </ProfileOptionButtonTitle>
+              </ProfileOptionButton>
+            )}
 
             <ProfileOptionButton
               onPress={() => {

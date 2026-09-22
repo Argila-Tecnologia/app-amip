@@ -147,17 +147,19 @@ api.registerInterceptTokenManager = (signOut) => {
         });
       }
 
-      // SE O ERRO NÃO FOR NENHUM ACIMA, FAZEMOS O LOGOUT DO USUÁRIO
-      signOut();
-
+      // Qualquer erro que NÃO seja 401 (validação, recurso não encontrado,
+      // erro de servidor etc.) é devolvido pra quem fez a chamada tratar -
+      // não é falha de sessão/token, não deve deslogar o usuário. Antes,
+      // esse "else" chamava signOut() incondicionalmente pra qualquer
+      // erro de QUALQUER request feita pelo app inteiro - um 404 (ex: rota
+      // inexistente) ou um 400 de validação normal derrubava a sessão do
+      // atleta, mascarando o erro real como se fosse a sessão que tivesse
+      // caído.
       if (requestError.response && requestError.response.data) {
         return Promise.reject(new AppError(requestError.response.data.message));
-      } else {
-        // return Promise.reject(
-        //   new AppError('Erro no servidor. Tente novamente mais tarde.'),
-        // );
-        return Promise.reject(requestError);
       }
+
+      return Promise.reject(requestError);
     },
   );
 

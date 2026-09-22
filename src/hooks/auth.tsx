@@ -34,6 +34,11 @@ interface IAuthContextDataProps {
   player: IPlayerDTO;
   isLoadingUserStorageData: boolean;
   signIn({ email, password }: ICredentials): Promise<void>;
+  // Devolve `is_new_player` pra tela de SignIn decidir se leva o atleta
+  // direto pro app ou pra um fluxo de completar o perfil (sem telefone/
+  // data de nascimento, que o Google não fornece) - decisão de UX ainda
+  // não tomada, ver comentário em SignInScreen.
+  signInWithGoogle(id_token: string): Promise<{ is_new_player: boolean }>;
   signOut(): Promise<void>;
   updatePlayerProfile(player: IPlayerDTO): Promise<void>;
 }
@@ -96,6 +101,25 @@ const AuthProvider = ({ children }: IAuthProviderProps) => {
       } catch (error) {
         throw error;
       }
+    },
+    [storageUserAndTokenSave, userAndTokenUpdate],
+  );
+
+  const signInWithGoogle = useCallback(
+    async (id_token: string) => {
+      const response = await api.post('/authenticate_player/google', {
+        id_token,
+      });
+
+      const { player, token, refresh_token, is_new_player } =
+        response.data as IAuthState & { is_new_player: boolean };
+
+      await storageUserAndTokenSave(player, token, refresh_token);
+      await userAndTokenUpdate(player, token);
+
+      api.defaults.headers.common.Authorization = `Bearer ${token}`;
+
+      return { is_new_player };
     },
     [storageUserAndTokenSave, userAndTokenUpdate],
   );
@@ -165,6 +189,7 @@ const AuthProvider = ({ children }: IAuthProviderProps) => {
         player,
         isLoadingUserStorageData,
         signIn,
+        signInWithGoogle,
         signOut,
         updatePlayerProfile,
       }}
