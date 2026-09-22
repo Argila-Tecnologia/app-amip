@@ -4,19 +4,21 @@
     "appVersionSource": "remote"
   },
   "build": {
-    "preview": { 
+    "preview": {
       "android": {
         "distribution": "internal"
       },
       "env": {
         "API_URL": "https://api.amiptdm.com",
-        "WHATSAPP_PHONE_NUMBER": "+5581993139096"
+        "WHATSAPP_PHONE_NUMBER": "+5581993139096",
+        "GOOGLE_WEB_CLIENT_ID": "508099773895-chmvh13a1q6amk37cbg6k2tfhf8nmtho.apps.googleusercontent.com"
       }
     },
     "production": {
       "env": {
         "API_URL": "https://api.amiptdm.com",
-        "WHATSAPP_PHONE_NUMBER": "+5581993139096"
+        "WHATSAPP_PHONE_NUMBER": "+5581993139096",
+        "GOOGLE_WEB_CLIENT_ID": "508099773895-chmvh13a1q6amk37cbg6k2tfhf8nmtho.apps.googleusercontent.com"
       }
     }
   }
