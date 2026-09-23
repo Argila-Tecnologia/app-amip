@@ -4,44 +4,46 @@ Este arquivo fornece orientação ao Claude Code (claude.ai/code) ao trabalhar c
 
 ## Visão geral do projeto
 
-`app-amip` é o aplicativo mobile dos atletas da AMIP: Expo SDK 55 / React Native 0.83 / React 19.2. É a contraparte cliente dos endpoints voltados pra atletas do `api-ibra` (rotas `ensurePlayerAuthenticated`: `/players`, `/authenticate_player`, `/notifications`, etc). O painel administrativo da equipe é um repositório separado (`admin-web-amip`) e não tem relação com este app.
+`app-amip` é o aplicativo mobile dos atletas da AMIP: Expo SDK 57 / React Native 0.86 / React 19.2. É a contraparte cliente dos endpoints voltados pra atletas do `api-ibra` (rotas `ensurePlayerAuthenticated`: `/players`, `/authenticate_player`, `/notifications`, etc). O painel administrativo da equipe é um repositório separado (`admin-web-amip`) e não tem relação com este app.
 
-Em migração do Expo SDK 52 (5 versões major atrás na época, motivada por prazos de toolchain do Google Play/App Store): os saltos 52→53→54→55 já foram feitos, um de cada vez (56→57 ainda pendentes, cada um numa sessão própria — ver o histórico de commits do próprio app pras notas salto a salto, ex: New Architecture virou obrigatória no 55, `@expo/vector-icons` precisa virar dependência direta antes do 56).
+Migração do Expo SDK 52→57 **concluída** (um salto por sessão: 52→53→54→55→56→57 — ver histórico de commits pras notas de cada salto, ex: New Architecture virou obrigatória no 55, `@expo/vector-icons` virou dependência direta antes do 56).
 
-Bundle identifier (as duas plataformas): `br.com.argilatecnologia.amiptm`. Versão atual: `1.0.0` (build/versionCode `1`) — app em estágio inicial.
+Bundle identifier (as duas plataformas): `br.com.argilatecnologia.amiptm`. Versão atual: `1.0.0` (versionCode `1`, gerenciado remotamente pelo EAS via `"appVersionSource": "remote"` no `eas.json` — **mudar `version` no `app.json` não tem efeito nenhum no número que sai no build**; usar `eas build:version:set` pra alterar de verdade).
 
-## ⚠️ Trabalho em andamento: login via Google (2026-09-21, ler primeiro)
+**App publicado em produção no Google Play** (2026-09-22, primeiro envio). A ficha original do app no Play Console (criada em abr/2025, nunca tinha recebido nenhum upload) começou a dar erro genérico e irrecuperável ("Ocorreu um erro inesperado") ao tentar abrir, mesmo após limpar cache/testar navegadores diferentes — usuário excluiu essa ficha (rascunho, 0 instalações, nunca publicada) e criou uma nova com o mesmo pacote (`br.com.argilatecnologia.amiptm`); o upload do `.aab` funcionou normalmente na ficha nova. Vale lembrar caso o mesmo erro apareça de novo num rascunho não utilizado.
 
-Feature em implementação, **nada commitado ainda neste repo** (`git status`
-mostra tudo modificado). Contexto completo pra retomar sem perder nada:
+## Login via Google (players)
 
-**O que já está pronto e funcionando**:
-- Backend (`api-ibra`) 100% pronto, **commitado localmente mas sem `git
-  push`** (commit `fcfd5b2` lá) - `POST /authenticate_player/google`,
-  vínculo automático por e-mail, criação de conta sem phone/birthday
-  (campos viraram opcionais), token verificado via `google-auth-library`.
-- `@react-native-google-signin/google-signin` instalado e configurado
-  (`App.tsx`: `GoogleSignin.configure({ webClientId })` no topo, fora do
-  componente). Plugin adicionado em `app.json` automaticamente pelo
-  `expo install` (Android só - iOS fica pra depois, decisão do usuário).
-- `src/hooks/auth.tsx`: novo método `signInWithGoogle(id_token)`, devolve
-  `{ is_new_player }` pra decidir se leva o atleta pro app normal ou pra
-  `editProfileInformationScreen` (conta nova sem telefone/nascimento).
-- `src/screens/SignIn/index.tsx` + `styles.ts`: botão oficial
-  `GoogleSigninButton` (cor `Light`, contrasta com o fundo navy) + lógica
-  completa de sign-in/cancelamento/erro. Layout revisado a pedido do
-  usuário (2026-09-21): logo reduzida (`RFValue(331)`→`RFValue(230)`),
-  ordem reorganizada pra ficar lógica - formulário+senha → "Esqueceu a
-  senha?" (fica junto do login por senha) → divisor "ou" → botão Google →
-  "Criar conta!" (call-to-action geral, por último).
+**Concluído, testado de ponta a ponta com conta real e publicado em produção** (2026-09-22).
+Coexiste com login por senha (não substitui), vínculo automático por
+e-mail quando o Google já verificou a posse daquele e-mail. Escopo:
+só atletas (`players`), Android apenas (iOS não configurado, decisão
+do usuário).
+
+- Backend (`api-ibra`): `POST /authenticate_player/google` - resolve
+  por `google_id` → por e-mail (auto-vincula) → cria conta nova (senha
+  aleatória gerada no servidor, nunca usada/exposta; sem phone/birthday,
+  ambos opcionais em `players`). Token verificado via `google-auth-library`.
+- `@react-native-google-signin/google-signin`: `App.tsx` chama
+  `GoogleSignin.configure({ webClientId })` no topo, fora do componente.
+  Plugin registrado em `app.json` (Android só).
+- `src/hooks/auth.tsx`: `signInWithGoogle(id_token)`, devolve
+  `{ is_new_player }` - atleta novo (sem phone/birthday) é redirecionado
+  pra `editProfileInformationScreen` em vez do app normal.
+- `src/screens/SignIn/index.tsx`: botão oficial `GoogleSigninButton`
+  (cor `Light`) abaixo do formulário de senha, com divisor "ou".
 - `src/dtos/player-dto.ts`: `phone`/`birthday` opcionais, `google_id`
-  novo - e os 2 bugs reais que isso destampou e já foram corrigidos:
-  `EditProfileInformation` (`format(new Date(undefined))` quebrava a tela
-  de completar perfil) e `Subscription` (`setValue` com `undefined`).
+  novo - qualquer código que assuma esses campos sempre presentes
+  precisa de guarda (ex: `format(new Date(...))` sem checar undefined
+  primeiro quebra a tela de completar perfil pra atleta via Google).
+- **Contas Google têm restrições de segurança que não se aplicam a
+  contas tradicionais** - ver seção "Autoatualização de perfil" abaixo:
+  e-mail não pode ser alterado, senha não pode ser definida/trocada por
+  nenhum dos 3 caminhos possíveis (troca normal, esqueci senha - pedido
+  e reset).
 
-**Achado crítico, guardar pra qualquer troubleshooting futuro de login
-Google**: erro `DEVELOPER_ERROR` (code 10) do
-`@react-native-google-signin/google-signin` = o SHA-1 cadastrado no
+**Troubleshooting - erro `DEVELOPER_ERROR` (code 10)** do
+`@react-native-google-signin/google-signin`: o SHA-1 cadastrado no
 Google Cloud Console não bate com o certificado que assinou o APK
 rodando. **Builds debug local (`expo run:android`) usam um keystore
 diferente do de produção** (`android/app/debug.keystore`, senha
@@ -57,25 +59,9 @@ convivem no mesmo projeto.
 Client ID "Web application" (usado como `webClientId` no app E como
 `GOOGLE_WEB_CLIENT_ID` no backend - mesmo valor nos dois):
 `508099773895-chmvh13a1q6amk37cbg6k2tfhf8nmtho.apps.googleusercontent.com`
-(já preenchido no `.env` dos dois repos).
-
-**Status do teste end-to-end**: bloqueado até 2026-09-21 pelo
-`DEVELOPER_ERROR` acima (só o Client ID de produção existia). Usuário
-acabou de criar o segundo Client ID Android (debug) - **próximo passo é
-testar de novo** (não sei ainda se funcionou, sessão foi interrompida
-por limite de contexto antes de confirmar).
-
-**Pra retomar numa sessão nova**: perguntar se o login com conta Google
-real já funcionou depois do Client ID de debug. Se sim, seguir pra
-commitar (api-ibra já tem o commit pronto sem push; app-amip precisa de
-um commit novo) - confirmar com o usuário antes de qualquer `git push`,
-como sempre. Se ainda não, os logs úteis pra depurar ficam em
-`adb logcat -d --pid=$(adb shell pidof br.com.argilatecnologia.amiptm) |
-grep ReactNativeJS` (é onde o erro real aparece, não no terminal do
-Metro). Emulador/Metro/backend local podem ter caído entre sessões -
-checar antes de assumir que estão de pé (ver seção de setup local no
-`CLAUDE.md` do `api-ibra` sobre o Postgres, mesma fricção se aplica
-aqui).
+(no `.env` dos dois repos, e também precisa estar nos blocos `env` de
+`eas.json` pra builds remotos da EAS - já esquecido uma vez, quebrando
+login Google silenciosamente num build de produção até ser notado).
 
 ## Comandos
 
@@ -83,7 +69,7 @@ aqui).
 - Build EAS: `eas build --profile preview --platform android` (distribuição interna) ou `--profile production`. Só esses dois profiles existem no `eas.json`; não há profile `development`.
 - Os diretórios nativos `android/` e `ios/` são versionados no repositório (o projeto passou por `expo prebuild`, ou é gerenciado com os diretórios nativos commitados) — ter isso em mente antes de adicionar qualquer config plugin do Expo que exija um prebuild novo, já que pode ser preciso reconciliar com customizações nativas existentes.
 
-Variáveis de ambiente (`react-native-dotenv`, injetadas via `.env` localmente e via blocos `env` do `eas.json` nos builds): `API_URL` (aponta pro backend de produção, `https://api.amiptdm.com`, tanto no profile `preview` quanto no `production` — não há URL de staging separada) e `WHATSAPP_PHONE_NUMBER`.
+Variáveis de ambiente (`react-native-dotenv`, injetadas via `.env` localmente e via blocos `env` do `eas.json` nos builds): `API_URL` (aponta pro backend de produção, `https://api.amiptdm.com`, tanto no profile `preview` quanto no `production` — não há URL de staging separada), `WHATSAPP_PHONE_NUMBER` e `GOOGLE_WEB_CLIENT_ID` (ver seção de login Google). Qualquer variável nova usada em runtime precisa ser adicionada tanto no `.env` local quanto nos blocos `env` de `eas.json` — só o `.env` local não é suficiente pra builds remotos da EAS, que não têm acesso a esse arquivo (é gitignored).
 
 ## Arquitetura
 
@@ -111,10 +97,16 @@ Duas dependências sem manutenção foram substituídas (não reintroduzir): `re
 
 ### Cliente HTTP e autenticação
 
-- `src/services/api.ts`: uma única instância `axios`, `baseURL: API_URL`. Tem um interceptor de resposta que, em `401`, tenta `POST /authenticate_player/refresh_token` e desloga o usuário se isso também falhar.
-- `src/hooks/auth.tsx`: `AuthProvider` — `signIn` (`POST /authenticate_player/session`), `signOut`, `loadData` (`GET /players/me`), `updatePlayerProfile`. É o lugar natural pra futuramente conectar o registro de device token (enviar o push token pro backend logo após um `signIn`/`loadData` bem-sucedido).
+- `src/services/api.ts`: uma única instância `axios`, `baseURL: API_URL`. Tem um interceptor de resposta que, em `401`, tenta `POST /authenticate_player/refresh_token` e desloga o usuário se isso também falhar (ou se não houver `refresh_token` salvo). **Qualquer outro erro HTTP (400/404/500/etc.) é só devolvido pra tela tratar, não desloga mais o usuário** — antes fazia `signOut()` incondicionalmente pra qualquer erro não-401, o que transformava um 404 de rota inexistente (ou qualquer outro erro comum) numa sessão encerrada sem explicação. Corrigido em 2026-09-22.
+- `src/hooks/auth.tsx`: `AuthProvider` — `signIn` (`POST /authenticate_player/session`), `signInWithGoogle`, `signOut`, `loadData` (`GET /players/me`), `updatePlayerProfile`. É o lugar natural pra futuramente conectar o registro de device token (enviar o push token pro backend logo após um `signIn`/`loadData` bem-sucedido).
 - `src/storage/auth-token-storage.ts`: persiste `{ token, refresh_token }` no `AsyncStorage` sob a chave `AUTH_TOKEN_STORAGE`. Não existe nenhum conceito de device/push token em lugar nenhum do app ainda.
 - **Controle de acesso por login**: `src/routes/app.routes.tsx` só registra `profileScreen`/`editProfileInformationScreen`/`editPasswordScreen`/`deleteProfileScreen` quando `player.id` é verdadeiro — o padrão oficial do React Navigation pra fluxos de autenticação (https://reactnavigation.org/docs/auth-flow/), então navegar pra elas deslogado não é só bloqueado, a rota nem existe. `News`/`Championships`/`Museum`/`Contact`/`Subscription` continuam registradas incondicionalmente (públicas de propósito, incluindo inscrição anônima em campeonato com `player_id: null`). `src/routes/index.tsx` guarda uma `navigationRef` e reseta pra `appBottomTabs` (sem toast) se a sessão cair enquanto a rota atual é uma das quatro telas protegidas — `app.routes.tsx` só decide quais rotas existem, não o que acontece se você já estiver dentro de uma quando ela desaparece.
+
+### Autoatualização de perfil (self-service)
+
+- `PUT /players/me` (backend, `ensurePlayerAuthenticated`) é a rota certa pro atleta editar o próprio nome/e-mail/phone/birthday — o `id` vem do token, nunca do corpo. **Diferente** de `PUT /players/update/basic` e `/update/complete`, que são staff-only (`ensureUserAuthenticated`, usadas pelo painel `admin-web-amip`) e nunca devem ser chamadas por este app. A tela `EditProfileInformation` já usa a rota certa desde 2026-09-22 — antes chamava `PUT /players` (rota que nunca existiu, sempre 404).
+- Upload de avatar usa a classe `File` de `expo-file-system` (`new File(uri).exists`/`.size`, propriedades síncronas) - **não** `FileSystem.getInfoAsync`, removido do pacote principal desde o SDK 57 (só existe em `expo-file-system/legacy` agora, o import antigo lança em runtime).
+- Contas Google (`player.google_id` preenchido): e-mail fica read-only na UI (`EditProfileInformation`) e o backend rejeita a troca de qualquer forma; botão "Atualizar senha" some do Profile (nenhum dos 3 fluxos de senha do backend aceita mudança pra essas contas - ver `CLAUDE.md` do `api-ibra`).
 
 ### Tema (claro/escuro)
 
