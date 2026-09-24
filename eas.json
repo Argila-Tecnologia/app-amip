@@ -21,5 +21,13 @@
         "GOOGLE_WEB_CLIENT_ID": "508099773895-chmvh13a1q6amk37cbg6k2tfhf8nmtho.apps.googleusercontent.com"
       }
     }
+  },
+  "submit": {
+    "production": {
+      "android": {
+        "serviceAccountKeyPath": "/home/lubnnia/Documentos/Projetos/MateriaisProjetos/materiais-ibra/eas-play-submit-amip-509314-335d30486655.json",
+        "track": "internal"
+      }
+    }
   }
 }
