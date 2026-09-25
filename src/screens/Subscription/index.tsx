@@ -4,6 +4,8 @@ import { ScrollView, TextInput } from 'react-native';
 
 import { useNavigation, useRoute } from '@react-navigation/native';
 
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+
 import { Feather } from '@expo/vector-icons';
 
 import { Controller, useForm } from 'react-hook-form';
@@ -93,8 +95,15 @@ export function SubscriptionScreen() {
   const theme = useTheme();
   const route = useRoute();
   const navigation = useNavigation();
+  const insets = useSafeAreaInsets();
 
   const { championshipId } = route.params as ISubscriptionRouteParams;
+
+  // Sem isso, o botão "Realizar inscrição" (último item do formulário)
+  // ficava colado na barra de navegação de 3 botões do Android, às vezes
+  // parcialmente coberto por ela - mesmo padrão já usado em
+  // DetailsChampionshipScreen.
+  const paddingBottom = insets.bottom;
 
   const nameRef = useRef<TextInput>(null);
   // const emailRef = useRef<TextInput>(null);
@@ -275,7 +284,10 @@ export function SubscriptionScreen() {
       {isLoadingCategoriesClubsAndChampionship ? (
         <Loading />
       ) : (
-        <ScrollView style={{ flexGrow: 1 }}>
+        <ScrollView
+          contentContainerStyle={{ paddingBottom }}
+          style={{ flexGrow: 1 }}
+        >
           <SubscriptionContent>
             {categoriesClubsAndChampionship && (
               <SubscriptionForm>

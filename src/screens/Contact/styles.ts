@@ -50,4 +50,14 @@ export const ContactText = styled.Text`
     font-size: ${RFValue(theme.FONT_SIZE.MD)}px;
     color: ${theme.COLORS['white-color']};
   `}
+
+  /*
+    Sem flex:1, o texto reivindica sua largura "natural" (a linha inteira,
+    sem quebra) dentro da row do botão - em telas/fontes menores esse
+    texto (mais longo, "Nos envie uma mensagem") passava do limite direito
+    do botão em vez de quebrar linha ou encolher junto com ele. flex:1
+    faz o texto dividir o espaço da row com o ícone, quebrando linha se
+    precisar, sempre dentro dos limites do botão.
+  */
+  flex: 1;
 `;

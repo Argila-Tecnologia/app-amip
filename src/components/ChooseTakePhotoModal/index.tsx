@@ -2,6 +2,8 @@ import { useEffect, useRef, useMemo, useCallback } from 'react';
 
 import BottomSheet from '@gorhom/bottom-sheet';
 
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+
 import { useTheme } from 'styled-components/native';
 
 import { MaterialIcons } from '@expo/vector-icons';
@@ -29,6 +31,7 @@ export function ChooseTakePhotoModal({
   onTakePhotoGallery,
 }: IChooseTakePhotoModalProps) {
   const theme = useTheme();
+  const insets = useSafeAreaInsets();
 
   const bottomSheetRef = useRef<BottomSheet>(null);
 
@@ -58,6 +61,12 @@ export function ChooseTakePhotoModal({
       ref={bottomSheetRef}
       index={INITIAL_POSITION_BOTTOM_SHEET} // NOTE bottom sheet initial hidden
       snapPoints={snapPoints}
+      // Sem isso, os botões de câmera/galeria ficavam colados (às vezes
+      // parcialmente cobertos) pela barra de navegação de 3 botões do
+      // Android - a folha não sabia nada sobre a área do sistema embaixo
+      // dela. "bottomInset" é o jeito documentado da própria lib pra
+      // resolver isso, alimentado pelo inset real do dispositivo.
+      bottomInset={insets.bottom}
       // Sem isso o fundo da folha fica sempre branco (padrão da própria
       // lib @gorhom/bottom-sheet) - precisa ser explícito pra acompanhar
       // tema, senão os ícones abaixo (agora com cor de tema) ficariam

@@ -125,6 +125,66 @@ Não existe código/dependências de notificação ou push (`expo-notifications`
 
 Não existe nenhuma tela neste app consumindo esses endpoints ainda, nem configuração de push notification (registro de push token do Expo, prompts de permissão, config de plugin no `app.json`, permissão `POST_NOTIFICATIONS` do Android) — isso é trabalho a construir do zero.
 
+## Cadastro de atleta menor de idade (2026-09-25, uncommitted)
+
+`src/screens/SignUp/index.tsx` (autocadastro do próprio atleta) ganhou a
+mesma regra já implementada no `admin-web-amip`/`api-ibra`: se o atleta
+for menor de 18 anos, precisa de um par completo de nome+telefone de pelo
+menos um entre pai, mãe ou responsável (não basta só o telefone ou só o
+nome de alguém).
+
+- **"Menor de idade?" não é um campo do banco** - é calculado a partir de
+  `birthday` toda vez que o atleta escolhe/troca a data no
+  `react-native-date-picker` (`handleSelectedBirthday`), via
+  `differenceInYears(new Date(), date) < 18` (`date-fns`, já era
+  dependência do projeto - trata corretamente quem ainda não fez
+  aniversário este ano, sem precisar de lógica manual de mês/dia).
+- Exibido como um `Switch` nativo do React Native com `disabled` - só
+  reflete o valor calculado, nunca é tocável diretamente (mesmo padrão do
+  toggle no admin-web-amip).
+- Campos condicionais (`father_name`/`father_phone`/`mother_name`/
+  `mother_phone`/`responsible_name`/`responsible_phone`/`school_name`)
+  renderizados só quando `is_minor` está ligado, com a mesma máscara de
+  telefone já usada no campo `phone` principal (`(99)99999-9999`).
+- Zod `.superRefine()` idêntico ao das outras duas telas: erro
+  customizado em `responsible_phone` se nenhum dos três pares estiver
+  completo. `is_minor` nunca é enviado no `POST /players` (a API rejeita
+  chave desconhecida) - descartado no payload como nos outros dois repos.
+- Toast de erro 400 diferenciado: se a mensagem do backend contiver
+  `"full contact"`, mostra o texto específico da regra de menor em vez do
+  genérico "já identificamos um cadastro com esses dados" (que seria
+  enganoso pra esse caso).
+- **Bug de layout encontrado e corrigido durante o teste no emulador**: o
+  texto do label do toggle ("Menor de idade? (automático pela data de
+  nascimento)") é longo o bastante pra quebrar em duas linhas - sem
+  `flex: 1` no texto, ele reivindicava sua largura "natural" (a linha
+  inteira, sem quebra) dentro da row, empurrando o `Switch` pra fora da
+  tela (visível como um círculo branco cortado na borda direita). Corrigido
+  criando `MinorToggleLabel` (`flex: 1`) em vez de reaproveitar
+  `SubscriptionCategoryActionButtonText` (que só rotula textos curtos de
+  uma linha, como o checkbox "Você é sócio da AMIP?" ao lado).
+- **Testado de ponta a ponta no emulador Android** (rodando localmente,
+  Metro + dev client já instalado): toggle liga sozinho ao escolher uma
+  data que torna o atleta menor, bloqueia o cadastro com a mensagem
+  correta quando o par nome+telefone está incompleto, e cria a conta com
+  sucesso (`POST /players → 201`, login automático) quando completo -
+  confirmado depois via `GET /players` que os dados do responsável
+  ficaram salvos certos no banco. Diferente do `admin-web-amip`, este app
+  já renderizava `error.message` corretamente nos componentes `Input`/
+  `InputMask`/`SelectPicker` (`{!!error && <ErrorText>{error}</ErrorText>}`)
+  - não precisou do mesmo fix de mensagem de erro dos outros dois repos.
+
+## 4 bugs de UI encontrados e corrigidos ao testar no dispositivo real (2026-09-25, uncommitted)
+
+Usuário testou o build no próprio celular (nav de 3 botões do Android) e mandou screenshots - achados não relacionados à feature de menor de idade, mas corrigidos na mesma sessão.
+
+- **`ContactScreen` ("Nos envie uma mensagem"): texto passava do limite direito do botão verde.** `ContactText` não tinha `flex`/`flexShrink`, então reivindicava a largura "natural" da linha inteira em vez de dividir espaço com o ícone ao lado. Fixed com `flex: 1` em `src/screens/Contact/styles.ts` (mesmo padrão do fix do `MinorToggleLabel` acima). Não reproduzi visualmente no emulador (a fonte responsiva aqui não estourou com a densidade/tamanho de tela dele), mas o fix é seguro e resolve a causa de qualquer forma.
+- **`ChooseTakePhotoModal` (câmera/galeria do avatar): botões ficavam colados/parcialmente cobertos pela barra de navegação de 3 botões.** O `@gorhom/bottom-sheet` não sabia nada sobre a área do sistema embaixo dele. Fixed com o prop `bottomInset={insets.bottom}` do próprio `BottomSheet` (`react-native-safe-area-context`) - é o mecanismo documentado da lib pra exatamente esse caso. Confirmado visualmente no emulador (screenshot antes/depois).
+- **`SubscriptionScreen` ("Realizar inscrição"): botão final do formulário colado na barra de navegação.** Faltava `paddingBottom` no `ScrollView` - mesmo padrão já usado em `DetailsChampionshipScreen` (`contentContainerStyle={{ paddingBottom: insets.bottom }}`), só que nunca tinha sido aplicado aqui. Confirmado visualmente no emulador.
+- **Upload de avatar (`ProfileScreen`): toast de sucesso aparece, mas a foto nunca é exibida depois.** Bug mais sério dos quatro, com efeito silencioso em produção. Causa raiz: o nome do arquivo enviado ao servidor é `img_${player.name}.${ext}` - para um nome como "Lubnnia Morais" (ou qualquer nome com espaço/acento, ex: "João Paulo"), a camada de multipart/form-data do React Native percent-encoda o espaço no `Content-Disposition` do arquivo antes de enviar (`%20`), e o `multer` no `api-ibra` salva esse nome *literal* em disco, `%20` incluso como texto. Depois, ao montar a URL da foto (`.../players_img/nome%20do%20arquivo.png`) e o `expo-image` pedir essa URL, o `express.static` decodifica `%20` de volta pra espaço real *ao procurar o arquivo* - como o arquivo real no disco tem os `%20` literais, a busca nunca bate → 404 silencioso (a chamada de upload em si retorna 200 normalmente, então o toast de sucesso é genuíno, só a exibição depois que falha). Confirmado com `curl` direto no arquivo salvo (404) e comparando o nome salvo em disco (`tmp/players_img/`) com o que a API devolve como `avatar_url`. Fixed com uma função local `sanitizeFilename()` em `src/screens/Profile/index.tsx` que troca qualquer caractere fora de `a-zA-Z0-9` por `_` antes de montar o nome do arquivo (nos dois handlers, câmera e galeria) - elimina a classe inteira do problema (espaço, acento, qualquer coisa), não só o caso específico do espaço.
+  - **Verificação**: depois do fix, o nome salvo virou `..._img_lubnnia_morais.png`, sem `%20`, e a URL resultante retornou `200` via `curl`. Também abri a URL direto no navegador do emulador (usando `10.0.2.2`, o alias correto do emulador pro host, em vez de `localhost`) e a imagem carregou perfeitamente - confirma que o bug real (arquivo inacessível) está corrigido. **O avatar continuou não aparecendo *dentro do app* no emulador só porque o `.env` local do `api-ibra` tem `APP_API_URL=http://localhost:3333`** - `localhost` no emulador aponta pro próprio emulador, não pro host, então a foto é genuinamente inalcançável dali (isso é uma limitação de ambiente de teste local, não do código; em produção `APP_API_URL` é o domínio público real, alcançável normalmente por qualquer celular). Não mexi nesse `.env` - mudar isso quebraria outros fluxos que dependem de `localhost` rodando na mesma máquina (ex: teste via navegador do painel admin).
+  - **Impacto em produção**: qualquer atleta que já tenha enviado uma foto de avatar com espaço/acento no nome (a maioria dos nomes reais) antes deste fix provavelmente está com o `avatar_url` atual quebrado (404) - o arquivo velho continua órfão em disco com o nome `%XX`-literal antigo. Não investiguei nem corrigi dados já existentes em produção, só o código daqui pra frente - vale avisar o usuário/verificar depois do deploy.
+
 ## Repositórios relacionados
 
 - **Backend**: `../api-ibra` — ver o `CLAUDE.md` próprio dele. Autenticação voltada pro atleta (`ensurePlayerAuthenticated`) e o módulo de notificações que este app deve consumir vivem lá.

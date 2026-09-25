@@ -47,6 +47,22 @@ import {
   ProfileRemoveAccountText,
 } from './styles';
 
+// Usado só pro nome do arquivo de avatar enviado ao servidor (não pra
+// exibição) - espaços e acentos no nome do atleta (ex: "Lubnnia Morais",
+// "João Paulo") acabavam virando sequências como "%20"/"%C3%A3" *literais*
+// no nome salvo em disco (a camada de multipart/form-data do React Native
+// percent-encoda o filename do Content-Disposition antes de enviar, e o
+// servidor nunca decodifica de volta ao salvar). Depois, ao montar a URL
+// pra exibir a foto, o Express decodifica esses "%XX" de volta durante o
+// lookup do arquivo estático - como o arquivo real no disco tem os "%XX"
+// literais no nome, a busca sempre dava 404: o upload "funcionava"
+// (POST/PATCH 200, toast de sucesso), mas a foto nunca aparecia depois.
+// Substituir qualquer caractere fora de a-z/0-9 por "_" evita esse
+// descompasso de codificação inteiramente, pra qualquer nome.
+function sanitizeFilename(name: string): string {
+  return name.replace(/[^a-zA-Z0-9]+/g, '_');
+}
+
 export function ProfileScreen() {
   const [openTakePhotoModal, setIsOpenTakePhotoModal] = useState(false);
   const [loadingUpdatePhoto, setIsLoadingUpdatePhoto] = useState(false);
@@ -138,7 +154,7 @@ export function ProfileScreen() {
         const fileExtension = photoSelected.assets[0].uri.split('.').pop();
 
         const photoFile = {
-          name: `img_${player.name}.${fileExtension}`.toLowerCase(),
+          name: `img_${sanitizeFilename(player.name)}.${fileExtension}`.toLowerCase(),
           uri: photoSelected.assets[0].uri,
           type: `${photoSelected.assets[0].type}/${fileExtension}`,
         } as any;
@@ -232,7 +248,7 @@ export function ProfileScreen() {
         const fileExtension = photoSelected.assets[0].uri.split('.').pop();
 
         const photoFile = {
-          name: `img_${player.name}.${fileExtension}`.toLowerCase(),
+          name: `img_${sanitizeFilename(player.name)}.${fileExtension}`.toLowerCase(),
           uri: photoSelected.assets[0].uri,
           type: `${photoSelected.assets[0].type}/${fileExtension}`,
         } as any;
