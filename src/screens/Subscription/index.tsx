@@ -248,7 +248,16 @@ export function SubscriptionScreen() {
 
         const clubsData = responseClubs.data as IClubDTO[];
 
-        const categoryData = responseCategory.data as ICategory[];
+        const allCategories = responseCategory.data as ICategory[];
+
+        // GET /categories retorna todas as categorias do sistema - o
+        // campeonato só deve oferecer as que o admin selecionou na
+        // criação (championshipData.categories_name), senão o atleta
+        // vê e consegue escolher categorias fora do que foi definido
+        // pra esse campeonato.
+        const categoryData = allCategories.filter((category) =>
+          championshipData.categories_name.includes(category.name),
+        );
 
         const clubsSelectPicker = clubsData.map((club) => {
           return {
