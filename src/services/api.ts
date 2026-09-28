@@ -67,6 +67,7 @@ api.registerInterceptTokenManager = (signOut) => {
             failedQueue.push({
               onSuccess: (token: string) => {
                 originalRequestConfig.headers = {
+                  ...originalRequestConfig.headers,
                   Authorization: `Bearer ${token}`,
                 };
 
@@ -104,14 +105,26 @@ api.registerInterceptTokenManager = (signOut) => {
 
                 /**
                  * REENVIANDO AS REQUISIÇÕES
+                 *
+                 * "data" só vem como string JSON pra requisições comuns
+                 * (axios serializa objeto -> string antes de mandar). Um
+                 * upload multipart (ex.: troca de avatar) manda um
+                 * FormData como body, que o axios repassa intacto (não é
+                 * string) - chamar JSON.parse nele lança porque
+                 * "[object FormData]" não é um JSON válido, quebrando o
+                 * reenvio dessa requisição especificamente.
                  */
-                if (originalRequestConfig.data) {
+                if (
+                  originalRequestConfig.data &&
+                  typeof originalRequestConfig.data === 'string'
+                ) {
                   originalRequestConfig.data = JSON.parse(
                     originalRequestConfig.data,
                   );
                 }
 
                 originalRequestConfig.headers = {
+                  ...originalRequestConfig.headers,
                   Authorization: `Bearer ${data.token}`,
                 };
 
@@ -122,6 +135,14 @@ api.registerInterceptTokenManager = (signOut) => {
                 });
 
                 resolve(api(originalRequestConfig));
+              })
+              .catch((error) => {
+                failedQueue.forEach((request) => {
+                  request.onFailure(error);
+                });
+
+                signOut();
+                reject(error);
               });
           } catch (error: any) {
             /**
