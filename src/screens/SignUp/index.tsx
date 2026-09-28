@@ -111,6 +111,17 @@ const signUpValidationSchema = zod
         path: ['responsible_phone'],
       });
     }
+
+    // Escola também é obrigatória pra atleta menor de idade - mesmo
+    // critério validado no backend (CreatePlayerUseCase) e já replicado
+    // no admin-web-amip.
+    if (!data.school_name) {
+      ctx.addIssue({
+        code: zod.ZodIssueCode.custom,
+        message: 'Informe o colégio onde o atleta estuda.',
+        path: ['school_name'],
+      });
+    }
   });
 
 type IFormDataSubmit = zod.infer<typeof signUpValidationSchema>;
@@ -297,6 +308,16 @@ export function SignUpScreen() {
                   text1: 'Equipe AMIP',
                   text2:
                     'Informe o nome e o telefone de pelo menos um: pai, mãe ou responsável.',
+                });
+                return;
+              }
+
+              if (message?.includes('school_name is required')) {
+                Toast.show({
+                  type: 'error',
+                  position: 'bottom',
+                  text1: 'Equipe AMIP',
+                  text2: 'Informe o colégio onde o atleta estuda.',
                 });
                 return;
               }
@@ -633,7 +654,7 @@ export function SignUpScreen() {
                   />
 
                   <SubscriptionCategoryActionButtonText>
-                    Você é sócio da AMIP?
+                    Você é atleta da AMIP?
                   </SubscriptionCategoryActionButtonText>
                 </MemberActionButton>
               )}
