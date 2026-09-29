@@ -35,15 +35,15 @@ const ThemeModeContext = createContext<IThemeModeContextDataProps>(
   {} as IThemeModeContextDataProps,
 );
 
-// Pedido do usuário: o app abre escuro por padrão pra quem nunca mexeu
-// nessa configuração - só usa o tema claro depois de o usuário escolher
-// isso manualmente na tela de Configurações (persistido a partir daí).
-const DEFAULT_THEME_NAME: IThemeName = 'dark';
+// Pedido do usuário (2026-09-29, revertendo a escolha anterior): o app
+// abre claro por padrão pra quem nunca mexeu nessa configuração - só usa
+// o tema escuro depois de o usuário escolher isso manualmente na tela de
+// Configurações (persistido a partir daí).
+const DEFAULT_THEME_NAME: IThemeName = 'light';
 
 const ThemeModeProvider = ({ children }: IThemeModeProviderProps) => {
-  const [themeName, setThemeNameState] = useState<IThemeName>(
-    DEFAULT_THEME_NAME,
-  );
+  const [themeName, setThemeNameState] =
+    useState<IThemeName>(DEFAULT_THEME_NAME);
 
   // FUNCTIONS
   const setThemeName = useCallback(async (newThemeName: IThemeName) => {
