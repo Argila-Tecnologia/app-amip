@@ -16,10 +16,10 @@ import { AppBottomTabs } from './app.bottom.tabs.routes';
 
 import { DetailsChampionshipScreen } from '@screens/Championships/DetailsChampionship';
 
-import { ProfileScreen } from '@screens/Profile';
 import { EditProfileInformationScreen } from '@screens/Profile/EditProfileInformation';
 import { EditPasswordScreen } from '@screens/Profile/EditPassword';
 import { DeleteProfileScreen } from '@screens/Profile/DeleteProfile';
+import { MyChargesScreen } from '@screens/Profile/MyCharges';
 
 import { SubscriptionScreen } from '@screens/Subscription';
 import { DetailsMuseumScreen } from '@screens/Museum/DetailsMuseum';
@@ -72,16 +72,20 @@ export function AppRoutes() {
       */}
       <Screen name="subscriptionScreen" component={SubscriptionScreen} />
 
-      {/* TELAS PRIVADAS - só existem enquanto autenticado */}
+      {/*
+        TELAS PRIVADAS - só existem enquanto autenticado. "profileScreen"
+        não vive mais aqui - virou uma aba de AppBottomTabs (ver
+        app.bottom.tabs.routes.tsx), continua com o mesmo nome de rota.
+      */}
       {player.id ? (
         <>
-          <Screen name="profileScreen" component={ProfileScreen} />
           <Screen
             name="editProfileInformationScreen"
             component={EditProfileInformationScreen}
           />
           <Screen name="editPasswordScreen" component={EditPasswordScreen} />
           <Screen name="deleteProfileScreen" component={DeleteProfileScreen} />
+          <Screen name="myChargesScreen" component={MyChargesScreen} />
         </>
       ) : null}
     </Navigator>

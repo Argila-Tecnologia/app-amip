@@ -1,8 +1,4 @@
-import { useCallback } from 'react';
-
 import { Platform } from 'react-native';
-
-import { useNavigation } from '@react-navigation/native';
 
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -10,7 +6,6 @@ import { Feather } from '@expo/vector-icons';
 
 import { useTheme } from 'styled-components/native';
 
-import { useAuth } from '@hooks/auth';
 import { useThemeMode } from '@hooks/theme';
 
 import logoImage from '../../assets/AMIP_LOGO.png';
@@ -21,30 +16,17 @@ import {
   HeaderAppLogoImage,
   HeaderAppActions,
   HeaderAppThemeButton,
-  HeaderAppProfileButton,
-  HeaderAppBoxProfile,
-  HeaderAppPersonPhotoImage,
-  HeaderAppPersonPhotoIcon,
 } from './styles';
 
+// O botão de perfil que ficava aqui (ao lado do de tema) foi removido -
+// "Perfil" virou uma aba fixa no rodapé (app.bottom.tabs.routes.tsx), então
+// ter os dois caminhos pro mesmo lugar ficaria redundante.
 export function HeaderApp() {
-  const { player } = useAuth();
-  const navigation = useNavigation();
   const theme = useTheme();
   const insets = useSafeAreaInsets();
   const { themeName, toggleTheme } = useThemeMode();
 
   const paddingTop = Platform.OS === 'android' ? insets.top + 15 : insets.top;
-
-  // FUNCTION
-  const handleProfile = useCallback(() => {
-    if (player.id) {
-      navigation.navigate('profileScreen');
-    } else {
-      navigation.navigate('signInScreen');
-    }
-  }, [navigation, player.id]);
-  // END FUNCTION
 
   return (
     <HeaderAppContainer style={{ paddingTop }}>
@@ -60,8 +42,9 @@ export function HeaderApp() {
           uma engrenagem que abria uma tela de Configurações só com esse
           toggle dentro; trocado por um ícone que já mostra o tema ATIVO
           (lua = escuro ativo, sol = claro ativo) e alterna com 1 toque.
-          Fica aqui, ao lado do perfil, porque essa é a única área do
-          header já visível em toda tela pública (News/Campeonatos/Museu).
+          Fica aqui, única ação que sobrou no header, já que o perfil
+          saiu daqui (virou aba) - visível em toda tela pública
+          (News/Campeonatos/Museu).
         */}
         <HeaderAppThemeButton onPress={toggleTheme}>
           <Feather
@@ -70,34 +53,6 @@ export function HeaderApp() {
             color={theme.COLORS['white-color']}
           />
         </HeaderAppThemeButton>
-
-        <HeaderAppProfileButton onPress={handleProfile}>
-          {player.id ? (
-            <HeaderAppBoxProfile>
-              {/* <HeaderAppPersonText numberOfLines={2} ellipsizeMode="tail">
-                Olá, {'\n'}
-                {player.name}
-              </HeaderAppPersonText> */}
-
-              {/*
-                Mesma troca do Profile: FallbackImage cobre "sem avatar" e
-                "avatar falhou ao carregar" mostrando as iniciais do
-                atleta (via "name"), em vez da logo da AMIP.
-              */}
-              <HeaderAppPersonPhotoImage
-                source={{ uri: player.avatar_url }}
-                name={player.name}
-                contentFit="cover"
-              />
-            </HeaderAppBoxProfile>
-          ) : (
-            <HeaderAppBoxProfile>
-              <HeaderAppPersonPhotoIcon>
-                <Feather name="user" size={25} color={theme.COLORS.text} />
-              </HeaderAppPersonPhotoIcon>
-            </HeaderAppBoxProfile>
-          )}
-        </HeaderAppProfileButton>
       </HeaderAppActions>
     </HeaderAppContainer>
   );

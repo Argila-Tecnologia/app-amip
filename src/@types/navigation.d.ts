@@ -26,6 +26,7 @@ export declare global {
       editProfileInformationScreen: undefined;
       editPasswordScreen: undefined;
       deleteProfileScreen: undefined;
+      myChargesScreen: undefined;
 
       contactScreen: undefined;
 

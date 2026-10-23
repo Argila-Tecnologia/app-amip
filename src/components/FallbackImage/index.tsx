@@ -20,6 +20,14 @@ interface IFallbackImageProps extends Omit<ImageProps, 'source'> {
   // Sem "name" (News, Championships, Museum, que mostram imagem de
   // conteúdo, não de pessoa), mantém a logo como antes.
   name?: string;
+  // Opcionais - sem informar, o círculo/iniciais seguem o token de tema de
+  // sempre ('surface'/'text', invertem entre claro/escuro). Hoje só o
+  // avatar do Perfil passa os dois, fixos em navy/branco (igual ao header,
+  // acento de marca que não muda com o tema) - os demais usos deste
+  // componente (News/Championships/Museum, sempre sem "name") continuam
+  // exatamente como estavam.
+  initialsBackgroundColor?: string;
+  initialsTextColor?: string;
 }
 
 // Primeira letra do primeiro e do último nome (ex: "João Paulo" -> "JP");
@@ -43,7 +51,7 @@ function getInitials(name: string): string {
 // centralizado numa fração do tamanho, em vez de esticar - do contrário,
 // um contêiner pensado pra foto grande (ex: banner de 320px) deixava a
 // logo enorme e distorcida ao tentar preencher tudo com "cover".
-const FallbackContainer = styled.View`
+const FallbackContainer = styled.View<{ $backgroundColor?: string }>`
   width: 100%;
   height: 100%;
 
@@ -65,19 +73,21 @@ const FallbackContainer = styled.View`
     componente é usado em News, Championships, Museum, Profile e no avatar
     do HeaderApp - o mesmo bug aparecia em todos eles). 'surface' inverte
     com o tema, mesmo token já usado nos campos de formulário e nos
-    círculos de avatar (ver Profile/styles.ts).
+    círculos de avatar (ver Profile/styles.ts). $backgroundColor sobrepõe
+    isso quando informado (ver IFallbackImageProps.initialsBackgroundColor).
   */
-  background-color: ${({ theme }) => theme.COLORS.surface};
+  background-color: ${({ theme, $backgroundColor }) =>
+    $backgroundColor ?? theme.COLORS.surface};
 `;
 
-const InitialsText = styled.Text`
+const InitialsText = styled.Text<{ $textColor?: string }>`
   width: 100%;
 
   text-align: center;
 
-  ${({ theme }) => css`
+  ${({ theme, $textColor }) => css`
     font-family: ${theme.FONT_FAMILY.BOLD};
-    color: ${theme.COLORS.text};
+    color: ${$textColor ?? theme.COLORS.text};
   `};
 `;
 
@@ -95,6 +105,8 @@ export function FallbackImage({
   style,
   contentFit,
   name,
+  initialsBackgroundColor,
+  initialsTextColor,
   ...rest
 }: IFallbackImageProps) {
   const uri = typeof source === 'object' ? source?.uri : undefined;
@@ -131,9 +143,15 @@ export function FallbackImage({
       typeof flattenedStyle?.width === 'number' ? flattenedStyle.width : 48;
 
     return (
-      <FallbackContainer style={style as StyleProp<ViewStyle>}>
+      <FallbackContainer
+        style={style as StyleProp<ViewStyle>}
+        $backgroundColor={initialsBackgroundColor}
+      >
         {name ? (
-          <InitialsText style={{ fontSize: avatarSize * 0.4 }}>
+          <InitialsText
+            style={{ fontSize: avatarSize * 0.4 }}
+            $textColor={initialsTextColor}
+          >
             {getInitials(name)}
           </InitialsText>
         ) : (

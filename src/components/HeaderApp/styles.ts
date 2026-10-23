@@ -4,8 +4,6 @@ import { Image } from 'expo-image';
 
 import { RFValue } from '@utils/rf-value';
 
-import { FallbackImage } from '@components/FallbackImage';
-
 export const HeaderAppContainer = styled.View`
   width: 100%;
   /* height: ${RFValue(90)}px; */
@@ -41,10 +39,9 @@ export const HeaderAppTitle = styled.Text`
   font-weight: bold;
 `;
 
-// Agrupa o botão de configurações (novo) e o de perfil (já existia) do lado
-// direito do header - antes só HeaderAppProfileButton tinha "flex: 1" pra se
-// alinhar à direita; agora quem faz isso é este wrapper, senão os dois
-// botões lado a lado dividiriam o espaço 50/50 com o logo (flex: 1 cada um).
+// Antes agrupava o botão de tema e o de perfil do lado direito do header -
+// o de perfil saiu (virou aba), sobrou só o de tema, mas o wrapper
+// continua útil pra alinhar à direita (flex: 1 aqui, não no botão).
 export const HeaderAppActions = styled.View`
   flex: 1;
   flex-direction: row;
@@ -60,53 +57,4 @@ export const HeaderAppThemeButton = styled.TouchableOpacity.attrs({
   padding: ${RFValue(8)}px;
 
   margin-right: ${RFValue(4)}px;
-`;
-
-export const HeaderAppProfileButton = styled.TouchableOpacity.attrs({
-  activeOpacity: 0.7,
-})`
-  flex-direction: row;
-  align-items: center;
-`;
-
-export const HeaderAppBoxProfile = styled.View`
-  margin-right: ${RFValue(10)}px;
-`;
-
-export const HeaderAppPersonText = styled.Text`
-  width: ${RFValue(120)}px;
-
-  ${({ theme }) => css`
-    font-family: ${theme.FONT_FAMILY.REGULAR};
-    font-size: ${RFValue(theme.FONT_SIZE.MD)}px;
-    color: ${({ theme }) => theme.COLORS['black-color']};
-  `};
-`;
-
-export const HeaderAppPersonPhotoImage = styled(FallbackImage)`
-  width: ${RFValue(50)}px;
-  height: ${RFValue(50)}px;
-
-  border-radius: ${RFValue(25)}px;
-` as unknown as typeof FallbackImage;
-
-export const HeaderAppPersonPhotoIcon = styled.View`
-  width: ${RFValue(50)}px;
-  height: ${RFValue(50)}px;
-
-  align-items: center;
-  justify-content: center;
-
-  /*
-    Era 'white-color' fixo - esse círculo é o placeholder "sem login/sem
-    avatar", uma superfície de verdade (mesmo caso do ProfileAvatarButton em
-    Profile/styles.ts), não texto sobre o header navy fixo. 'surface' inverte
-    com o tema; o ícone dentro (HeaderApp/index.tsx) segue pro token 'text'.
-  */
-  background-color: ${({ theme }) => theme.COLORS.surface};
-
-  border-radius: ${RFValue(25)}px;
-
-  /* margin-left: ${RFValue(0)}px;
-  margin-right: ${RFValue(5)}px; */
 `;

@@ -33,7 +33,6 @@ import {
   ProfileContainer,
   ProfileContent,
   ProfileHeader,
-  ProfileHeaderBackButton,
   ProfileHeaderLogoutButton,
   ProfileHeaderLogoutContainer,
   ProfileHeaderTitle,
@@ -42,6 +41,7 @@ import {
   ProfileOptionButton,
   ProfileOptionButtonIcon,
   ProfileOptionButtonTitle,
+  ProfileOptionsCard,
   ProfileOptionsContent,
   ProfileRemoveAccountButton,
   ProfileRemoveAccountText,
@@ -76,10 +76,6 @@ export function ProfileScreen() {
     Platform.OS === 'android' ? insets.top + 20 : insets.top + 10;
 
   // FUNCTIONS
-  const handleGoBackNavigation = useCallback(() => {
-    navigation.goBack();
-  }, [navigation]);
-
   const handleToggleTakePhotoModal = useCallback(() => {
     Keyboard.dismiss();
 
@@ -97,19 +93,22 @@ export function ProfileScreen() {
         text: 'Sim',
         style: 'default',
         onPress: () => {
+          // Não precisa mais navegar manualmente daqui pra appBottomTabs -
+          // "profileScreen" é uma das PRIVATE_SCREEN_NAMES que
+          // src/routes/index.tsx já observa: assim que "player.id" fica
+          // vazio (signOut), aquele efeito detecta que a rota atual é
+          // privada e reseta sozinho pra appBottomTabs. Antes de Perfil
+          // virar aba, chamar navigation.navigate('appBottomTabs') aqui
+          // funcionava (empilhava de volta pra uma rota irmã já existente);
+          // agora que Perfil é uma aba DENTRO de appBottomTabs, chamar isso
+          // por conta própria daqui de dentro não teria como garantir que
+          // volta pra aba inicial (Notícias) - o reset (index 0) do efeito
+          // em routes/index.tsx é o jeito confiável de fazer isso.
           signOut();
-          navigation.navigate('appBottomTabs');
-          // navigation.reset({
-          //   routes: [
-          //     {
-          //       name: 'appBottomTabs',
-          //     },
-          //   ],
-          // });
         },
       },
     ]);
-  }, [signOut, navigation]);
+  }, [signOut]);
 
   // UPDATE PHOTO
   const handleTakePhotoCamera = useCallback(async () => {
@@ -317,15 +316,7 @@ export function ProfileScreen() {
     <ProfileContainer>
       <ProfileHeader style={{ paddingTop }}>
         <ProfileHeaderTitleContainer>
-          <ProfileHeaderBackButton onPress={handleGoBackNavigation}>
-            <Feather
-              name="chevron-left"
-              size={25}
-              color={theme.COLORS['white-color']}
-            />
-
-            <ProfileHeaderTitle>Perfil</ProfileHeaderTitle>
-          </ProfileHeaderBackButton>
+          <ProfileHeaderTitle>Perfil</ProfileHeaderTitle>
         </ProfileHeaderTitleContainer>
 
         <ProfileHeaderLogoutContainer>
@@ -360,11 +351,16 @@ export function ProfileScreen() {
                     em vez da logo da AMIP, já que aqui tem um nome pra
                     derivar delas (diferente de News/Championships/Museum,
                     que são imagem de conteúdo, não de pessoa).
+                    initialsBackgroundColor/initialsTextColor: navy/branco
+                    fixos, igual ao header - acento de marca que não muda
+                    com o tema (ver FallbackImage/index.tsx).
                   */}
                   <ProfileAvatarImage
                     source={{ uri: player.avatar_url }}
                     name={player.name}
                     contentFit="cover"
+                    initialsBackgroundColor={theme.COLORS['blue-dark-color']}
+                    initialsTextColor={theme.COLORS['white-color']}
                   />
 
                   <ProfileAvatarCamera>
@@ -382,66 +378,94 @@ export function ProfileScreen() {
           </ProfileAvatarImageNameContainer>
 
           <ProfileOptionsContent>
-            <ProfileOptionButton
-              onPress={() => {
-                navigation.navigate('editProfileInformationScreen');
-              }}
-            >
-              <ProfileOptionButtonIcon>
-                <Feather
-                  name="refresh-cw"
-                  size={27}
-                  color={theme.COLORS.text}
-                />
-              </ProfileOptionButtonIcon>
-
-              <ProfileOptionButtonTitle>
-                Atualizar perfil
-              </ProfileOptionButtonTitle>
-            </ProfileOptionButton>
-
-            {/*
-              Conta vinculada a login via Google não tem senha de verdade
-              pra trocar (o backend já rejeita a troca em
-              UpdatePlayerPasswordUseCase/ResetPlayerPasswordUseCase/
-              SendForgotPasswordEmailUseCase) - escondida aqui pra não
-              oferecer uma opção que sempre daria erro.
-            */}
-            {!player.google_id && (
+            <ProfileOptionsCard>
               <ProfileOptionButton
                 onPress={() => {
-                  navigation.navigate('editPasswordScreen');
+                  navigation.navigate('editProfileInformationScreen');
                 }}
               >
-                <ProfileOptionButtonIcon>
+                <ProfileOptionButtonIcon
+                  $tintColor={`${theme.COLORS['blue-dark-color']}1a`}
+                >
                   <Feather
-                    name="lock"
-                    size={27}
-                    color={theme.COLORS.text}
+                    name="refresh-cw"
+                    size={18}
+                    color={theme.COLORS['blue-dark-color']}
                   />
                 </ProfileOptionButtonIcon>
 
                 <ProfileOptionButtonTitle>
-                  Atualizar senha
+                  Atualizar perfil
                 </ProfileOptionButtonTitle>
               </ProfileOptionButton>
-            )}
 
-            <ProfileOptionButton
-              onPress={() => {
-                navigation.navigate('contactScreen');
-              }}
-            >
-              <ProfileOptionButtonIcon>
-                <Feather
-                  name="phone-call"
-                  size={27}
-                  color={theme.COLORS.text}
-                />
-              </ProfileOptionButtonIcon>
+              <ProfileOptionButton
+                onPress={() => {
+                  navigation.navigate('myChargesScreen');
+                }}
+              >
+                <ProfileOptionButtonIcon
+                  $tintColor={`${theme.COLORS['green-color']}33`}
+                >
+                  <Feather
+                    name="file-text"
+                    size={18}
+                    color={theme.COLORS['green-color']}
+                  />
+                </ProfileOptionButtonIcon>
 
-              <ProfileOptionButtonTitle>Contato</ProfileOptionButtonTitle>
-            </ProfileOptionButton>
+                <ProfileOptionButtonTitle $bold>
+                  Faturas
+                </ProfileOptionButtonTitle>
+              </ProfileOptionButton>
+
+              {/*
+                Conta vinculada a login via Google não tem senha de verdade
+                pra trocar (o backend já rejeita a troca em
+                UpdatePlayerPasswordUseCase/ResetPlayerPasswordUseCase/
+                SendForgotPasswordEmailUseCase) - escondida aqui pra não
+                oferecer uma opção que sempre daria erro.
+              */}
+              {!player.google_id && (
+                <ProfileOptionButton
+                  onPress={() => {
+                    navigation.navigate('editPasswordScreen');
+                  }}
+                >
+                  <ProfileOptionButtonIcon
+                    $tintColor={`${theme.COLORS['blue-dark-color']}1a`}
+                  >
+                    <Feather
+                      name="lock"
+                      size={18}
+                      color={theme.COLORS['blue-dark-color']}
+                    />
+                  </ProfileOptionButtonIcon>
+
+                  <ProfileOptionButtonTitle>
+                    Atualizar senha
+                  </ProfileOptionButtonTitle>
+                </ProfileOptionButton>
+              )}
+
+              <ProfileOptionButton
+                onPress={() => {
+                  navigation.navigate('contactScreen');
+                }}
+              >
+                <ProfileOptionButtonIcon
+                  $tintColor={`${theme.COLORS['blue-dark-color']}1a`}
+                >
+                  <Feather
+                    name="phone-call"
+                    size={18}
+                    color={theme.COLORS['blue-dark-color']}
+                  />
+                </ProfileOptionButtonIcon>
+
+                <ProfileOptionButtonTitle>Contato</ProfileOptionButtonTitle>
+              </ProfileOptionButton>
+            </ProfileOptionsCard>
           </ProfileOptionsContent>
 
           <ProfileRemoveAccountButton

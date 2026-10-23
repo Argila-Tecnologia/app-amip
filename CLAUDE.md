@@ -185,6 +185,109 @@ Usuário testou o build no próprio celular (nav de 3 botões do Android) e mand
   - **Verificação**: depois do fix, o nome salvo virou `..._img_lubnnia_morais.png`, sem `%20`, e a URL resultante retornou `200` via `curl`. Também abri a URL direto no navegador do emulador (usando `10.0.2.2`, o alias correto do emulador pro host, em vez de `localhost`) e a imagem carregou perfeitamente - confirma que o bug real (arquivo inacessível) está corrigido. **O avatar continuou não aparecendo *dentro do app* no emulador só porque o `.env` local do `api-ibra` tem `APP_API_URL=http://localhost:3333`** - `localhost` no emulador aponta pro próprio emulador, não pro host, então a foto é genuinamente inalcançável dali (isso é uma limitação de ambiente de teste local, não do código; em produção `APP_API_URL` é o domínio público real, alcançável normalmente por qualquer celular). Não mexi nesse `.env` - mudar isso quebraria outros fluxos que dependem de `localhost` rodando na mesma máquina (ex: teste via navegador do painel admin).
   - **Impacto em produção**: qualquer atleta que já tenha enviado uma foto de avatar com espaço/acento no nome (a maioria dos nomes reais) antes deste fix provavelmente está com o `avatar_url` atual quebrado (404) - o arquivo velho continua órfão em disco com o nome `%XX`-literal antigo. Não investiguei nem corrigi dados já existentes em produção, só o código daqui pra frente - vale avisar o usuário/verificar depois do deploy.
 
+## Faturas + reformulação de navegação (2026-10-23)
+
+Primeira peça visível de uma funcionalidade maior de Faturas com
+pagamento via gateway (gateway ainda não escolhido, decisão pendente da
+diretoria da AMIP - ver `CLAUDE.md` do `api-ibra` pro histórico completo
+da decisão, comparativo de provedores e o endpoint `GET /charges/me`).
+Mockup de referência (cores/navegação) foi validado com o usuário antes
+de implementar - ver histórico de conversa, não há artefato versionado
+aqui.
+
+### Perfil virou uma aba fixa (antes era só um ícone no header)
+
+- `src/routes/app.bottom.tabs.routes.tsx`: Perfil é a 4ª aba (ícone
+  `user`), ao lado de Notícias/Campeonatos/Museu. **Nome de rota mantido
+  como `profileScreen`** de propósito - é o mesmo que `routes/index.tsx`
+  (`PRIVATE_SCREEN_NAMES`) já observava pra resetar a navegação se a
+  sessão cair no meio do uso; não precisou mudar esse mecanismo.
+- Guarda de login: a aba fica sempre visível (mesmo deslogado), mas um
+  `listeners.tabPress` intercepta o toque (`event.preventDefault()`) e
+  manda pro login quando `!player.id` - replica o comportamento que o
+  antigo botão do header já tinha, só que numa aba em vez de um botão.
+- `src/routes/app.routes.tsx`: `profileScreen` saiu do Stack (só existe
+  como aba agora); `editProfileInformationScreen`/`editPasswordScreen`/
+  `deleteProfileScreen`/`myChargesScreen` continuam como telas empilhadas,
+  abertas a partir da aba Perfil, do jeito que já era.
+- `src/components/HeaderApp/`: o botão de perfil que ficava no cabeçalho
+  foi removido (ficava redundante com a aba nova) - sobrou só o botão de
+  tema.
+- `src/screens/Profile/index.tsx`: sem seta de "voltar" no header (nenhuma
+  aba tem) - só título + botão de logout. `handleSignOut` não chama mais
+  `navigation.navigate('appBottomTabs')` manualmente - virou redundante
+  (e de comportamento incerto de dentro de uma aba) já que
+  `routes/index.tsx` já reseta sozinho quando `player.id` fica vazio numa
+  tela de `PRIVATE_SCREEN_NAMES`.
+
+### Perfil reestilizado (cores reais do clube: navy + verde)
+
+- Avatar: círculo `blue-dark-color` (navy) com iniciais brancas, em vez do
+  neutro/tema de antes - acento de marca fixo, igual ao header.
+- `src/components/FallbackImage/index.tsx` ganhou 2 props opcionais,
+  `initialsBackgroundColor`/`initialsTextColor` (default = tokens de tema
+  de sempre). Esse componente é compartilhado com News/Championships/
+  Museum - as props evitam que a cor fixa do avatar do Perfil vaze pros
+  outros usos (todos sem `name`, continuam exatamente como estavam).
+- Lista de opções envolta num card branco com borda
+  (`ProfileOptionsCard`, novo), cada ícone ganhou uma caixinha colorida
+  atrás (navy clara pros itens antigos, verde pro item novo de Faturas).
+  "Remover conta" já era um botão vermelho sólido antes dessa sessão -
+  não precisou de mudança.
+- Novo item "Faturas" na lista, ícone verde, abre `myChargesScreen`.
+
+### Tela "Minhas faturas" (`src/screens/Profile/MyCharges/`)
+
+- Consome `GET /charges/me` via `useQuery` (mesmo padrão de
+  `NewsScreen`), DTO em `src/dtos/charge-dto.ts`.
+- **"Fatura atual"** em destaque = a cobrança não paga (pendente ou
+  atrasada) com vencimento mais próximo - entre as em aberto, a mais
+  antiga é a mais urgente (se tiver atrasada, ela aparece antes de
+  qualquer pendente futura); sem nenhuma em aberto, cai pra mais recente
+  já paga. O resto vira "Faturas anteriores" (histórico), na mesma ordem
+  (vencimento decrescente) que a API já devolve.
+- Cada cobrança mostra o nome do `Program` (`program_name`, campo novo no
+  backend) - necessário porque um atleta pode ter mais de um
+  `PlayerProgram` (ex: time principal + projeto social) ao mesmo tempo, e
+  as cobranças de todos vêm juntas na mesma lista.
+- **Sem cobranças** = mensagem de lista vazia ("Nenhuma fatura
+  encontrada."), sem card de fatura atual.
+- **Botão "Pagar" desabilitado/"Em breve"** (`MyChargesPayButton`, uma
+  `View` simples, não touchable) - sem gateway de pagamento ainda,
+  decisão deliberada de não prometer uma ação que não existe, em vez de
+  esconder a funcionalidade inteira.
+- Status (PAGO/PENDENTE/ATRASADO) já vem calculado do backend - a tela só
+  exibe, não recalcula nada a partir de `due_date`.
+
+### Verificação
+
+Testado de ponta a ponta no emulador Android (`npx expo run:android` +
+`adb screencap`/`input tap`, sem Expo Go nem dev client configurado
+localmente - ver aviso em "Comandos" acima): aba nova, guarda de login
+(toque deslogado → SignIn), avatar/card/cores batendo com o mockup
+aprovado, navegação Perfil → Faturas, e o estado vazio da tela de
+Faturas. **Conta de teste criada em produção** pra conseguir logar
+(`claude.teste.mockup@example.com`, não existe staging separado neste
+app) - ainda não removida, avisado ao usuário. Não verificado
+visualmente o estado COM cobranças (a conta de teste não tem nenhuma) -
+a lógica de seleção de "fatura atual"/histórico/`program_name` está
+coberta por 6 testes Jest no backend (`api-ibra`,
+`ListMyChargesUseCase.spec.ts`).
+
+### Pendências conhecidas, não esquecer
+
+- Botão "Pagar" fica desabilitado até o gateway de pagamento ser
+  escolhido e integrado (decisão da diretoria, ver `api-ibra`).
+- Barra de "parcelas pagas/em aberto" do mockup original foi
+  **deliberadamente removida** - o modelo de dados real (matrícula anual
+  + mensalidade recorrente sem prazo fixo) não sustenta o conceito de "N
+  parcelas de um plano" que a barra pressupunha. Pode voltar como reforço
+  futuro se a diretoria confirmar uma estrutura mais específica.
+- Estado "com cobranças" da tela de Faturas não foi confirmado
+  visualmente no emulador (só a lógica, via testes de backend) - vale
+  conferir visualmente assim que houver uma conta de teste com cobranças
+  reais, ou quando o usuário testar no próprio dispositivo.
+
 ## Repositórios relacionados
 
 - **Backend**: `../api-ibra` — ver o `CLAUDE.md` próprio dele. Autenticação voltada pro atleta (`ensurePlayerAuthenticated`) e o módulo de notificações que este app deve consumir vivem lá.

@@ -27,15 +27,8 @@ export const ProfileHeaderTitleContainer = styled.View`
   align-items: center;
 `;
 
-export const ProfileHeaderBackButton = styled.TouchableOpacity.attrs({
-  activeOpacity: 0.7,
-})`
-  flex-direction: row;
-  align-items: center;
-
-  margin-right: ${RFValue(10)}px;
-`;
-
+// Sem seta de "voltar" - Perfil agora é uma aba (igual Notícias/
+// Campeonatos/Museu, nenhuma delas tem botão de voltar no header).
 export const ProfileHeaderTitle = styled.Text`
   ${({ theme }) => css`
     font-family: ${theme.FONT_FAMILY.BOLD};
@@ -43,7 +36,7 @@ export const ProfileHeaderTitle = styled.Text`
     color: ${theme.COLORS['white-color']};
   `};
 
-  margin-left: ${RFValue(5)}px;
+  margin-left: ${RFValue(16)}px;
 `;
 
 export const ProfileHeaderLogoutContainer = styled.View`
@@ -78,11 +71,15 @@ export const ProfileAvatarButton = styled.TouchableOpacity.attrs({
   height: ${RFValue(166)}px;
 
   /*
-    Era 'gray-color-200' fixo - esse fundo é uma superfície de verdade (fica
-    atrás da foto/FallbackImage), não texto, então precisa inverter com o
-    tema igual os campos de formulário. 'surface' é o mesmo token usado lá.
+    Era 'surface' (inverte com o tema) - trocado pra 'blue-dark-color' fixo
+    de propósito: o avatar (com foto real ou com as iniciais do
+    FallbackImage, ver initialsBackgroundColor abaixo) agora é um acento de
+    marca, igual ao header - não deve mudar de cor com o tema claro/escuro.
+    Só aparece de fato enquanto a foto está subindo (o Loading cobre o
+    resto do círculo); sem foto real, quem preenche o círculo é o
+    FallbackImage por baixo, não este fundo.
   */
-  background-color: ${({ theme }) => theme.COLORS.surface};
+  background-color: ${({ theme }) => theme.COLORS['blue-dark-color']};
 
   border-radius: ${RFValue(98)}px;
 
@@ -147,22 +144,63 @@ export const ProfileOptionsContent = styled.View`
   margin-top: ${RFValue(50)}px;
 `;
 
+// Card branco com borda ao redor de toda a lista - cada ProfileOptionButton
+// vira uma linha dentro dele (separadas por border-bottom, ver abaixo),
+// igual ao mockup aprovado. 'surface' inverte com o tema (fica branco no
+// claro, uma camada mais clara que o fundo no escuro); 'border' é o mesmo
+// token cinza-claro já usado em campos de formulário.
+export const ProfileOptionsCard = styled.View`
+  background-color: ${({ theme }) => theme.COLORS.surface};
+
+  border-width: 1px;
+  border-color: ${({ theme }) => theme.COLORS.border};
+  border-radius: ${RFValue(14)}px;
+
+  overflow: hidden;
+`;
+
 export const ProfileOptionButton = styled.TouchableOpacity.attrs({
   activeOpacity: 0.7,
 })`
   flex-direction: row;
   align-items: center;
 
-  margin: ${RFValue(10)}px 0;
+  padding: ${RFValue(15)}px ${RFValue(16)}px;
+
+  border-bottom-width: 1px;
+  border-bottom-color: ${({ theme }) => theme.COLORS.border};
+
+  /*
+    Última linha do card não tem borda embaixo (senão sobraria uma faixa
+    cinza encostada no cantos arredondados do ProfileOptionsCard).
+  */
+  &:last-child {
+    border-bottom-width: 0;
+  }
 `;
 
-export const ProfileOptionButtonIcon = styled.View`
-  margin-right: ${RFValue(20)}px;
+// Caixinha colorida atrás do ícone, do jeito que o mockup mostra - $tintColor
+// é a cor de fundo (passada com baixa opacidade, ex: '#0c0c5b1a'), o ícone
+// em si continua na cor sólida correspondente (ver uso em index.tsx).
+export const ProfileOptionButtonIcon = styled.View<{ $tintColor: string }>`
+  width: ${RFValue(34)}px;
+  height: ${RFValue(34)}px;
+
+  align-items: center;
+  justify-content: center;
+
+  background-color: ${({ $tintColor }) => $tintColor};
+  border-radius: ${RFValue(10)}px;
+
+  margin-right: ${RFValue(14)}px;
 `;
 
-export const ProfileOptionButtonTitle = styled.Text`
+export const ProfileOptionButtonTitle = styled.Text<{ $bold?: boolean }>`
+  flex: 1;
+
   font-size: ${({ theme }) => RFValue(theme.FONT_SIZE.LG)}px;
   color: ${({ theme }) => theme.COLORS.text};
+  font-weight: ${({ $bold }) => ($bold ? 'bold' : 'normal')};
 `;
 
 export const ProfileRemoveAccountButton = styled.TouchableOpacity`
