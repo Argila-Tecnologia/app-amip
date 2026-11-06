@@ -1,6 +1,6 @@
 import { useCallback, useRef, useState } from 'react';
 
-import { ScrollView, TextInput } from 'react-native';
+import { Linking, ScrollView, TextInput } from 'react-native';
 
 import { useNavigation, useRoute } from '@react-navigation/native';
 
@@ -73,7 +73,12 @@ const subscriptionValidationSchema = zod.object({
   name: zod
     .string({ required_error: 'Campo obrigatório' })
     .min(1, 'Campo obrigatório'),
-  // email: zod.string().email(),
+  // Opcional aqui de propósito - só é exigido de verdade (checado na mão
+  // em handleSubscription, não aqui no schema) quando o atleta não está
+  // logado, já que quem tem conta não precisa digitar de novo o e-mail
+  // que já está cadastrado. A API também exige isso (ver CreateSubscriptionUseCase,
+  // "email" obrigatório só sem player_id).
+  email: zod.string().email('E-mail inválido').optional().or(zod.literal('')),
   whatsapp: zod
     .string({ required_error: 'Campo obrigatório' })
     .min(1, 'Campo obrigatório'),
@@ -106,7 +111,7 @@ export function SubscriptionScreen() {
   const paddingBottom = insets.bottom;
 
   const nameRef = useRef<TextInput>(null);
-  // const emailRef = useRef<TextInput>(null);
+  const emailRef = useRef<TextInput>(null);
   const whatsappRef = useRef<TextInput>(null);
   const clubRef = useRef<TextInput>(null);
   // const valueRef = useRef<TextInput>(null);
@@ -143,7 +148,7 @@ export function SubscriptionScreen() {
   );
 
   const handleSubscription = useCallback(
-    async ({ name, whatsapp, club }: ISubscriptionFormSubmitData) => {
+    async ({ name, email, whatsapp, club }: ISubscriptionFormSubmitData) => {
       try {
         setIsLoadingSendSubscription(true);
 
@@ -158,8 +163,29 @@ export function SubscriptionScreen() {
           return;
         }
 
+        // A API exige e-mail quando não há player_id (inscrito sem conta
+        // no app) - ver CreateSubscriptionUseCase. Checado aqui (igual à
+        // checagem de categoria acima) em vez de no schema do zod, porque
+        // a obrigatoriedade depende de "player.id" (login), não só do
+        // valor do próprio campo.
+        if (!player.id && !email) {
+          Toast.show({
+            type: 'error',
+            position: 'bottom',
+            text1: 'Equipe AMIP',
+            text2: 'Informe seu e-mail.',
+          });
+
+          return;
+        }
+
         const data = {
           name,
+          // Quem já tem conta usa sempre o e-mail cadastrado no próprio
+          // Player (a API nem olha pra esse campo nesse caso - ver
+          // CreateSubscriptionUseCase) - não manda o do formulário pra
+          // evitar confusão, mesmo que o campo nem apareça pra esse atleta.
+          email: player.id ? undefined : email,
           whatsapp,
           club,
           championship_id: championshipId,
@@ -178,6 +204,24 @@ export function SubscriptionScreen() {
             text1: 'Equipe AMIP',
             text2: 'Inscrição realizada com sucesso!',
           });
+
+          // A API devolve { subscription, payment_url } desde que a
+          // inscrição em campeonato passou a gerar cobrança automática
+          // via AbacatePay - payment_url vem null quando o campeonato é
+          // gratuito (nada a pagar), e preenchido quando tem valor. Igual
+          // ao padrão já usado pro link de vídeo em DetailsChampionship:
+          // confere se o dispositivo consegue abrir antes de tentar.
+          const { payment_url: paymentUrl } = response.data as {
+            payment_url: string | null;
+          };
+
+          if (paymentUrl) {
+            const canOpenPaymentUrl = await Linking.canOpenURL(paymentUrl);
+
+            if (canOpenPaymentUrl) {
+              await Linking.openURL(paymentUrl);
+            }
+          }
 
           setSelectedCategories([]);
 
@@ -316,11 +360,47 @@ export function SubscriptionScreen() {
                         onChange(text);
                       }}
                       onSubmitEditing={() => {
-                        whatsappRef.current?.focus();
+                        if (!player.id) {
+                          emailRef.current?.focus();
+                        } else {
+                          whatsappRef.current?.focus();
+                        }
                       }}
                     />
                   )}
                 />
+
+                {/* Só pra quem não tem conta no app - quem está logado usa
+                    o e-mail já cadastrado (ver handleSubscription), não
+                    precisa digitar de novo. A API passou a exigir esse
+                    campo desde que a inscrição em campeonato virou uma
+                    cobrança automática via AbacatePay (ver
+                    CreateSubscriptionUseCase). */}
+                {!player.id && (
+                  <Controller
+                    control={control}
+                    name="email"
+                    render={({ field: { value, onChange } }) => (
+                      <Input
+                        ref={emailRef}
+                        autoCorrect={false}
+                        autoCapitalize="none"
+                        keyboardType="email-address"
+                        value={value}
+                        placeholder="Informe o e-mail"
+                        placeholderTextColor={theme.COLORS['text-secondary']}
+                        error={errors.email?.message}
+                        returnKeyType="next"
+                        onChangeText={(text) => {
+                          onChange(text);
+                        }}
+                        onSubmitEditing={() => {
+                          whatsappRef.current?.focus();
+                        }}
+                      />
+                    )}
+                  />
+                )}
 
                 <Controller
                   control={control}

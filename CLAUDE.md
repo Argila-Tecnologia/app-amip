@@ -288,6 +288,55 @@ coberta por 6 testes Jest no backend (`api-ibra`,
   conferir visualmente assim que houver uma conta de teste com cobranças
   reais, ou quando o usuário testar no próprio dispositivo.
 
+## Inscrição em campeonato: e-mail pra quem não tem login + abertura do pagamento (2026-11-05/06, uncommitted)
+
+Achado testando de ponta a ponta o webhook da AbacatePay (ver
+`CLAUDE.md` do `api-ibra`, seção "AbacatePay — webhook endpoint") - a
+`SubscriptionScreen` (tela pública de "Faça sua inscrição", usada tanto
+por atleta logado quanto por gente de fora da AMIP sem conta) ficou
+desatualizada em dois pontos quando a inscrição em campeonato passou a
+gerar cobrança automática via AbacatePay.
+
+- **`POST /subscriptions` mudou de formato** (já documentado antes
+  aqui) - passou a devolver `{ subscription, payment_url }` em vez do
+  objeto `Subscription` puro. A tela nunca lia o corpo da resposta (só
+  checava `response.status === 201`), então isso não quebrava nada
+  tecnicamente - só fazia o `payment_url` (o link de pagamento de
+  verdade) ser descartado, ou seja, nenhuma cobrança de torneio pago
+  chegava a ser efetivamente cobrada pelo app.
+- **Campo de e-mail**: a API passou a exigir `email` no corpo sempre que
+  não há `player_id` (inscrito sem conta) - ver `CreateSubscriptionUseCase`
+  no `api-ibra`. A tela nunca tinha esse campo reativado (só comentado:
+  `// email: zod.string().email()`), então **toda inscrição sem login
+  estava quebrada em produção** (400 "email is required"), não só a
+  parte de pagamento - nem campeonato gratuito funcionava mais pra quem
+  não tem conta. Achado durante este mesmo teste.
+
+**Confirmado com o usuário**: campo de e-mail aparece só quando
+`!player.id` (deslogado) - quem já tem conta continua sem digitar nada a
+mais, igual às outras telas do app. Quando `payment_url` vem preenchido
+(inscrição paga), o app abre direto no navegador via
+`Linking.canOpenURL`/`Linking.openURL` - mesmo padrão já usado pro link
+de vídeo em `DetailsChampionshipScreen` - em vez de mostrar um botão
+"Pagar agora" separado.
+
+**Testado de ponta a ponta no emulador Android**, contra o `api-ibra`
+local (`.env` trocado pra `http://10.0.2.2:3333` durante o teste,
+revertido pra produção depois - ver "Comandos" acima pro alias do
+emulador): preencheu o formulário de uma inscrição sem login pro
+"Campeonato de Teste AMIP" (campeonato de teste já existente, value>0),
+submeteu, e confirmou que o Chrome do emulador abriu de verdade na
+página de checkout real da AbacatePay (`app.abacatepay.com/pay/...`,
+modo simulação/Dev mode) com os dados da inscrição. Achado nesse mesmo
+teste, já corrigido no `api-ibra`: o backend ainda não calculava o valor
+certo nesse fluxo (`value` nunca era mandado por esta tela, e o backend
+confiava nesse campo vindo do cliente) - ver `CLAUDE.md` do `api-ibra`
+pro fix completo (valor passou a vir sempre de `Championship.value`, não
+mais do corpo da requisição).
+
+`tsc --noEmit` e `eslint` limpos no arquivo alterado
+(`src/screens/Subscription/index.tsx`). **Ainda não commitado.**
+
 ## Repositórios relacionados
 
 - **Backend**: `../api-ibra` — ver o `CLAUDE.md` próprio dele. Autenticação voltada pro atleta (`ensurePlayerAuthenticated`) e o módulo de notificações que este app deve consumir vivem lá.
