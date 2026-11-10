@@ -81,23 +81,30 @@ export const MyChargesDueDate = styled.Text`
   color: ${({ theme }) => theme.COLORS.text};
 `;
 
-// Botão "Pagar" desabilitado/"em breve" - sem gateway de pagamento ainda.
-// De propósito uma View simples, não um TouchableOpacity: não faz sentido
-// dar feedback de toque num botão que não tem nenhuma ação por trás.
-export const MyChargesPayButton = styled.View`
+// Botão "Pagar" - desde 2026-11-10 pode ter uma ação de verdade (abrir o
+// checkout da AbacatePay) quando a cobrança tem payment_url, ou continuar
+// desabilitado/"em breve" quando não tem (ex: mensalidade atrasada, que
+// ainda não gera link nenhum - ver CLAUDE.md). TouchableOpacity sempre,
+// mesmo no estado desabilitado - mais simples que duas versões do
+// componente, e o $enabled controla tanto a cor quanto o toque.
+export const MyChargesPayButton = styled.TouchableOpacity<{
+  $enabled: boolean;
+}>`
   flex-direction: row;
   align-items: center;
 
-  background-color: ${({ theme }) => theme.COLORS.border};
+  background-color: ${({ theme, $enabled }) =>
+    $enabled ? theme.COLORS['green-color'] : theme.COLORS.border};
 
   padding: ${RFValue(10)}px ${RFValue(16)}px;
   border-radius: 999px;
 `;
 
-export const MyChargesPayButtonText = styled.Text`
+export const MyChargesPayButtonText = styled.Text<{ $enabled: boolean }>`
   font-size: ${RFValue(13)}px;
   font-weight: bold;
-  color: ${({ theme }) => theme.COLORS['text-secondary']};
+  color: ${({ theme, $enabled }) =>
+    $enabled ? theme.COLORS['white-color'] : theme.COLORS['text-secondary']};
 
   margin-left: ${RFValue(6)}px;
 `;

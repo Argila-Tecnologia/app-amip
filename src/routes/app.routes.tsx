@@ -20,6 +20,7 @@ import { EditProfileInformationScreen } from '@screens/Profile/EditProfileInform
 import { EditPasswordScreen } from '@screens/Profile/EditPassword';
 import { DeleteProfileScreen } from '@screens/Profile/DeleteProfile';
 import { MyChargesScreen } from '@screens/Profile/MyCharges';
+import { MyPlayerProgramsScreen } from '@screens/Profile/MyPlayerPrograms';
 
 import { SubscriptionScreen } from '@screens/Subscription';
 import { DetailsMuseumScreen } from '@screens/Museum/DetailsMuseum';
@@ -86,6 +87,10 @@ export function AppRoutes() {
           <Screen name="editPasswordScreen" component={EditPasswordScreen} />
           <Screen name="deleteProfileScreen" component={DeleteProfileScreen} />
           <Screen name="myChargesScreen" component={MyChargesScreen} />
+          <Screen
+            name="myPlayerProgramsScreen"
+            component={MyPlayerProgramsScreen}
+          />
         </>
       ) : null}
     </Navigator>

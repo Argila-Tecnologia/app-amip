@@ -125,7 +125,7 @@ Não existe código/dependências de notificação ou push (`expo-notifications`
 
 Não existe nenhuma tela neste app consumindo esses endpoints ainda, nem configuração de push notification (registro de push token do Expo, prompts de permissão, config de plugin no `app.json`, permissão `POST_NOTIFICATIONS` do Android) — isso é trabalho a construir do zero.
 
-## Cadastro de atleta menor de idade (2026-09-25, uncommitted)
+## Cadastro de atleta menor de idade (2026-09-25, commit `a5dca7f`/`3971bbd`)
 
 `src/screens/SignUp/index.tsx` (autocadastro do próprio atleta) ganhou a
 mesma regra já implementada no `admin-web-amip`/`api-ibra`: se o atleta
@@ -174,7 +174,7 @@ nome de alguém).
   `InputMask`/`SelectPicker` (`{!!error && <ErrorText>{error}</ErrorText>}`)
   - não precisou do mesmo fix de mensagem de erro dos outros dois repos.
 
-## 4 bugs de UI encontrados e corrigidos ao testar no dispositivo real (2026-09-25, uncommitted)
+## 4 bugs de UI encontrados e corrigidos ao testar no dispositivo real (2026-09-25, commit `a5dca7f`)
 
 Usuário testou o build no próprio celular (nav de 3 botões do Android) e mandou screenshots - achados não relacionados à feature de menor de idade, mas corrigidos na mesma sessão.
 
@@ -288,7 +288,7 @@ coberta por 6 testes Jest no backend (`api-ibra`,
   conferir visualmente assim que houver uma conta de teste com cobranças
   reais, ou quando o usuário testar no próprio dispositivo.
 
-## Inscrição em campeonato: e-mail pra quem não tem login + abertura do pagamento (2026-11-05/06, uncommitted)
+## Inscrição em campeonato: e-mail pra quem não tem login + abertura do pagamento (2026-11-05/06, commit `a0ddff7`)
 
 Achado testando de ponta a ponta o webhook da AbacatePay (ver
 `CLAUDE.md` do `api-ibra`, seção "AbacatePay — webhook endpoint") - a
@@ -335,7 +335,210 @@ pro fix completo (valor passou a vir sempre de `Championship.value`, não
 mais do corpo da requisição).
 
 `tsc --noEmit` e `eslint` limpos no arquivo alterado
-(`src/screens/Subscription/index.tsx`). **Ainda não commitado.**
+(`src/screens/Subscription/index.tsx`). Commitado em `a0ddff7`
+(2026-11-06).
+
+## Pendências conhecidas (consolidado em 2026-11-10)
+
+Levantamento feito revisando `git log`, `npm audit` e o restante deste
+arquivo - consolidado aqui num único lugar em vez de espalhado pelas
+seções de histórico acima (as pendências específicas de Faturas
+continuam detalhadas na seção própria acima, e são só referenciadas
+aqui).
+
+- **Dependabot**: restam 12 vulnerabilidades (1 baixa, 7 moderadas, 4
+  altas) de um total de 23, após `5b97e8a` resolver 11 via
+  `npm audit fix`. As restantes são majoritariamente `node-forge`
+  (dependência transitiva de ferramental de build/CLI, não roda dentro
+  do app em si) e `zod` (upgrade pra `zod@4.6.7` é breaking change,
+  precisa de `npm audit fix --force` e testar depois).
+- **`expo-dev-client` ausente**: `npm start` roda `expo start
+  --dev-client`, mas o pacote não está listado em `package.json` nem
+  instalado em `node_modules` - conferir antes de depender do fluxo de
+  dev client localmente (ver seção "Comandos").
+- **Conta de teste em produção**: `claude.teste.mockup@example.com`,
+  criada pra testar a tela de Faturas (ver seção "Faturas" acima) -
+  **confirmado com o usuário em 2026-11-10 que ainda não foi removida**.
+  Vale remover do banco de produção quando possível.
+- **Gateway de pagamento das Faturas**: **resolvido** - AbacatePay
+  escolhida e integrada (ver `CLAUDE.md` do `api-ibra`). O botão "Pagar"
+  já funciona de verdade pra matrícula e torneio (ver seção "Botão Pagar
+  de verdade" abaixo); só mensalidade atrasada continua sem solução (ver
+  a mesma seção, "Mensalidade atrasada").
+- **Estado "com cobranças" da tela de Faturas**: **verificado** em
+  2026-11-10, no emulador, com cobranças de teste reais (matrícula e
+  torneio) - ver seção abaixo.
+- **Avatares antigos quebrados em produção**: fotos enviadas antes do
+  fix de `sanitizeFilename()` (nomes com espaço/acento, ver seção "4
+  bugs de UI" acima) continuam com arquivo órfão em disco e
+  `avatar_url` resultando em 404 - nenhuma migração/limpeza de dados já
+  existentes foi feita, só o código daqui pra frente.
+- **Notificações**: feature inteira ainda não iniciada neste app (API
+  do backend já pronta, ver seção "Notificações" acima) - é trabalho a
+  construir do zero (telas, registro de push token, permissões
+  Android).
+- **Cancelamento de matrícula/mensalidade**: **validado de ponta a
+  ponta contra o sandbox real da AbacatePay em 2026-11-11** (ver seção
+  própria abaixo) - um bug real foi achado e corrigido no `api-ibra`
+  nesse processo (link de mensalidade continuava pagável depois de
+  cancelar pelo app).
+- **Cancelamento de inscrição em torneio**: **não existe** nenhuma forma
+  de cancelar (nem pro atleta, nem staff-com-integração-AbacatePay) - ver
+  seção "Cancelamento validado de ponta a ponta..." abaixo pro detalhe.
+  Decisão do usuário: deixar pendente por enquanto.
+
+## Botão "Pagar" de verdade + "Minhas matrículas" (2026-11-10)
+
+Trabalho cross-repo - a lógica de negócio e os novos endpoints estão
+detalhados no `CLAUDE.md` do `api-ibra` (seções "Faturas: link de
+pagamento guardado e exposto pelo app-amip",
+"Cancelamento de mensalidade pelo app-amip" e "Mensalidade atrasada
+('Vencida')"). Aqui só o que mudou **neste** app.
+
+### Botão "Pagar" (tela "Minhas faturas")
+
+- `src/dtos/charge-dto.ts`: `IMyChargeDTO` ganhou `payment_url: string |
+  null` (mesmo campo novo que `GET /charges/me` passou a devolver).
+- `src/screens/Profile/MyCharges/`: `MyChargesPayButton` deixou de ser
+  uma `View` sempre desabilitada - agora é um `TouchableOpacity` real
+  (`$enabled` controla cor e toque), chama
+  `Linking.canOpenURL`/`openURL(currentCharge.payment_url)` quando
+  preenchido, mesmo padrão já usado em `Subscription/index.tsx` pro link
+  de torneio. Continua caindo no visual antigo "Em breve" (desabilitado)
+  quando `payment_url` vem `null` - hoje é o caso de mensalidade
+  (atrasada ou não) e qualquer lançamento manual da equipe.
+- Funciona pra **matrícula** e **inscrição em torneio** (torneio já
+  funcionava via `Linking` direto na tela de inscrição desde `a0ddff7`;
+  a novidade é ele TAMBÉM aparecer depois em "Minhas faturas", se a
+  pessoa fechar o navegador antes de terminar de pagar).
+
+### Tela nova "Minhas matrículas" (cancelar mensalidade)
+
+- Item novo no Perfil, ícone `users`, abre `myPlayerProgramsScreen`
+  (rota nova em `app.routes.tsx`/`routes/index.tsx`/`@types/navigation.d.ts`,
+  mesmo padrão de tela privada gated por `player.id` que as outras 4).
+- `src/dtos/player-program-dto.ts` (novo) + `src/screens/Profile/MyPlayerPrograms/`
+  (novo): lista `GET /player_programs/me` - cada vínculo do atleta
+  (nome do programa, mensalidade líquida, `ATIVA`/`CANCELADA`). Decisão
+  confirmada com o usuário: tela separada de "Minhas faturas", não um
+  botão dentro dela - um atleta pode ter mais de um vínculo ao mesmo
+  tempo (ex: time principal + projeto social).
+- Botão "Cancelar mensalidade" (vermelho, `theme.COLORS['red-color']`,
+  mesmo peso visual de "Remover conta") só aparece pra vínculo `ATIVA`.
+  Confirmação via `Alert.alert` antes de chamar
+  `POST /player_programs/me/{id}/cancel` - ação irreversível e de
+  dinheiro real, mesmo padrão já usado em `handleSignOut`
+  (`Profile/index.tsx`), só com texto mais sério. Sucesso/erro via
+  `Toast`, lista recarrega sozinha (`refetch` do `useQuery`) depois de
+  cancelar.
+
+### Verificação
+
+**Testado de ponta a ponta repetidas vezes no emulador Android**, contra
+o `api-ibra` local (mesmo esquema de `.env` trocado e revertido depois -
+ver seção "Comandos"): matrícula com `payment_url` aparecendo como
+"Pendente" (não mais "Atrasado" - bug de status corrigido no mesmo dia,
+ver `CLAUDE.md` do `api-ibra`) com botão "Pagar" abrindo o checkout real
+da AbacatePay; cancelamento pelo app derrubando tanto a mensalidade
+quanto uma matrícula ainda pendente da lista de Faturas; link do
+checkout de matrícula parando de abrir de verdade depois de cancelado
+(`POST /checkouts/delete` da AbacatePay, chamado pelo backend). Um
+problema de ambiente (servidor local do `api-ibra` rodando código
+desatualizado por causa de um respawn perdido do `ts-node-dev`) gerou um
+falso negativo no meio do caminho - não é bug deste app, ver nota no
+`CLAUDE.md` do `api-ibra`.
+
+### Mensalidade atrasada - não implementado, decisão pendente
+
+Diferente de matrícula/torneio, uma mensalidade atrasada não tem link
+novo pra mostrar (a AbacatePay só retenta o mesmo cartão sozinha) -
+continua caindo no "Em breve" desabilitado. Existe um caminho possível
+(Portal do Cliente da AbacatePay, que também deixa a família trocar de
+cartão), mas ele vem junto com cancelamento e reembolso self-service que
+ainda não foram tratados no backend - ver `CLAUDE.md` do `api-ibra` pro
+detalhe completo. Nada a fazer neste app até essa decisão ser tomada.
+
+## Cancelamento validado de ponta a ponta contra a AbacatePay real + 2 bugs de UI no tema escuro (2026-11-11)
+
+Sessão pedida pelo usuário especificamente pra **testar no aplicativo**
+(emulador Android real, não só ler o código) se cancelar uma matrícula
+pelo app realmente mata o link na AbacatePay ou só marca como cancelado
+no nosso banco - a pendência mais importante deixada em aberto pela
+seção anterior. Achou e corrigiu, no meio do caminho, um bug real de
+cancelamento (no `api-ibra`) e 2 bugs de UI no tema escuro (neste app).
+
+### 2 bugs de tema escuro, achados pelo usuário olhando o emulador
+
+- **Ícones das caixinhas do Perfil ilegíveis no tema escuro**: `
+  'blue-dark-color'` (`#0c0c5b`, navy bem escuro) é fixo de propósito
+  entre os temas (acento de marca) - ótimo contraste no card branco do
+  tema claro, mas quase invisível sobre o `surface` do tema escuro (que
+  já é um navy bem próximo do preto). `ProfileScreen` agora calcula
+  `optionIconAccentColor`/`optionIconTintColor` a partir de
+  `useThemeMode().themeName`: continua `blue-dark-color` no claro, mas
+  troca pro `blue-light-color` (`#2ebfdc`, o mesmo tipo de acento fixo,
+  só que claro) no escuro - afeta os ícones de "Atualizar perfil",
+  "Minhas matrículas", "Atualizar senha" e "Contato" (o de "Faturas", em
+  verde, já lia bem nos dois temas, não mexido).
+- **Tela "Minhas matrículas" sem `paddingBottom`**: `MyPlayerPrograms/
+  index.tsx` não passava `insets.bottom` pro `contentContainerStyle` do
+  `ScrollView` (mesmo padrão já usado em `DetailsChampionshipScreen`/
+  `SubscriptionScreen`, mas nunca aplicado aqui) - o último card da lista
+  (e o botão "Cancelar mensalidade" dele, quando `ATIVA`) ficava cortado
+  pela barra de navegação gestual do Android, inacessível. Corrigido
+  adicionando `useSafeAreaInsets()` e `paddingBottom: insets.bottom` nos
+  dois ramos do `contentContainerStyle` (lista vazia e lista com itens).
+
+### Cancelamento de matrícula/mensalidade: validado contra o sandbox real
+
+Metodologia: em vez de só ler o código, criado um `PlayerProgram` de
+teste de verdade (matrícula + mensalidade, ambos gerando checkout real
+na AbacatePay) direto contra o `api-ibra` local, cancelado pelo botão
+"Cancelar mensalidade" no emulador, e então aberto os dois links de
+pagamento reais no navegador pra ver se realmente morreram
+("Não encontramos este link") ou se continuavam pagáveis.
+
+- **Matrícula**: confirmado que o link morre de verdade depois de
+  cancelar (mecanismo já existente e correto, ver seção anterior).
+- **Mensalidade (achado um bug real)**: o link de pagamento da
+  mensalidade continuava **100% funcional** depois de cancelar pelo
+  app, mesmo com o banco já mostrando tudo cancelado e o toast de
+  sucesso aparecendo normalmente. Causa raiz (no `api-ibra`, ver
+  `CLAUDE.md` de lá pro detalhe completo): a AbacatePay usa um endpoint
+  **diferente** pra excluir um checkout de assinatura
+  (`/v2/subscriptions/checkouts/delete`) do que pra um checkout avulso
+  (`/v2/checkouts/delete`, usado pela matrícula) - o serviço de
+  cancelamento estava chamando o endpoint errado (o de matrícula) pro
+  checkout de mensalidade, a chamada falhava contra a API real, e um
+  `try/catch` deliberado (pra não derrubar o cancelamento local por causa
+  de uma falha de rede) engolia o erro silenciosamente. **Corrigido** -
+  novo método `deleteSubscriptionCheckout` no provider, chamando o
+  endpoint certo. Recomprovado depois do fix: um vínculo novo cancelado
+  pelo app teve o link de mensalidade morrendo de verdade também.
+  Nenhuma mudança neste app - o bug e o fix são inteiramente no
+  `api-ibra`.
+- Achado secundário durante a investigação: 3 processos `yarn dev:server`
+  do `api-ibra` ficaram rodando ao mesmo tempo no ambiente local, nenhum
+  deles de fato escutando a porta 3333 - o mesmo tipo de "respawn
+  perdido do `ts-node-dev`" já registrado como causa de falso negativo na
+  seção anterior. Resolvido matando os três e subindo um processo limpo
+  antes de testar.
+
+### Cancelamento de inscrição em torneio - não testado, feature não existe
+
+Pedido original também incluía testar cancelamento de torneio. Não dá
+pra testar **no aplicativo** porque **não existe** - o atleta pode se
+inscrever (com ou sem pagamento) mas não tem nenhuma tela/botão pra
+cancelar depois. O único cancelamento de torneio que existe é
+`DeleteSubscriptionUseCase` no `api-ibra` (staff-only, usado pelo
+`admin-web-amip`), e ele **não toca a AbacatePay de jeito nenhum** - só
+apaga a `Subscription` do nosso banco, deixando um checkout/cobrança de
+torneio pago ou pendente ÓRFÃO no painel deles (mesma classe de bug que
+acabou de ser corrigida pra matrícula/mensalidade, só que pra torneio
+ainda nem tem o mecanismo de "cancelar a Charge + excluir o checkout"
+implementado). **Decisão do usuário (2026-11-11): deixar pendente por
+enquanto**, só documentado aqui - nada a construir ainda, nem admin nem
+self-service.
 
 ## Repositórios relacionados
 

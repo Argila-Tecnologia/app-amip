@@ -12,4 +12,10 @@ export type IMyChargeDTO = {
   paid_at: string | null;
   status: IMyChargeStatus;
   program_name: string;
+  // Link de checkout da AbacatePay - null quando a cobrança já está paga
+  // (nada a pagar) ou quando ela nunca teve um link guardado no backend
+  // (mensalidade, que hoje ainda não gera link algum quando atrasa, ou
+  // lançamento manual da equipe). O app só mostra o botão "Pagar" quando
+  // este campo vem preenchido.
+  payment_url: string | null;
 };

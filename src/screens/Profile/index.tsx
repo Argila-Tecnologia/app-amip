@@ -21,6 +21,7 @@ import Toast from 'react-native-toast-message';
 import { api } from '@services/api';
 
 import { useAuth } from '@hooks/auth';
+import { useThemeMode } from '@hooks/theme';
 
 import { Loading } from '@components/Loading';
 import { ChooseTakePhotoModal } from '@components/ChooseTakePhotoModal';
@@ -69,8 +70,24 @@ export function ProfileScreen() {
 
   const { player, updatePlayerProfile, signOut } = useAuth();
   const theme = useTheme();
+  const { themeName } = useThemeMode();
   const navigation = useNavigation();
   const insets = useSafeAreaInsets();
+
+  // 'blue-dark-color' é um navy bem escuro, fixo de propósito entre os
+  // temas (acento de marca - ver CLAUDE.md) - ótimo contraste no card
+  // branco do tema claro, mas ilegível (navy sobre um 'surface' que já é
+  // quase preto) no escuro. 'blue-light-color' é o mesmo tipo de acento
+  // fixo, só que claro o bastante pra se destacar em qualquer um dos dois
+  // fundos - troca só a cor usada nesses ícones de "caixinha", sem mexer
+  // no token em si (que continua igual nos outros usos do app).
+  const optionIconAccentColor =
+    themeName === 'dark'
+      ? theme.COLORS['blue-light-color']
+      : theme.COLORS['blue-dark-color'];
+  const optionIconTintColor = `${optionIconAccentColor}${
+    themeName === 'dark' ? '33' : '1a'
+  }`;
 
   const paddingTop =
     Platform.OS === 'android' ? insets.top + 20 : insets.top + 10;
@@ -384,13 +401,11 @@ export function ProfileScreen() {
                   navigation.navigate('editProfileInformationScreen');
                 }}
               >
-                <ProfileOptionButtonIcon
-                  $tintColor={`${theme.COLORS['blue-dark-color']}1a`}
-                >
+                <ProfileOptionButtonIcon $tintColor={optionIconTintColor}>
                   <Feather
                     name="refresh-cw"
                     size={18}
-                    color={theme.COLORS['blue-dark-color']}
+                    color={optionIconAccentColor}
                   />
                 </ProfileOptionButtonIcon>
 
@@ -419,6 +434,24 @@ export function ProfileScreen() {
                 </ProfileOptionButtonTitle>
               </ProfileOptionButton>
 
+              <ProfileOptionButton
+                onPress={() => {
+                  navigation.navigate('myPlayerProgramsScreen');
+                }}
+              >
+                <ProfileOptionButtonIcon $tintColor={optionIconTintColor}>
+                  <Feather
+                    name="users"
+                    size={18}
+                    color={optionIconAccentColor}
+                  />
+                </ProfileOptionButtonIcon>
+
+                <ProfileOptionButtonTitle>
+                  Minhas matrículas
+                </ProfileOptionButtonTitle>
+              </ProfileOptionButton>
+
               {/*
                 Conta vinculada a login via Google não tem senha de verdade
                 pra trocar (o backend já rejeita a troca em
@@ -432,13 +465,11 @@ export function ProfileScreen() {
                     navigation.navigate('editPasswordScreen');
                   }}
                 >
-                  <ProfileOptionButtonIcon
-                    $tintColor={`${theme.COLORS['blue-dark-color']}1a`}
-                  >
+                  <ProfileOptionButtonIcon $tintColor={optionIconTintColor}>
                     <Feather
                       name="lock"
                       size={18}
-                      color={theme.COLORS['blue-dark-color']}
+                      color={optionIconAccentColor}
                     />
                   </ProfileOptionButtonIcon>
 
@@ -453,13 +484,11 @@ export function ProfileScreen() {
                   navigation.navigate('contactScreen');
                 }}
               >
-                <ProfileOptionButtonIcon
-                  $tintColor={`${theme.COLORS['blue-dark-color']}1a`}
-                >
+                <ProfileOptionButtonIcon $tintColor={optionIconTintColor}>
                   <Feather
                     name="phone-call"
                     size={18}
-                    color={theme.COLORS['blue-dark-color']}
+                    color={optionIconAccentColor}
                   />
                 </ProfileOptionButtonIcon>
 

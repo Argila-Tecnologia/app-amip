@@ -1,5 +1,7 @@
 import { useMemo } from 'react';
 
+import { Linking } from 'react-native';
+
 import { useTheme } from 'styled-components/native';
 
 import { useQuery } from '@tanstack/react-query';
@@ -125,6 +127,23 @@ export function MyChargesScreen() {
     return { currentCharge: current, historyCharges: history };
   }, [charges]);
 
+  // Mesmo padrão já usado em Subscription/index.tsx pro link de pagamento
+  // da inscrição em campeonato: confere se o dispositivo consegue abrir
+  // antes de tentar, em vez de deixar o Linking estourar sem tratamento.
+  async function handlePayCurrentCharge() {
+    if (!currentCharge?.payment_url) {
+      return;
+    }
+
+    const canOpenPaymentUrl = await Linking.canOpenURL(
+      currentCharge.payment_url,
+    );
+
+    if (canOpenPaymentUrl) {
+      await Linking.openURL(currentCharge.payment_url);
+    }
+  }
+
   return (
     <MyChargesContainer>
       <Header title="Minhas faturas" />
@@ -173,18 +192,34 @@ export function MyChargesScreen() {
                     </MyChargesDueLabel>
 
                     {/*
-                      Sem gateway de pagamento ainda (decisão pendente da
-                      diretoria) - o botão fica visível, mas desabilitado e
-                      claramente marcado como "em breve", em vez de
-                      prometer uma ação que ainda não existe.
+                      payment_url só vem preenchido pra cobranças PENDING/
+                      OVERDUE que já tiveram um checkout da AbacatePay
+                      guardado (matrícula e inscrição em torneio, por
+                      enquanto - ver CLAUDE.md) - uma mensalidade atrasada
+                      ainda cai no "Em breve" desabilitado, porque a
+                      AbacatePay não gera link novo pra esse caso.
                     */}
-                    <MyChargesPayButton>
+                    <MyChargesPayButton
+                      $enabled={!!currentCharge.payment_url}
+                      disabled={!currentCharge.payment_url}
+                      onPress={handlePayCurrentCharge}
+                    >
                       <Feather
-                        name="clock"
+                        name={
+                          currentCharge.payment_url ? 'external-link' : 'clock'
+                        }
                         size={14}
-                        color={theme.COLORS['text-secondary']}
+                        color={
+                          currentCharge.payment_url
+                            ? theme.COLORS['white-color']
+                            : theme.COLORS['text-secondary']
+                        }
                       />
-                      <MyChargesPayButtonText>Em breve</MyChargesPayButtonText>
+                      <MyChargesPayButtonText
+                        $enabled={!!currentCharge.payment_url}
+                      >
+                        {currentCharge.payment_url ? 'Pagar' : 'Em breve'}
+                      </MyChargesPayButtonText>
                     </MyChargesPayButton>
                   </MyChargesDueRow>
                 </MyChargesCurrentCard>

@@ -23,6 +23,7 @@ const PRIVATE_SCREEN_NAMES = [
   'editProfileInformationScreen',
   'editPasswordScreen',
   'deleteProfileScreen',
+  'myPlayerProgramsScreen',
 ];
 
 export function Routes() {
