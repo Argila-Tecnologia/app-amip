@@ -50,7 +50,18 @@ export function ChampionshipsScreen() {
   >({
     queryKey: ['championships'],
     queryFn: async () => {
-      const response = await api.get('/championships');
+      // BUG CORRIGIDO (2026-11-14, ver CLAUDE.md do api-ibra,
+      // "Cancelamento de inscrição em torneio"): sem este parâmetro, a
+      // API devolvia TODOS os campeonatos, ativos ou não (bug que só foi
+      // corrigido agora do lado do backend - antes disso, o parâmetro
+      // nem fazia diferença nenhuma) - um campeonato "aposentado" pela
+      // equipe (toggle "Ativo" desligado no admin) continuava aparecendo
+      // normalmente aqui pro atleta se inscrever.
+      const response = await api.get('/championships', {
+        params: {
+          enabled: 'true',
+        },
+      });
 
       if (response.status === 200) {
         const championshipsData = response.data as IChampionshipsDTO[];
