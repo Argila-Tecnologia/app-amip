@@ -382,10 +382,15 @@ aqui).
   própria abaixo) - um bug real foi achado e corrigido no `api-ibra`
   nesse processo (link de mensalidade continuava pagável depois de
   cancelar pelo app).
-- **Cancelamento de inscrição em torneio**: **não existe** nenhuma forma
-  de cancelar (nem pro atleta, nem staff-com-integração-AbacatePay) - ver
-  seção "Cancelamento validado de ponta a ponta..." abaixo pro detalhe.
-  Decisão do usuário: deixar pendente por enquanto.
+- **Cancelamento de inscrição em torneio**: **resolvido no `api-ibra`/
+  `admin-web-amip` em 2026-11-13/14** - `DeleteSubscriptionUseCase` virou
+  cancelamento de verdade (não mais um `delete()` cru, que já violava
+  uma FK `RESTRICT` pra qualquer inscrição com cobrança) e passou a
+  estornar de verdade via AbacatePay quando a cobrança já estava paga -
+  ver `CLAUDE.md` do `api-ibra` pro detalhe completo. **Continua
+  staff-only** - nenhuma tela/endpoint neste app permite o atleta
+  cancelar a própria inscrição em torneio, então não há nada a construir
+  aqui.
 
 ## Botão "Pagar" de verdade + "Minhas matrículas" (2026-11-10)
 
@@ -539,6 +544,24 @@ ainda nem tem o mecanismo de "cancelar a Charge + excluir o checkout"
 implementado). **Decisão do usuário (2026-11-11): deixar pendente por
 enquanto**, só documentado aqui - nada a construir ainda, nem admin nem
 self-service.
+
+**Atualização (2026-11-14): resolvido no `api-ibra`/`admin-web-amip`.**
+`DeleteSubscriptionUseCase` passou a cancelar de verdade (reaproveitando
+o campo `Subscription.enabled`, que já existia e nunca era lido/escrito
+em lugar nenhum) em vez de fazer um `delete()` cru - achado nesse
+processo que o `delete()` cru já violava uma FK `RESTRICT`
+(`charges.subscription_id`) pra qualquer inscrição com cobrança, então o
+botão "Remover" no `admin-web-amip` provavelmente já estava quebrado em
+produção, não só "não limpa a AbacatePay". Cobrança pendente: cancela +
+exclui o checkout. Cobrança já paga: estorno de verdade via AbacatePay
+(`POST /checkouts/refund`, novo `ChargeStatus.REFUNDED`) - se o estorno
+falhar (ex: cartão já liquidado, rejeitado pela própria AbacatePay), o
+cancelamento inteiro é bloqueado e o motivo real sobe pro staff decidir.
+Validado contra o sandbox real da AbacatePay. **Continua staff-only** -
+nenhuma mudança neste app, não existe (nem existia) self-service pro
+atleta cancelar a própria inscrição em torneio pelo app-amip. Ver
+`CLAUDE.md` do `api-ibra` pro detalhe completo (seção "Cancelamento de
+inscrição em torneio - construído, com estorno real").
 
 ## Repositórios relacionados
 
