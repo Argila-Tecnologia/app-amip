@@ -382,14 +382,10 @@ aqui).
   própria abaixo) - um bug real foi achado e corrigido no `api-ibra`
   nesse processo (link de mensalidade continuava pagável depois de
   cancelar pelo app).
-- **Cancelamento de inscrição em torneio**: **resolvido no `api-ibra`/
-  `admin-web-amip` em 2026-11-13/14** - `DeleteSubscriptionUseCase` virou
-  cancelamento de verdade (não mais um `delete()` cru, que já violava
-  uma FK `RESTRICT` pra qualquer inscrição com cobrança) e passou a
-  estornar de verdade via AbacatePay quando a cobrança já estava paga -
-  ver `CLAUDE.md` do `api-ibra` pro detalhe completo. **Continua
-  staff-only** - nenhuma tela/endpoint neste app permite o atleta
-  cancelar a própria inscrição em torneio, então não há nada a construir
+- **Cancelamento de inscrição em torneio**: **resolvido completamente em
+  2026-11-18** - staff (`api-ibra`/`admin-web-amip`, 2026-11-13/14) e
+  agora também **self-service pelo atleta** (ver seção "Cancelamento de
+  inscrição em torneio pelo próprio atleta" abaixo). Nada mais pendente
   aqui.
 
 ## Botão "Pagar" de verdade + "Minhas matrículas" (2026-11-10)
@@ -557,11 +553,65 @@ exclui o checkout. Cobrança já paga: estorno de verdade via AbacatePay
 (`POST /checkouts/refund`, novo `ChargeStatus.REFUNDED`) - se o estorno
 falhar (ex: cartão já liquidado, rejeitado pela própria AbacatePay), o
 cancelamento inteiro é bloqueado e o motivo real sobe pro staff decidir.
-Validado contra o sandbox real da AbacatePay. **Continua staff-only** -
-nenhuma mudança neste app, não existe (nem existia) self-service pro
-atleta cancelar a própria inscrição em torneio pelo app-amip. Ver
-`CLAUDE.md` do `api-ibra` pro detalhe completo (seção "Cancelamento de
-inscrição em torneio - construído, com estorno real").
+Validado contra o sandbox real da AbacatePay. Na época desta sessão
+(2026-11-11), continuava staff-only - **isso mudou em 2026-11-18, ver
+seção abaixo**.
+
+## Cancelamento de inscrição em torneio pelo próprio atleta (2026-11-18)
+
+Trabalho cross-repo pedido pelo usuário - fizemos passo a passo, cada
+decisão de produto confirmada antes de codar (nome de tela, ícone,
+regra de prazo, o que acontece com campeonato sem data, etc.). A lógica
+de negócio e os novos endpoints estão detalhados no `CLAUDE.md` do
+`api-ibra` (seção "Cancelamento de inscrição em torneio pelo próprio
+atleta"). Aqui só o que mudou **neste** app.
+
+### Nova tela "Inscrições em torneios"
+
+- Item novo no Perfil, ícone `award` (Feather não tem ícone de troféu -
+  "medalha/fita" foi a opção mais próxima disponível), abre
+  `myTournamentSubscriptionsScreen` (rota nova, mesmo padrão de tela
+  privada gated por `player.id` que as outras 5).
+- `src/dtos/subscription-tournament-dto.ts` (novo) +
+  `src/screens/Profile/MyTournamentSubscriptions/` (novo): lista
+  `GET /subscriptions/me` - cada inscrição do atleta (nome/data do
+  campeonato, valor, `ATIVA`/`CANCELADA`). Mesmo padrão exato de
+  `MyPlayerPrograms` ("Minhas matrículas"): confirmação via
+  `Alert.alert`, Toast de sucesso/erro, botão "Cancelar inscrição" só
+  aparece pra inscrição ainda ativa.
+- Erro ao cancelar é **sempre genérico** ("Fale com a equipe AMIP") -
+  decisão confirmada com o usuário: nunca mostra o texto cru do backend
+  (prazo de 24h esgotado, campeonato sem `start_date` ainda, ou a
+  AbacatePay recusando o estorno automático caem todos na mesma
+  mensagem).
+
+### Regras de negócio confirmadas com o usuário (decididas uma a uma)
+
+- Self-cancel liberado até **24h antes do início do campeonato**
+  (`Championship.start_date`, campo novo no backend - ver `CLAUDE.md`
+  do `api-ibra`) - prazo vale **só pro atleta**, staff continua
+  cancelando a qualquer momento pelo admin-web-amip.
+- Campeonato sem `start_date` preenchida (campeonato antigo, criado
+  antes desta feature) → self-cancel fica bloqueado até o staff editar
+  e preencher - mesma regra que já bloqueia inscrição NOVA nesse caso.
+- **Bug real achado testando no emulador**: a trava de edição do
+  `start_date` (igual à do campo Valor) impedia preencher a data pela
+  primeira vez em qualquer campeonato que já tivesse inscrição -
+  exatamente o caminho de remediação que a própria feature pede pro
+  staff fazer. Corrigido no `api-ibra` (ver `CLAUDE.md` de lá).
+
+### Verificação
+
+**Testado de ponta a ponta no emulador Android**, contra o `api-ibra`
+local (mesmo esquema de `.env` trocado e revertido depois - ver seção
+"Comandos"): tela listando uma inscrição real já existente, bloqueio
+correto quando o campeonato não tinha `start_date`, preenchimento da
+data pelo staff (achando o bug da trava), cancelamento com sucesso
+atualizando o status pra "CANCELADA" na hora. Confirmado também, via
+`curl` direto na API: checagem de dono (403 ao tentar cancelar
+inscrição de outro atleta) e morte real do checkout na AbacatePay
+(link abriu "Não encontramos este link" depois de cancelar). Suíte
+completa do `api-ibra` (489 testes) passando.
 
 ## Repositórios relacionados
 
