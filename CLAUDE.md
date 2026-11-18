@@ -346,16 +346,38 @@ seções de histórico acima (as pendências específicas de Faturas
 continuam detalhadas na seção própria acima, e são só referenciadas
 aqui).
 
-- **Dependabot**: restam 12 vulnerabilidades (1 baixa, 7 moderadas, 4
-  altas) de um total de 23, após `5b97e8a` resolver 11 via
-  `npm audit fix`. As restantes são majoritariamente `node-forge`
-  (dependência transitiva de ferramental de build/CLI, não roda dentro
-  do app em si) e `zod` (upgrade pra `zod@4.6.7` é breaking change,
-  precisa de `npm audit fix --force` e testar depois).
-- **`expo-dev-client` ausente**: `npm start` roda `expo start
-  --dev-client`, mas o pacote não está listado em `package.json` nem
-  instalado em `node_modules` - conferir antes de depender do fluxo de
-  dev client localmente (ver seção "Comandos").
+- **Dependabot**: `node-forge` resolvido de vez em `ce44c44` (2026-11-18,
+  `npm audit fix` simples, sem breaking change - dependência transitiva
+  de ferramental de build, não roda dentro do app). Restam só 2 causas
+  raiz (31 avisos, mas todos efeito em cascata dessas duas): `picomatch`
+  (ReDoS em ferramental de build - o fix automático instalaria
+  `react-native@0.83.10` como efeito colateral, **fora** do que o Expo
+  SDK 57 espera, risco real de quebrar o build nativo) e `zod` (nosso
+  `zod@3.24.1` direto, usado em quase todo formulário do app, está na
+  faixa vulnerável - fix exige upgrade major pra `zod@4.6.7`). **Decisão
+  confirmada com o usuário (2026-11-18)**: deixar as duas pendentes de
+  propósito - risco prático baixo (ReDoS não é explorável por quem usa
+  o app; zod exige entrada específica demais) frente ao risco de forçar
+  um upgrade breaking bem em cima de um envio pra produção. Fazer numa
+  sessão dedicada, com tempo pra testar.
+- **`expo-dev-client` ausente**: **resolvido em 2026-11-18**
+  (`npx expo install expo-dev-client`, que já resolve a versão
+  compatível com o SDK 57 sozinho). O projeto usa autolinking dinâmico
+  nos dois lados (`expoAutolinking.useExpoModules()` no
+  `android/settings.gradle`, `use_expo_modules!` no `ios/Podfile`) -
+  instalar a dependência nova não exigiu `expo prebuild` nem tocar em
+  nenhum arquivo nativo já commitado, só rebuildar
+  (`npx expo run:android`) pra pegar o módulo novo no build. **Testado
+  de ponta a ponta no emulador**: rebuild nativo com sucesso (`BUILD
+  SUCCESSFUL`), app reinstalado abre a tela real do Expo Dev Launcher
+  (antes disso o app só tinha a capacidade de debug "crua" do React
+  Native, sem essa tela - funcionava por coincidência, não porque o
+  dev client estivesse de fato instalado), conectou no Metro
+  manualmente e carregou o bundle JS sem erro (bundle completo, 2071
+  módulos). Não afeta build de produção (`eas build --profile
+  production`), que é um build de release padrão, inteiramente
+  separado desse fluxo - resolvido por higiene do projeto antes do
+  envio, não porque bloqueasse o envio em si.
 - **Conta de teste em produção**: `claude.teste.mockup@example.com`,
   criada pra testar a tela de Faturas (ver seção "Faturas" acima) -
   **confirmado com o usuário em 2026-11-10 que ainda não foi removida**.
