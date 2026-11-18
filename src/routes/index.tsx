@@ -24,6 +24,7 @@ const PRIVATE_SCREEN_NAMES = [
   'editPasswordScreen',
   'deleteProfileScreen',
   'myPlayerProgramsScreen',
+  'myTournamentSubscriptionsScreen',
 ];
 
 export function Routes() {

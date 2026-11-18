@@ -28,6 +28,7 @@ export declare global {
       deleteProfileScreen: undefined;
       myChargesScreen: undefined;
       myPlayerProgramsScreen: undefined;
+      myTournamentSubscriptionsScreen: undefined;
 
       contactScreen: undefined;
 

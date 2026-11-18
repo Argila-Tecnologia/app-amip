@@ -452,6 +452,24 @@ export function ProfileScreen() {
                 </ProfileOptionButtonTitle>
               </ProfileOptionButton>
 
+              <ProfileOptionButton
+                onPress={() => {
+                  navigation.navigate('myTournamentSubscriptionsScreen');
+                }}
+              >
+                <ProfileOptionButtonIcon $tintColor={optionIconTintColor}>
+                  <Feather
+                    name="award"
+                    size={18}
+                    color={optionIconAccentColor}
+                  />
+                </ProfileOptionButtonIcon>
+
+                <ProfileOptionButtonTitle>
+                  Inscrições em torneios
+                </ProfileOptionButtonTitle>
+              </ProfileOptionButton>
+
               {/*
                 Conta vinculada a login via Google não tem senha de verdade
                 pra trocar (o backend já rejeita a troca em
