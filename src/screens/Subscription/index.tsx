@@ -1,6 +1,6 @@
 import { useCallback, useRef, useState } from 'react';
 
-import { Linking, ScrollView, TextInput } from 'react-native';
+import { Keyboard, Linking, ScrollView, TextInput } from 'react-native';
 
 import { useNavigation, useRoute } from '@react-navigation/native';
 
@@ -82,9 +82,11 @@ const subscriptionValidationSchema = zod.object({
   whatsapp: zod
     .string({ required_error: 'Campo obrigatório' })
     .min(1, 'Campo obrigatório'),
-  club: zod
-    .string({ required_error: 'Campo obrigatório' })
-    .min(1, 'Campo obrigatório'),
+  // Opcional aqui pelo mesmo motivo do "email" acima - só é exigido de
+  // verdade (checado na mão em handleSubscription) quando o campo está
+  // visível, isto é, quando o atleta não é do clube AMIP (ver
+  // "shouldShowClub"). Quem já é atleta da AMIP não escolhe outro clube.
+  club: zod.string().optional().or(zod.literal('')),
 });
 
 type ISubscriptionFormSubmitData = zod.infer<
@@ -103,6 +105,11 @@ export function SubscriptionScreen() {
   const insets = useSafeAreaInsets();
 
   const { championshipId } = route.params as ISubscriptionRouteParams;
+
+  // Atleta logado e já vinculado ao clube AMIP não escolhe outro clube -
+  // o campo some pra ele. Quem não está logado, ou está logado mas não é
+  // atleta do clube (só tem conta no app), continua escolhendo.
+  const shouldShowClub = !player.id || !player.is_player_club;
 
   // Sem isso, o botão "Realizar inscrição" (último item do formulário)
   // ficava colado na barra de navegação de 3 botões do Android, às vezes
@@ -179,6 +186,19 @@ export function SubscriptionScreen() {
           return;
         }
 
+        // Mesmo padrão do e-mail acima: só exigido quando o campo está
+        // visível (atleta não é do clube AMIP) - ver "shouldShowClub".
+        if (shouldShowClub && !club) {
+          Toast.show({
+            type: 'error',
+            position: 'bottom',
+            text1: 'Equipe AMIP',
+            text2: 'Informe seu clube.',
+          });
+
+          return;
+        }
+
         const data = {
           name,
           // Quem já tem conta usa sempre o e-mail cadastrado no próprio
@@ -187,7 +207,9 @@ export function SubscriptionScreen() {
           // evitar confusão, mesmo que o campo nem apareça pra esse atleta.
           email: player.id ? undefined : email,
           whatsapp,
-          club,
+          // Não manda clube nenhum pra atleta do clube AMIP - o campo nem
+          // aparece pra ele (ver "shouldShowClub").
+          club: shouldShowClub ? club : undefined,
           championship_id: championshipId,
           category_name: selectedCategories,
           player_id: player.id ? player.id : null,
@@ -265,7 +287,7 @@ export function SubscriptionScreen() {
         setIsLoadingSendSubscription(false);
       }
     },
-    [selectedCategories, championshipId, player.id, navigation],
+    [selectedCategories, championshipId, player.id, shouldShowClub, navigation],
   );
   // END FUNCTIONS
 
@@ -420,27 +442,36 @@ export function SubscriptionScreen() {
                         onChange(text);
                       }}
                       onSubmitEditing={() => {
-                        clubRef.current?.focus();
+                        if (shouldShowClub) {
+                          clubRef.current?.focus();
+                        } else {
+                          Keyboard.dismiss();
+                        }
                       }}
                     />
                   )}
                 />
 
-                <Controller
-                  control={control}
-                  name="club"
-                  render={({ field: { value, onChange } }) => (
-                    <SelectPicker
-                      items={categoriesClubsAndChampionship.clubs}
-                      placeholder="Selecione seu clube"
-                      error={errors.club?.message}
-                      value={value}
-                      onValueChange={(text) => {
-                        onChange(text);
-                      }}
-                    />
-                  )}
-                />
+                {/* Só pra quem não é atleta do clube AMIP (ver
+                    "shouldShowClub") - quem já é do clube obviamente não
+                    vai selecionar outro. */}
+                {shouldShowClub && (
+                  <Controller
+                    control={control}
+                    name="club"
+                    render={({ field: { value, onChange } }) => (
+                      <SelectPicker
+                        items={categoriesClubsAndChampionship.clubs}
+                        placeholder="Selecione seu clube"
+                        error={errors.club?.message}
+                        value={value}
+                        onValueChange={(text) => {
+                          onChange(text);
+                        }}
+                      />
+                    )}
+                  />
+                )}
 
                 {categoriesClubsAndChampionship.championship.value > 0 && (
                   <SubscriptionPlaceDateChampionshipContainer>
