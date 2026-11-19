@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 
-import { ScrollView, Linking } from 'react-native';
+import { ScrollView, Linking, View } from 'react-native';
 
 import { useNavigation, useRoute } from '@react-navigation/native';
 
@@ -21,6 +21,9 @@ import { IChampionshipsDTO } from '@dtos/championship-dto';
 import { Loading } from '@components/Loading';
 import { Header } from '@components/Header';
 import { Button } from '@components/Form/Button';
+import { Markdown } from '@components/Markdown';
+
+import { RFValue } from '@utils/rf-value';
 
 import {
   DetailChampionshipContainer,
@@ -29,7 +32,6 @@ import {
   DetailChampionshipImage,
   DetailChampionshipImageContainer,
   DetailChampionshipInfoContainer,
-  DetailChampionshipInfoDescription,
   DetailChampionshipInfoRow,
   DetailChampionshipLinkVideoButton,
   DetailChampionshipLinkVideoButtonText,
@@ -138,9 +140,15 @@ export function DetailsChampionshipScreen() {
                   />
                 </DetailChampionshipImageContainer>
 
-                <DetailChampionshipInfoDescription>
-                  {championship.description}
-                </DetailChampionshipInfoDescription>
+                <View
+                  style={{
+                    width: '100%',
+                    marginTop: RFValue(10),
+                    marginBottom: RFValue(10),
+                  }}
+                >
+                  <Markdown>{championship.description}</Markdown>
+                </View>
 
                 <DetailChampionshipInfoRow>
                   <DetailChampionshipIconContainer>

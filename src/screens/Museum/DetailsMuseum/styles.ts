@@ -55,18 +55,9 @@ export const DetailMuseumImage = styled(FallbackImage)`
   height: 100%;
 ` as unknown as typeof FallbackImage;
 
-export const DetailMuseumMuseumDescription = styled.Text`
-  width: 100%;
-
-  font-family: ${({ theme }) => theme.FONT_FAMILY.REGULAR};
-  font-size: ${({ theme }) => theme.FONT_SIZE.LG}px;
-  /* Mesmo caso já visto em outras telas de detalhe - sem "color" nenhum,
-     ficava preto só por ser o padrão do RN, e não mudava de tema. */
-  color: ${({ theme }) => theme.COLORS.text};
-  text-align: justify;
-  margin-top: ${RFValue(10)}px;
-  margin-bottom: ${RFValue(30)}px;
-`;
+// DetailMuseumMuseumDescription (styled.Text puro) foi substituído por
+// <Markdown> na tela (2026-11-19, ver CLAUDE.md "Editor de texto: largura,
+// autolink e renderização markdown") - mesmo motivo da tela de Campeonato.
 
 export const DetailMuseumGalleryImages = styled.View`
   width: 100%;

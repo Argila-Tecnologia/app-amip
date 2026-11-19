@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import { ScrollView } from 'react-native';
+import { ScrollView, View } from 'react-native';
 
 import { useRoute } from '@react-navigation/native';
 
@@ -22,6 +22,9 @@ import { Loading } from '@components/Loading';
 import { Button } from '@components/Form/Button';
 import { HeaderImageGallery } from '@components/HeaderImageGallery';
 import { FooterImageGallery } from '@components/FooterImageGallery';
+import { Markdown } from '@components/Markdown';
+
+import { RFValue } from '@utils/rf-value';
 
 import {
   DetailMuseumContainer,
@@ -30,7 +33,6 @@ import {
   DetailMuseumImage,
   DetailMuseumImageContainer,
   DetailMuseumItemMuseum,
-  DetailMuseumMuseumDescription,
   DetailMuseumTitle,
 } from './styles';
 
@@ -105,9 +107,15 @@ export function DetailsMuseumScreen() {
                   />
                 </DetailMuseumImageContainer>
 
-                <DetailMuseumMuseumDescription>
-                  {museum.description}
-                </DetailMuseumMuseumDescription>
+                <View
+                  style={{
+                    width: '100%',
+                    marginTop: RFValue(10),
+                    marginBottom: RFValue(30),
+                  }}
+                >
+                  <Markdown>{museum.description}</Markdown>
+                </View>
 
                 <DetailMuseumGalleryImages style={{ paddingBottom }}>
                   {museum.gallery_images &&

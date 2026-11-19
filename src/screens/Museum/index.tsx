@@ -15,6 +15,8 @@ import { IMuseumDTO } from '@dtos/museum-dto';
 import { HeaderApp } from '@components/HeaderApp';
 import { Loading } from '@components/Loading';
 
+import { stripMarkdown } from '@utils/strip-markdown';
+
 import {
   Divider,
   MuseumButton,
@@ -96,8 +98,12 @@ export function MuseumsScreen() {
                     contentFit="cover"
                   />
 
+                  {/* numberOfLines/ellipsizeMode truncam a prévia - precisa
+                      de texto puro, sem símbolos de markdown (ver
+                      stripMarkdown) - a descrição completa, formatada de
+                      verdade, só aparece na tela de detalhe. */}
                   <MuseumDescription numberOfLines={3} ellipsizeMode="tail">
-                    {museumItem.description}
+                    {stripMarkdown(museumItem.description)}
                   </MuseumDescription>
 
                   <Feather

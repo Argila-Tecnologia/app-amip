@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 
-import { Linking, ScrollView } from 'react-native';
+import { Linking, ScrollView, View } from 'react-native';
 
 import { useRoute } from '@react-navigation/native';
 
@@ -14,10 +14,12 @@ import { INewsDTO } from '@dtos/news-dto';
 
 import { Loading } from '@components/Loading';
 import { Header } from '@components/Header';
+import { Markdown } from '@components/Markdown';
+
+import { RFValue } from '@utils/rf-value';
 
 import {
   BoxNews,
-  DetailNewsDescription,
   DetailNewsImageContainer,
   DetailNewsLinkVideoButton,
   DetailNewsLinkVideoButtonText,
@@ -100,7 +102,9 @@ export function DetailsNewsScreen() {
                   />
                 </DetailNewsImageContainer>
 
-                <DetailNewsDescription>{news.content}</DetailNewsDescription>
+                <View style={{ width: '100%', marginTop: RFValue(10) }}>
+                  <Markdown>{news.content}</Markdown>
+                </View>
 
                 <DetailNewsLinkVideoButton
                   onPress={() => {

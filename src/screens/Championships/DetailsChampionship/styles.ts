@@ -57,22 +57,13 @@ export const DetailChampionshipImage = styled(FallbackImage)`
   height: 100%;
 ` as unknown as typeof FallbackImage;
 
-export const DetailChampionshipInfoDescription = styled.Text`
-  width: 100%;
-
-  font-family: ${({ theme }) => theme.FONT_FAMILY.REGULAR};
-  font-size: ${({ theme }) => theme.FONT_SIZE.MD}px;
-  /*
-    Não tinha "color" nenhum antes - funcionava por acidente porque preto é
-    a cor padrão de Text no React Native, mas isso não muda de tema nenhum.
-    Adicionado explicitamente pra acompanhar claro/escuro.
-  */
-  color: ${({ theme }) => theme.COLORS.text};
-  text-align: justify;
-
-  margin-top: ${RFValue(10)}px;
-  margin-bottom: ${RFValue(10)}px;
-`;
+// DetailChampionshipInfoDescription (styled.Text puro) foi substituído por
+// <Markdown> (2026-11-19, ver CLAUDE.md "Editor de texto: largura, autolink
+// e renderização markdown") - a descrição é markdown de verdade (vem do
+// Editor rico do admin-web-amip), um Text comum só mostrava a sintaxe crua
+// (listas, negrito etc. apareciam como caracteres soltos). O espaçamento
+// vertical que esse styled.Text tinha (margin-top/bottom RFValue(10)) foi
+// pro wrapper <View> em volta do <Markdown> na própria tela.
 
 // Antes "Local" e "Data" ficavam lado a lado numa linha só, com altura
 // fixa (30px) - um texto mais longo (ex: "Ginásio Municipal de Caruaru")

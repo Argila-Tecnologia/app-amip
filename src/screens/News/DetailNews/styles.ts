@@ -59,21 +59,9 @@ export const DetailNewsImage = styled(FallbackImage)`
   height: 100%;
 ` as unknown as typeof FallbackImage;
 
-export const DetailNewsDescription = styled.Text`
-  width: 100%;
-
-  font-family: ${({ theme }) => theme.FONT_FAMILY.REGULAR};
-  font-size: ${({ theme }) => theme.FONT_SIZE.LG}px;
-  /*
-    Não tinha "color" nenhum antes - funcionava por acidente porque o
-    preto é a cor padrão de Text no React Native, mas isso não muda de tema
-    nenhum. Adicionado explicitamente pra acompanhar claro/escuro.
-  */
-  color: ${({ theme }) => theme.COLORS.text};
-  text-align: justify;
-
-  margin-top: ${RFValue(10)}px;
-`;
+// DetailNewsDescription (styled.Text puro) foi substituído por <Markdown>
+// na tela (2026-11-19, ver CLAUDE.md "Editor de texto: largura, autolink e
+// renderização markdown") - mesmo motivo das telas de Campeonato/Museu.
 
 export const DetailNewsLinkVideoButton = styled.TouchableOpacity.attrs({
   activeOpacity: 0.7,

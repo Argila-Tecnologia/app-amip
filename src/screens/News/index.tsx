@@ -15,6 +15,8 @@ import { INewsDTO } from '@dtos/news-dto';
 import { HeaderApp } from '@components/HeaderApp';
 import { Loading } from '@components/Loading';
 
+import { stripMarkdown } from '@utils/strip-markdown';
+
 import {
   Divider,
   NewsButton,
@@ -103,8 +105,11 @@ export function NewsScreen() {
                   */}
                   <NewsImage source={{ uri: newsItem.image_url }} />
 
+                  {/* Texto puro pra prévia truncável (ver stripMarkdown) -
+                      a descrição completa, formatada de verdade, só
+                      aparece na tela de detalhe. */}
                   <NewsDescription numberOfLines={3} ellipsizeMode="tail">
-                    {newsItem.content}
+                    {stripMarkdown(newsItem.content)}
                   </NewsDescription>
 
                   <Feather
