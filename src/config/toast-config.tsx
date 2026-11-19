@@ -23,8 +23,16 @@ export const toastConfig: ToastConfig = {
   success: (props) => (
     <SuccessToast
       {...props}
-      style={{ borderLeftColor: theme.COLORS['success-color'] }}
-      contentContainerStyle={{ paddingHorizontal: RFValue(15) }}
+      // A lib limita "text2" a 1 linha por padrão (BaseToast.js,
+      // text2NumberOfLines = 1) e a caixa tem altura fixa (60) - mensagens
+      // mais longas (ex: os toasts de erro de login/recuperação de senha)
+      // apareciam cortadas com "...". "height: 'auto'" deixa a caixa
+      // crescer com o conteúdo em vez de cortar o texto.
+      style={{ borderLeftColor: theme.COLORS['success-color'], height: 'auto' }}
+      contentContainerStyle={{
+        paddingHorizontal: RFValue(15),
+        paddingVertical: RFValue(10),
+      }}
       text1Style={{
         fontSize: theme.FONT_SIZE.MD,
         fontWeight: 'bold',
@@ -33,6 +41,7 @@ export const toastConfig: ToastConfig = {
         fontSize: theme.FONT_SIZE.SM,
         color: theme.COLORS['black-color'],
       }}
+      text2NumberOfLines={3}
     />
   ),
   /*
@@ -42,7 +51,11 @@ export const toastConfig: ToastConfig = {
   error: (props) => (
     <ErrorToast
       {...props}
-      contentContainerStyle={{ paddingHorizontal: RFValue(15) }}
+      style={{ height: 'auto' }}
+      contentContainerStyle={{
+        paddingHorizontal: RFValue(15),
+        paddingVertical: RFValue(10),
+      }}
       text1Style={{
         fontSize: theme.FONT_SIZE.MD,
       }}
@@ -50,6 +63,7 @@ export const toastConfig: ToastConfig = {
         fontSize: theme.FONT_SIZE.SM,
         color: theme.COLORS['black-color'],
       }}
+      text2NumberOfLines={3}
     />
   ),
 };
