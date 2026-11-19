@@ -1,7 +1,5 @@
 import axios, { AxiosError, AxiosInstance } from 'axios';
 
-import { AppError } from '@utils/app-error';
-
 import { API_URL } from '@env';
 
 import {
@@ -176,10 +174,18 @@ api.registerInterceptTokenManager = (signOut) => {
       // inexistente) ou um 400 de validação normal derrubava a sessão do
       // atleta, mascarando o erro real como se fosse a sessão que tivesse
       // caído.
-      if (requestError.response && requestError.response.data) {
-        return Promise.reject(new AppError(requestError.response.data.message));
-      }
-
+      //
+      // Sempre rejeita com o "requestError" original (o AxiosError de
+      // verdade) - a versão anterior envolvia esse erro num "new
+      // AppError(...)" próprio, que tem só um campo "message" e não é
+      // "instanceof AxiosError" nem carrega "error.response.status". Toda
+      // tela que verifica o tipo/status do erro pra mostrar uma mensagem
+      // específica (ex: ForgotPassword checando status 400 pra "conta
+      // Google", ou qualquer outra tela com `instanceof AxiosError`)
+      // nunca batia com esse "AppError" e caía em silêncio total - nenhum
+      // toast aparecia, nem o específico nem um genérico. Bug real
+      // encontrado testando "esqueci senha": a API respondia certinho,
+      // mas a tela não mostrava nada pro atleta.
       return Promise.reject(requestError);
     },
   );
