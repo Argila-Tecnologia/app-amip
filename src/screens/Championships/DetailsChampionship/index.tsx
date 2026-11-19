@@ -4,6 +4,8 @@ import { ScrollView, Linking, View } from 'react-native';
 
 import { useNavigation, useRoute } from '@react-navigation/native';
 
+import { isBefore, startOfDay } from 'date-fns';
+
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Feather } from '@expo/vector-icons';
@@ -53,6 +55,19 @@ export function DetailsChampionshipScreen() {
   const { championshipId } = route.params as IDetailChampionshipRouteParams;
 
   const paddingBottom = insets.bottom;
+
+  // Campeonato sem "start_date" (antigo, criado antes dessa coluna
+  // existir) ou cujo início já passou não deve mais aceitar inscrição -
+  // evita o atleta tentar se inscrever num torneio que já aconteceu.
+  // Continua aparecendo no histórico (ver ChampionshipsScreen), só sem o
+  // botão aqui no detalhe.
+  function canSubscribe(startDate: string | null) {
+    if (!startDate) {
+      return false;
+    }
+
+    return !isBefore(startOfDay(new Date(startDate)), startOfDay(new Date()));
+  }
 
   // FUNCTIONS
   const handlePressLinkVideo = useCallback(async (video: string) => {
@@ -213,13 +228,15 @@ export function DetailsChampionshipScreen() {
                 )}
               </DetailChampionshipInfoContainer>
 
-              <Button
-                onPress={() => {
-                  handleSubscriptionChampionship(championship.id);
-                }}
-              >
-                Inscreva-se aqui!
-              </Button>
+              {canSubscribe(championship.start_date) && (
+                <Button
+                  onPress={() => {
+                    handleSubscriptionChampionship(championship.id);
+                  }}
+                >
+                  Inscreva-se aqui!
+                </Button>
+              )}
             </DetailChampionshipContent>
           )}
         </ScrollView>

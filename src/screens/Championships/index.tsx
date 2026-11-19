@@ -2,6 +2,8 @@ import { useCallback } from 'react';
 
 import { useNavigation } from '@react-navigation/native';
 
+import { getYear } from 'date-fns';
+
 import { Feather } from '@expo/vector-icons';
 
 import { useTheme } from 'styled-components/native';
@@ -66,7 +68,18 @@ export function ChampionshipsScreen() {
       if (response.status === 200) {
         const championshipsData = response.data as IChampionshipsDTO[];
 
-        return championshipsData;
+        // A cada ano só devem aparecer os campeonatos do ano corrente
+        // (decisão de produto, 2026-11-19) - campeonato sem "start_date"
+        // (campeonato antigo, criado antes dessa coluna existir) não tem
+        // como ter o ano confirmado, então fica de fora até a equipe
+        // preencher a data real dele.
+        const currentYear = getYear(new Date());
+
+        return championshipsData.filter(
+          (championship) =>
+            !!championship.start_date &&
+            getYear(new Date(championship.start_date)) === currentYear,
+        );
       }
     },
   });
