@@ -106,18 +106,27 @@ export function DetailsNewsScreen() {
                   <Markdown>{news.content}</Markdown>
                 </View>
 
-                <DetailNewsLinkVideoButton
-                  onPress={() => {
-                    handlePressLinkVideo(news.video);
-                  }}
-                >
-                  <DetailNewsLinkVideoButtonText>
-                    Veja mais detalhes da matéria{' '}
-                    <DetailNewsLinkVideoButtonTextLink>
-                      neste link!
-                    </DetailNewsLinkVideoButtonTextLink>
-                  </DetailNewsLinkVideoButtonText>
-                </DetailNewsLinkVideoButton>
+                {/*
+                  Antes aparecia sempre, mesmo sem nenhum link cadastrado -
+                  tocar no botão nesse caso chamava Linking.canOpenURL(undefined),
+                  que nunca abria nada (silencioso) mas deixava o botão
+                  "morto" visível pro leitor. Mesmo padrão já usado em
+                  DetailsChampionship/Subscription pro link de vídeo.
+                */}
+                {news.video && (
+                  <DetailNewsLinkVideoButton
+                    onPress={() => {
+                      handlePressLinkVideo(news.video);
+                    }}
+                  >
+                    <DetailNewsLinkVideoButtonText>
+                      Veja mais detalhes da matéria{' '}
+                      <DetailNewsLinkVideoButtonTextLink>
+                        neste link!
+                      </DetailNewsLinkVideoButtonTextLink>
+                    </DetailNewsLinkVideoButtonText>
+                  </DetailNewsLinkVideoButton>
+                )}
               </BoxNews>
             </DetailsNewsContent>
           )}
