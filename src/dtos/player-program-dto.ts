@@ -1,9 +1,9 @@
 // Mesmo shape devolvido por GET /player_programs/me (api-ibra,
-// ListMyPlayerProgramsUseCase) - "Minhas matrículas", usada só pra listar
-// os vínculos do próprio atleta e permitir cancelar a mensalidade (ver
-// MyPlayerPrograms/index.tsx). Diferente de IMyChargeDTO, não tem relação
-// nenhuma com cobranças específicas - existe mesmo que o vínculo nunca
-// tenha gerado uma Charge ainda.
+// ListMyPlayerProgramsUseCase) - "Minhas mensalidades", usada só pra
+// listar os vínculos do próprio atleta e permitir cancelar a mensalidade
+// (ver MyPlayerPrograms/index.tsx). Diferente de IMyChargeDTO, não tem
+// relação nenhuma com cobranças específicas - existe mesmo que o vínculo
+// nunca tenha gerado uma Charge ainda.
 export type IMyPlayerProgramDTO = {
   id: string;
   program_name: string;
@@ -12,4 +12,10 @@ export type IMyPlayerProgramDTO = {
   // false quando o vínculo já foi cancelado - nesse caso o app não mostra
   // o botão de cancelar (o backend rejeita cancelar de novo com 400).
   is_active: boolean;
+  // true quando existe uma cobrança de matrícula (ENROLLMENT_FEE) ainda
+  // não paga (PENDING/OVERDUE) pra esse vínculo - usado pra não mostrar
+  // "ATIVA" (que sugere "tudo em dia") quando o atleta nem pagou a
+  // matrícula ainda. Ver CLAUDE.md, "Minhas mensalidades: badge
+  // inconsistente com Faturas".
+  has_pending_enrollment_fee: boolean;
 };

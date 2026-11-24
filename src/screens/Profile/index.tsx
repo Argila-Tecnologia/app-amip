@@ -448,7 +448,7 @@ export function ProfileScreen() {
                 </ProfileOptionButtonIcon>
 
                 <ProfileOptionButtonTitle>
-                  Minhas matrículas
+                  Minhas mensalidades
                 </ProfileOptionButtonTitle>
               </ProfileOptionButton>
 

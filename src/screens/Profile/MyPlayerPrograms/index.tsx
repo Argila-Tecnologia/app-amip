@@ -128,7 +128,7 @@ export function MyPlayerProgramsScreen() {
 
   return (
     <MyPlayerProgramsContainer>
-      <Header title="Minhas matrículas" />
+      <Header title="Minhas mensalidades" />
 
       {isLoadingPlayerPrograms ? (
         <Loading />
@@ -144,7 +144,7 @@ export function MyPlayerProgramsScreen() {
           {!playerPrograms || playerPrograms.length === 0 ? (
             <MyPlayerProgramsEmptyContainer>
               <MyPlayerProgramsEmptyText>
-                Nenhuma matrícula encontrada.
+                Nenhuma mensalidade encontrada.
               </MyPlayerProgramsEmptyText>
             </MyPlayerProgramsEmptyContainer>
           ) : (
@@ -158,12 +158,26 @@ export function MyPlayerProgramsScreen() {
 
                     <MyPlayerProgramStatusPill
                       $color={
-                        playerProgram.is_active
-                          ? theme.COLORS['green-color']
-                          : theme.COLORS['text-secondary']
+                        !playerProgram.is_active
+                          ? theme.COLORS['text-secondary']
+                          : playerProgram.has_pending_enrollment_fee
+                            ? theme.COLORS['orange-color']
+                            : theme.COLORS['green-color']
                       }
                     >
-                      {playerProgram.is_active ? 'ATIVA' : 'CANCELADA'}
+                      {/*
+                        "ATIVA" sozinho (baseado só em is_active, que só
+                        reflete "não foi cancelado") enganava o atleta que
+                        nem pagou a matrícula ainda - em Faturas a mesma
+                        cobrança aparece como "Pendente". Ver
+                        has_pending_enrollment_fee (api-ibra,
+                        ListMyPlayerProgramsUseCase).
+                      */}
+                      {!playerProgram.is_active
+                        ? 'CANCELADA'
+                        : playerProgram.has_pending_enrollment_fee
+                          ? 'MATRÍCULA PENDENTE'
+                          : 'ATIVA'}
                     </MyPlayerProgramStatusPill>
                   </MyPlayerProgramTopRow>
 
